@@ -47,11 +47,11 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="min-h-screen bg-black" id="reader-root">
       {/* Fixed Header - Tap to toggle */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black via-black/95 to-transparent transition-opacity duration-300 reader-header">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-[rgb(var(--color-bg-primary))] via-[rgba(var(--color-bg-primary),0.95)] to-transparent transition-opacity duration-300 reader-header">
         <div className="px-4 md:px-8 py-4 flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2 text-white hover:text-red-500 transition-colors"
+            className="flex items-center gap-2 text-[rgb(var(--color-fg-primary))] hover:text-[rgb(var(--color-accent))] transition-colors"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -60,7 +60,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
           </Link>
 
           <div className="text-center">
-            <h1 className="text-lg md:text-xl font-bold text-white line-clamp-1">
+            <h1 className="text-lg md:text-xl font-bold text-[rgb(var(--color-fg-primary))] line-clamp-1">
               {content.title}
             </h1>
           </div>
@@ -80,33 +80,33 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
             priority
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black" />
+          <div className="w-full h-full bg-gradient-to-br from-[rgb(var(--color-bg-secondary))] to-[rgb(var(--color-bg-primary))]" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgb(var(--color-bg-primary))] via-[rgba(var(--color-bg-primary),0.7)] to-transparent" />
 
         <div className="relative h-full flex flex-col justify-end px-4 md:px-8 pb-8">
           <div className="max-w-4xl mx-auto w-full">
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-4">
-              <span className="px-3 py-1 bg-red-600 text-white text-xs font-bold uppercase tracking-wider rounded">
+              <span className="px-3 py-1 bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))] text-xs font-bold uppercase tracking-wider rounded">
                 Manga
               </span>
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-sm text-white text-xs font-semibold uppercase tracking-wider rounded">
+              <span className="px-3 py-1 bg-[rgba(var(--color-fg-primary),0.05)] backdrop-blur-sm text-[rgb(var(--color-fg-primary))] text-xs font-semibold uppercase tracking-wider rounded">
                 {chapterNumbers.length} Chapters
               </span>
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-sm text-white text-xs font-semibold uppercase tracking-wider rounded">
+              <span className="px-3 py-1 bg-[rgba(var(--color-fg-primary),0.05)] backdrop-blur-sm text-[rgb(var(--color-fg-primary))] text-xs font-semibold uppercase tracking-wider rounded">
                 {pages.length} Pages
               </span>
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 heading-display">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[rgb(var(--color-fg-primary))] mb-4 heading-display">
               {content.title}
             </h1>
 
             {/* Description */}
             {content.description && (
-              <p className="text-base md:text-lg text-gray-200 line-clamp-3 max-w-2xl">
+              <p className="text-base md:text-lg text-[rgb(var(--color-fg-primary))] line-clamp-3 max-w-2xl">
                 {content.description}
               </p>
             )}
@@ -118,7 +118,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
       <div className="max-w-4xl mx-auto px-0 md:px-4 pb-16">
         {/* Table of Contents */}
         <section className="mb-12 px-4 md:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 heading-section">
+          <h2 className="text-2xl md:text-3xl font-bold text-[rgb(var(--color-fg-primary))] mb-6 heading-section">
             Chapters
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -126,12 +126,12 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
               <a
                 key={chapterNum}
                 href={`#chapter-${chapterNum}`}
-                className="px-4 py-3 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-lg border border-white/10 hover:border-red-500/50 transition-all group"
+                className="px-4 py-3 bg-white/5 hover:bg-[rgba(var(--color-fg-primary),0.05)] backdrop-blur-sm rounded-lg border border-[rgba(var(--color-fg-primary),0.1)] hover:border-[rgba(var(--color-accent),0.5)] transition-all group"
               >
-                <div className="text-white font-semibold group-hover:text-red-500 transition-colors">
+                <div className="text-[rgb(var(--color-fg-primary))] font-semibold group-hover:text-[rgb(var(--color-accent))] transition-colors">
                   Chapter {chapterNum}
                 </div>
-                <div className="text-sm text-gray-400 mt-1">
+                <div className="text-sm text-[rgb(var(--color-fg-muted))] mt-1">
                   {chapters[chapterNum].length} pages
                 </div>
               </a>
@@ -148,16 +148,16 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
           >
             {/* Chapter Header - Minimal */}
             <div className="sticky top-20 z-40 mb-0">
-              <div className="bg-black/95 backdrop-blur-sm border-y border-white/10 px-6 py-4 flex items-center justify-between">
+              <div className="bg-black/95 backdrop-blur-sm border-y border-[rgba(var(--color-fg-primary),0.1)] px-6 py-4 flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-white">
+                  <h2 className="text-xl md:text-2xl font-bold text-[rgb(var(--color-fg-primary))]">
                     Chapter {chapterNum}
                   </h2>
-                  <p className="text-sm text-gray-400 mt-1">
+                  <p className="text-sm text-[rgb(var(--color-fg-muted))] mt-1">
                     {chapters[chapterNum].length} pages
                   </p>
                 </div>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-[rgb(var(--color-fg-muted))]">
                   Scroll to read
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
                 .map((page) => (
                   <div
                     key={page.id}
-                    className="relative w-full bg-gray-900"
+                    className="relative w-full bg-[rgb(var(--color-bg-secondary))]"
                   >
                     <Image
                       src={page.url}
@@ -213,10 +213,10 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
       <div className="fixed bottom-8 right-8 z-50">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="w-12 h-12 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center shadow-2xl transition-colors"
+          className="w-12 h-12 bg-[rgb(var(--color-accent))] hover:bg-[rgb(var(--color-accent-hover))] rounded-full flex items-center justify-center shadow-2xl transition-colors"
           aria-label="Scroll to top"
         >
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-[rgb(var(--color-fg-primary))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </button>
