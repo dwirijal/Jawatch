@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default async function HomePage() {
-  const response = await getContents(undefined, 60);
+  const response = await getContents(undefined, 1, 60);
   const contents = response.data || [];
 
   const anime = contents.filter(c => c.content_type === 'anime');
