@@ -269,7 +269,7 @@ export default async function HomePage() {
               <div className="flex flex-wrap gap-4">
                 <Link
                   href={getRoute(heroContent.content_type, heroContent.id)}
-                  className="px-8 py-4 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors flex items-center gap-2"
+                  className="px-4 sm:px-8 py-4 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors flex items-center gap-2"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
@@ -278,7 +278,7 @@ export default async function HomePage() {
                 </Link>
                 <Link
                   href={getRoute(heroContent.content_type, heroContent.id)}
-                  className="px-8 py-4 bg-[rgb(var(--color-fg-primary))]/10 backdrop-blur-sm text-[rgb(var(--color-fg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-fg-primary))]/20 transition-colors flex items-center gap-2"
+                  className="px-4 sm:px-8 py-4 bg-[rgb(var(--color-fg-primary))]/10 backdrop-blur-sm text-[rgb(var(--color-fg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-fg-primary))]/20 transition-colors flex items-center gap-2"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -301,7 +301,7 @@ export default async function HomePage() {
 
       {/* Empty State */}
       {contents.length === 0 && (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 sm:px-8 text-center">
           <div className="relative mb-8">
             <div className="w-32 h-32 bg-gradient-to-br from-[rgb(var(--color-accent))] to-[rgb(var(--color-accent-hover))] rounded-2xl flex items-center justify-center animate-pulse">
               <svg className="w-16 h-16 text-[rgb(var(--color-fg-primary))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
