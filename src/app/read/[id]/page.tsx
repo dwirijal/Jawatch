@@ -5,8 +5,7 @@ import Link from 'next/link';
 export default async function ReadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: idStr } = await params;
   const id = parseInt(idStr);
-  const response = await getFullContent(id);
-  const fullContent = response.data;
+  const fullContent = await getFullContent(id);
 
   // Handle content not found
   if (!fullContent || !fullContent.id) {
