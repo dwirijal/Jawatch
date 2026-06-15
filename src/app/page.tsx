@@ -118,7 +118,7 @@ export default async function HomePage() {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-elevated))] to-[rgb(var(--color-bg-secondary))]">
                         {getIcon(item.content_type)}
                       </div>
                     )}
@@ -127,7 +127,7 @@ export default async function HomePage() {
                         NEW
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.95)] via-[rgba(var(--color-bg-primary),0.6)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
                       <h4 className="text-[rgb(var(--color-fg-primary))] font-bold text-base mb-2 line-clamp-2">{item.title}</h4>
                       <div className="flex items-center gap-2 text-sm text-[rgb(var(--color-fg-secondary))] mb-3">
                         <span>{new Date(item.scraped_at).getFullYear()}</span>
@@ -162,7 +162,7 @@ export default async function HomePage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-elevated))] to-[rgb(var(--color-bg-secondary))]">
                       {getIcon(item.content_type)}
                     </div>
                   )}
@@ -171,7 +171,7 @@ export default async function HomePage() {
                       NEW
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.95)] via-[rgba(var(--color-bg-primary),0.6)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
                     <h4 className="text-[rgb(var(--color-fg-primary))] font-bold text-lg mb-2 line-clamp-2">{item.title}</h4>
                     <div className="flex items-center gap-2 text-sm text-[rgb(var(--color-fg-secondary))] mb-3">
                       <span>{new Date(item.scraped_at).getFullYear()}</span>
@@ -218,10 +218,10 @@ export default async function HomePage() {
                 priority
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black" />
+              <div className="w-full h-full bg-gradient-to-br from-[rgb(var(--color-bg-secondary))] to-[rgb(var(--color-bg-primary))]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[rgba(var(--color-bg-primary),0.95)] via-[rgba(var(--color-bg-primary),0.7)] to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgb(var(--color-bg-primary))] via-[rgba(var(--color-bg-primary),0.5)] to-transparent" />
           </div>
 
           {/* Hero Content */}
@@ -303,7 +303,7 @@ export default async function HomePage() {
       {contents.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
           <div className="relative mb-8">
-            <div className="w-32 h-32 bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center animate-pulse">
+            <div className="w-32 h-32 bg-gradient-to-br from-[rgb(var(--color-accent))] to-[rgb(var(--color-accent-hover))] rounded-2xl flex items-center justify-center animate-pulse">
               <svg className="w-16 h-16 text-[rgb(var(--color-fg-primary))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>

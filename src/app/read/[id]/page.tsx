@@ -45,7 +45,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
   const chapterNumbers = Object.keys(chapters).map(Number).sort((a, b) => a - b);
 
   return (
-    <div className="min-h-screen bg-black" id="reader-root">
+    <div className="min-h-screen bg-[rgb(var(--color-bg-primary))]" id="reader-root">
       {/* Fixed Header - Tap to toggle */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-[rgb(var(--color-bg-primary))] via-[rgba(var(--color-bg-primary),0.95)] to-transparent transition-opacity duration-300 reader-header">
         <div className="px-4 md:px-8 py-4 flex items-center justify-between">
@@ -126,7 +126,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
               <a
                 key={chapterNum}
                 href={`#chapter-${chapterNum}`}
-                className="px-4 py-3 bg-white/5 hover:bg-[rgba(var(--color-fg-primary),0.05)] backdrop-blur-sm rounded-lg border border-[rgba(var(--color-fg-primary),0.1)] hover:border-[rgba(var(--color-accent),0.5)] transition-all group"
+                className="px-4 py-3 bg-[rgba(var(--color-fg-primary),0.05)] hover:bg-[rgba(var(--color-fg-primary),0.05)] backdrop-blur-sm rounded-lg border border-[rgba(var(--color-fg-primary),0.1)] hover:border-[rgba(var(--color-accent),0.5)] transition-all group"
               >
                 <div className="text-[rgb(var(--color-fg-primary))] font-semibold group-hover:text-[rgb(var(--color-accent))] transition-colors">
                   Chapter {chapterNum}
@@ -148,7 +148,7 @@ export default async function ReadPage({ params }: { params: Promise<{ id: strin
           >
             {/* Chapter Header - Minimal */}
             <div className="sticky top-20 z-40 mb-0">
-              <div className="bg-black/95 backdrop-blur-sm border-y border-[rgba(var(--color-fg-primary),0.1)] px-6 py-4 flex items-center justify-between">
+              <div className="bg-[rgb(var(--color-bg-primary))]/95 backdrop-blur-sm border-y border-[rgba(var(--color-fg-primary),0.1)] px-6 py-4 flex items-center justify-between">
                 <div>
                   <h2 className="text-xl md:text-2xl font-bold text-[rgb(var(--color-fg-primary))]">
                     Chapter {chapterNum}
