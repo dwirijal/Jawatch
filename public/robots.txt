@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /watch/
+Allow: /read/
+Allow: /search
+Disallow: /api/
+
+Sitemap: https://jawatch.com/sitemap.xml
