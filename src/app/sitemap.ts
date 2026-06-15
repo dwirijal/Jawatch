@@ -4,8 +4,8 @@ export default async function sitemap() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   // Fetch all content for sitemap
-  const response = await getContents(undefined, 1000);
-  const contents = response.items || [];
+  const response = await getContents(undefined, 1, 1000);
+  const contents = response.data || [];
 
   const staticUrls = [
     {

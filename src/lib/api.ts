@@ -72,20 +72,27 @@ async function fetchApi<T>(path: string, isArray: boolean = false): Promise<T> {
 }
 
 export interface PaginatedResponse<T> {
-  total: number;
-  limit: number;
-  offset: number;
-  items: T[];
+  data: T[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    has_next: boolean;
+  };
+  error: {
+    code: number;
+    message: string;
+  } | null;
 }
 
-export async function getContents(type?: string, limit?: number, offset?: number): Promise<PaginatedResponse<Content>> {
+export async function getContents(type?: string, page?: number, limit?: number): Promise<PaginatedResponse<Content>> {
   const params = new URLSearchParams();
   if (type) params.set('type', type);
+  if (page) params.set('page', String(page));
   if (limit) params.set('limit', String(limit));
-  if (offset) params.set('offset', String(offset));
   const query = params.toString();
   const path = `/api/contents${query ? `?${query}` : ''}`;
-  return fetchApi(path, true);
+  return fetchApi(path, false);
 }
 
 export interface TrendingResponse {
@@ -133,9 +140,15 @@ export async function getFullContent(contentId: number): Promise<FullContent> {
 }
 
 export interface SearchResult {
-  query: string;
-  count: number;
-  items: Content[];
+  data: Content[];
+  meta: {
+    query: string;
+    total: number;
+  };
+  error: {
+    code: number;
+    message: string;
+  } | null;
 }
 
 export async function searchContents(query: string, limit?: number): Promise<SearchResult> {
