@@ -35,8 +35,8 @@ export function ContentCard({ content }: { content: Content }) {
             NEW
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-          <div className="text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.9)] via-[rgba(var(--color-bg-primary),0.4)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <div className="text-[rgb(var(--color-fg-primary))]">
             <p className="text-sm font-semibold">
               {content.content_type === 'anime' ? 'Watch Now' : 'Read Now'}
             </p>
