@@ -4,10 +4,17 @@ export interface Content {
   id: number;
   title: string;
   source_id: number;
-  content_type: 'anime' | 'manga' | 'other';
+  content_type: 'anime' | 'manga' | 'movie' | 'donghua' | 'comic' | 'novel' | 'other';
   description?: string;
   cover_url?: string;
+  episode_count?: number;
+  chapter_count?: number;
+  status?: string;
+  genres?: string;
+  year?: number;
+  rating?: number;
   scraped_at: string;
+  last_scraped_at: string;
 }
 
 export interface Stream {
@@ -79,6 +86,24 @@ export async function getContents(type?: string, limit?: number, offset?: number
   const query = params.toString();
   const path = `/api/contents${query ? `?${query}` : ''}`;
   return fetchApi(path, true);
+}
+
+export interface TrendingResponse {
+  data: Content[];
+  meta: {
+    limit: number;
+    total: number;
+  };
+  error: null;
+}
+
+export async function getTrending(type?: string, limit?: number): Promise<TrendingResponse> {
+  const params = new URLSearchParams();
+  if (type) params.set('type', type);
+  if (limit) params.set('limit', String(limit));
+  const query = params.toString();
+  const path = `/api/trending${query ? `?${query}` : ''}`;
+  return fetchApi(path, false);
 }
 
 export async function getContent(id: number): Promise<Content> {
