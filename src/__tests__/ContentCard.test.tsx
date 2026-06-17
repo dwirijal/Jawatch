@@ -10,6 +10,7 @@ describe('ContentCard Component', () => {
     content_type: 'anime' as const,
     cover_url: 'https://example.com/cover.jpg',
     scraped_at: new Date().toISOString(),
+    last_scraped_at: new Date().toISOString(),
     source_id: 1,
   };
 
