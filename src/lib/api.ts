@@ -10,50 +10,93 @@ export interface AnimeDetail extends AnimeCard {
   enrichments?: Record<string, any>;
 }
 
+const READ_KINDS = new Set(["manga", "comic", "manhwa", "manhua", "novel"]);
+
+export function isReadable(card: { media_type?: string; entry_kind?: string }): boolean {
+  return READ_KINDS.has(card.entry_kind || "") || READ_KINDS.has(card.media_type || "");
+}
+
 export interface Episode {
   unit_key: string; item_key: string; unit_kind: string; unit_number: number;
   title: string | null; preferred_source?: string; thumbnail_url?: string;
   stream_links?: { source: string; url: string }[];
   download_links?: { provider?: string; quality?: string; url: string }[];
+  pages?: string[];
+}
+
+export function contentUrl(card: { media_type?: string; entry_kind?: string; slug: string }): string {
+  return isReadable(card) ? `/read/${card.slug}` : `/stream/${card.slug}`;
 }
 
 export interface BrowseResult { items: AnimeCard[]; has_next: boolean; next_cursor?: string; }
 
-const API_BASE = typeof window === "undefined"
-  ? (process.env.INTERNAL_API_URL || "http://localhost:8080/v1")
-  : (process.env.NEXT_PUBLIC_API_URL || "https://api.dwizzy.my.id/v1");
+// ponytail: single env var — NEXT_PUBLIC_API_URL works for both client & server on Vercel
+// (same domain, no internal routing needed for single-region free-tier app)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+
+if (!API_BASE) {
+  throw new Error(
+    "Missing NEXT_PUBLIC_API_URL env var. " +
+    "Run `vercel env pull .env.local` to sync from Vercel."
+  );
+}
+
+// ponytail: 5s timeout prevents hanging fetches on flaky upstream
+const TIMEOUT_MS = 5000;
+
+async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      throw new Error(`API ${path}: ${res.status} ${res.statusText}`);
+    }
+    return res;
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new Error(`API ${path}: timeout after ${TIMEOUT_MS}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export async function browse(params: {
   media_type?: string; sort?: string; genre?: string; limit?: number; cursor?: string;
 }): Promise<BrowseResult> {
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v !== undefined) sp.set(k, String(v));
-  const res = await fetch(`${API_BASE}/media?${sp}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  // ponytail: revalidate 1h — browse data changes slowly, saves ~98% function invocations
+  const res = await apiFetch(`/media?${sp}`, { next: { revalidate: 3600 } });
   return (await res.json()).data;
 }
 
 export async function getDetail(slug: string): Promise<AnimeDetail> {
-  const res = await fetch(`${API_BASE}/media/slug/${encodeURIComponent(slug)}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  // ponytail: revalidate 2h — detail pages rarely change
+  const res = await apiFetch(`/media/slug/${encodeURIComponent(slug)}`, { next: { revalidate: 7200 } });
   return (await res.json()).data;
 }
 
 export async function getEpisodes(itemKey: string): Promise<Episode[]> {
-  const res = await fetch(`${API_BASE}/media/${encodeURIComponent(itemKey)}/units?limit=500`, { cache: "no-store" });
-  if (!res.ok) return [];
+  // ponytail: revalidate 24h — episode lists rarely change after release
+  const res = await apiFetch(`/media/${encodeURIComponent(itemKey)}/units?limit=500`, { next: { revalidate: 86400 } });
   return (await res.json()).data?.units || [];
 }
 
 export async function getEpisodeDetail(itemKey: string, unitNumber: number): Promise<Episode | null> {
-  const res = await fetch(`${API_BASE}/media/${encodeURIComponent(itemKey)}/units/${unitNumber}`, { cache: "no-store" });
-  if (!res.ok) return null;
+  // ponytail: no-store — episode stream links are session-specific, must be fresh
+  const res = await apiFetch(`/media/${encodeURIComponent(itemKey)}/units/${unitNumber}`, { cache: "no-store" });
   return (await res.json()).data;
 }
 
 export async function searchAnime(query: string): Promise<AnimeCard[]> {
-  const res = await fetch(`${API_BASE}/media/search?q=${encodeURIComponent(query)}&limit=20`, { cache: "no-store" });
-  if (!res.ok) return [];
+  // ponytail: revalidate 1h — search results stable for common queries
+  const res = await apiFetch(`/media/search?q=${encodeURIComponent(query)}&limit=20`, { next: { revalidate: 3600 } });
   return (await res.json()).data?.items || [];
 }
 

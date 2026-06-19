@@ -3,55 +3,81 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { browse, coverUrl, type AnimeCard } from "@/lib/api";
+import { Button, LinkButton } from "./atoms/Button";
+import { HeroSkeleton } from "./atoms/Skeleton";
 
 export default function HeroSection() {
   const [featured, setFeatured] = useState<AnimeCard | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    browse({ media_type: "anime", sort: "popular", limit: 5 }).then(r => {
-      if (r.items.length > 0) setFeatured(r.items[0]);
-    }).catch(() => {});
+    browse({ media_type: "anime", sort: "popular", limit: 5 })
+      .then(r => {
+        if (r.items.length > 0) setFeatured(r.items[0]);
+        else setError(true);
+      })
+      .catch(() => setError(true));
   }, []);
+
+  if (error) {
+    return (
+      <section className="relative w-full h-[50vh] min-h-[300px] max-h-[500px] bg-[var(--ja-surface)] flex items-center justify-center">
+        <div className="text-center px-4 max-w-md">
+          <svg className="w-16 h-16 mx-auto mb-4 text-[var(--ja-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+          </svg>
+          <h2 className="text-xl font-bold text-white mb-2">Tidak dapat memuat konten</h2>
+          <p className="text-[var(--ja-text-secondary)] text-sm">Pastikan koneksi internet stabil, lalu coba lagi.</p>
+          <Button className="mt-6" onClick={() => window.location.reload()}>Muat Ulang</Button>
+        </div>
+      </section>
+    );
+  }
 
   if (!featured) return <HeroSkeleton />;
 
   return (
     <section className="relative w-full h-[75vh] min-h-[500px] max-h-[700px] overflow-hidden">
-      <img src={coverUrl(featured)} alt="" className="absolute inset-0 w-full h-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f]/90 via-transparent to-transparent" />
-      <div className="relative z-10 h-full max-w-7xl mx-auto px-4 flex flex-col justify-end pb-20">
-        <div className="max-w-xl">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-purple-600/80 text-white mb-4">Trending This Week</span>
-          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-3 leading-tight">{featured.title}</h1>
-          <p className="text-sm sm:text-base text-gray-300 mb-6 line-clamp-2">{featured.genres?.join(" · ") || "Anime"}</p>
-          <div className="flex gap-3">
-            <Link href={`/stream/${featured.slug}`}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium transition-all hover:scale-105">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
-              Watch Now
-            </Link>
-            <Link href="/browse"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all border border-white/10">
-              Browse All
-            </Link>
-          </div>
-        </div>
+      <div className="absolute inset-0">
+        <img
+          src={coverUrl(featured)}
+          alt=""
+          className="w-full h-full object-cover scale-105"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--ja-bg)] via-[var(--ja-bg)/60] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--ja-bg)/95] via-[var(--ja-bg)/40] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--ja-bg)]" />
       </div>
-    </section>
-  );
-}
 
-function HeroSkeleton() {
-  return (
-    <section className="w-full h-[75vh] min-h-[500px] max-h-[700px] bg-[#141428]">
-      <div className="max-w-7xl mx-auto px-4 h-full flex flex-col justify-end pb-20">
-        <div className="skeleton h-6 w-32 mb-4" />
-        <div className="skeleton h-12 w-96 mb-3" />
-        <div className="skeleton h-5 w-64 mb-6" />
-        <div className="flex gap-3">
-          <div className="skeleton h-12 w-36 rounded-xl" />
-          <div className="skeleton h-12 w-36 rounded-xl" />
+      <div className="relative z-10 h-full max-w-[var(--ja-content-max)] mx-auto px-4 flex flex-col justify-end pb-20 animate-fade-up">
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--ja-purple)/0.9] backdrop-blur-sm text-white text-sm font-medium mb-6 shadow-[var(--ja-shadow-glow)]">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            Trending This Week
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.1] drop-shadow-2xl">
+            {featured.title}
+          </h1>
+
+          <p className="text-base sm:text-lg text-gray-200 mb-8 line-clamp-2 drop-shadow-lg">
+            {featured.genres?.join(" · ") || "Anime"}
+          </p>
+
+          <div className="flex flex-wrap gap-3">
+            <LinkButton href={`/stream/${featured.slug}`} size="lg" aria-label={`Watch ${featured.title}`}>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+              </svg>
+              Watch Now
+            </LinkButton>
+            <LinkButton href="/browse" variant="secondary" size="lg">
+              Browse All
+            </LinkButton>
+          </div>
         </div>
       </div>
     </section>

@@ -1,49 +1,161 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════
+   JAWATCH DESIGN SYSTEM — TOKENS
+   ═══════════════════════════════════════════ */
+
 :root {
-  --background: #0a0a0f;
-  --foreground: #e4e4f0;
+  /* ── Brand ── */
+  --ja-purple: oklch(55% 0.25 285);
+  --ja-purple-hover: oklch(62% 0.22 285);
+  --ja-purple-glow: oklch(45% 0.3 285 / 0.25);
+  --ja-gold: oklch(82% 0.16 80);
+
+  /* ── Surfaces ── */
+  --ja-bg: oklch(11% 0.03 280);
+  --ja-surface: oklch(16% 0.02 280);
+  --ja-surface-hover: oklch(20% 0.03 280);
+  --ja-surface-raised: oklch(22% 0.02 280);
+
+  /* ── Text ── */
+  --ja-text: oklch(92% 0.01 280);
+  --ja-text-secondary: oklch(68% 0.02 280);
+  --ja-text-muted: oklch(45% 0.02 280);
+
+  /* ── Borders ── */
+  --ja-border: oklch(92% 0.01 280 / 0.06);
+  --ja-border-hover: oklch(92% 0.01 280 / 0.12);
+
+  /* ── Status ── */
+  --ja-green: oklch(65% 0.2 145);
+  --ja-blue: oklch(62% 0.19 250);
+  --ja-yellow: oklch(78% 0.16 85);
+  --ja-red: oklch(60% 0.22 25);
+
+  /* ── Radii ── */
+  --ja-r-sm: 0.5rem;
+  --ja-r-md: 0.75rem;
+  --ja-r-lg: 1rem;
+  --ja-r-xl: 1.25rem;
+  --ja-r-full: 9999px;
+
+  /* ── Spacing ── */
+  --ja-section-gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+  --ja-content-max: 80rem;
+
+  /* ── Motion ── */
+  --ja-fast: 120ms;
+  --ja-normal: 220ms;
+  --ja-slow: 350ms;
+  --ja-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ja-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Shadows ── */
+  --ja-shadow-card: 0 4px 24px oklch(0% 0 0 / 0.3);
+  --ja-shadow-card-hover: 0 12px 40px oklch(0% 0 0 / 0.5);
+  --ja-shadow-glow: 0 0 30px var(--ja-purple-glow);
 }
 
+/* ── Tailwind theme bridge ── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--ja-bg);
+  --color-foreground: var(--ja-text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Base reset ── */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--ja-bg);
+  color: var(--ja-text);
   font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
 }
 
+/* ── Film grain overlay ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
-::-webkit-scrollbar-thumb { background: #1e1e3a; border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--ja-bg); }
+::-webkit-scrollbar-thumb { background: var(--ja-surface-raised); border-radius: var(--ja-r-sm); }
+::-webkit-scrollbar-thumb:hover { background: var(--ja-purple); }
 
-.anime-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.anime-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(108,92,231,0.2);
+/* ── Selection ── */
+::selection {
+  background: oklch(55% 0.25 285 / 0.3);
+  color: var(--ja-text);
 }
 
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--ja-purple);
+  outline-offset: 2px;
+  border-radius: var(--ja-r-sm);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Animations ── */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
-.skeleton {
-  background: linear-gradient(90deg, #1e1e3a 25%, #141428 50%, #1e1e3a 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 0.5rem;
+
+.animate-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s var(--ja-ease-out);
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s var(--ja-ease-out);
+}
+
+/* ── Glass effect ── */
 .glass {
-  backdrop-filter: blur(12px);
-  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  background: oklch(11% 0.03 280 / 0.75);
 }
