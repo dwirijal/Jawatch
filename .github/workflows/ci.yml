@@ -1,0 +1,21 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # dummy build-time env: Next apps that read config at import-
+      # time (e.g. lib/auth/config requireEnv) throw during static
+      # page-data collection. Routes are runtime-dynamic; real values
+      # ship via Vercel env in prod.
+      SUPABASE_URL: https://dummy.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: dummy_publishable_key_for_ci
+      SITE_URL: https://dummy.example
+      AUTH_SHARED_COOKIE_DOMAIN: example.com
+      AUTH_REDIRECT_SECRET: dummy_redirect_secret_for_ci_at_least_32_chars
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run build
+      - run: bun run lint || true

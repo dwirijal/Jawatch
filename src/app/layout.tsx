@@ -30,15 +30,9 @@ export default function RootLayout({
                 JAWATCH
               </h1>
               <nav className="hidden md:flex gap-6">
-                <a href="/" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">
-                  Home
-                </a>
-                <a href="/watch" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">
-                  Watch
-                </a>
-                <a href="/read" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">
-                  Read
-                </a>
+                <a href="/" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">Home</a>
+                <a href="/browse" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">Browse</a>
+                <a href="/search" className="text-sm font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors">Search</a>
               </nav>
             </div>
 
@@ -80,8 +74,8 @@ export default function RootLayout({
               </form>
               <nav className="flex flex-col gap-3">
                 <a href="/" className="text-base font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors py-2 border-b border-[rgba(var(--color-fg-primary),0.05)]">Home</a>
-                <a href="/watch" className="text-base font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors py-2 border-b border-[rgba(var(--color-fg-primary),0.05)]">Watch</a>
-                <a href="/read" className="text-base font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors py-2 border-b border-[rgba(var(--color-fg-primary),0.05)]">Read</a>
+                <a href="/browse" className="text-base font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors py-2 border-b border-[rgba(var(--color-fg-primary),0.05)]">Browse</a>
+                <a href="/search" className="text-base font-semibold text-[rgb(var(--color-fg-secondary))] hover:text-[rgb(var(--color-fg-primary))] transition-colors py-2 border-b border-[rgba(var(--color-fg-primary),0.05)]">Search</a>
               </nav>
             </div>
           </div>
@@ -106,8 +100,8 @@ export default function RootLayout({
               </div>
               <div className="flex gap-6 text-sm text-[rgb(var(--color-fg-muted))]">
                 <a href="/" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Home</a>
-                <a href="/watch" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Watch</a>
-                <a href="/read" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Read</a>
+                <a href="/browse" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Browse</a>
+                <a href="/search" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Search</a>
               </div>
             </div>
             <div className="mt-8 pt-8 border-t border-[rgba(var(--color-fg-primary),0.1)] text-center text-sm text-[rgb(var(--color-fg-muted))]">

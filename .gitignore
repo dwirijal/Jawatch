@@ -19,3 +19,8 @@ yarn-error.log*
 
 # Local env files
 .env*.local
+.vercel
+.env*
+
+# Seed data (ephemeral, generated from local pg)
+tmp_seed/
