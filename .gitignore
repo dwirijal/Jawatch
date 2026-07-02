@@ -19,3 +19,11 @@ yarn-error.log*
 
 # Local env files
 .env*.local
+.env
+
+# Tracked junk (purged from git, keep ignored)
+/lrt
+let
+
+# Build artifacts
+*.tsbuildinfo
