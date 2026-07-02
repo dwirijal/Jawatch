@@ -2,12 +2,21 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+<<<<<<< Updated upstream
 import { useState } from 'react';
 import { Content } from '@/lib/api';
 
 export function ContentCard({ content }: { content: Content }) {
   const isNew = new Date(content.scraped_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
   const [imgError, setImgError] = useState(false);
+=======
+import { contentType, isWatchable, type Item } from '@/lib/db';
+
+export function ContentCard({ item, index = 0 }: { item: Item; index?: number }) {
+  const ct = contentType(item.type);
+  const href = isWatchable(ct) ? `/watch/${item.slug}` : `/read/${item.slug}`;
+  const topGenre = item.genres?.[0];
+>>>>>>> Stashed changes
 
   return (
     <Link
