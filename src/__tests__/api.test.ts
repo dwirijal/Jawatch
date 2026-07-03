@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getContents, getTrending, getContent, searchContents, getStreams } from '@/lib/api';
+import { getMedia, getTrending, getMediaBySlug, searchMedia, getEpisodes } from '@/lib/api';
 
-// Mock fetch globally
 global.fetch = vi.fn();
 
 describe('API Client', () => {
@@ -9,11 +8,11 @@ describe('API Client', () => {
     vi.clearAllMocks();
   });
 
-  describe('getContents', () => {
-    it('should fetch paginated contents with default params', async () => {
+  describe('getMedia', () => {
+    it('should fetch paginated media with default params', async () => {
       const mockResponse = {
-        data: [{ id: 1, title: 'Test', content_type: 'anime' }],
-        meta: { page: 1, limit: 20, total: 1, has_next: false },
+        data: [{ slug: 'test', type: 'anime', title: 'Test', createdAt: '', updatedAt: '' }],
+        meta: { pagination: { hasMore: false, limit: 20, total: 1 } },
         error: null,
       };
 
@@ -22,24 +21,25 @@ describe('API Client', () => {
         json: async () => mockResponse,
       });
 
-      const result = await getContents();
+      const result = await getMedia();
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/contents'),
+        expect.stringContaining('/v1/media'),
         expect.objectContaining({
           headers: { Accept: 'application/json' },
         })
       );
-      expect(result).toEqual(mockResponse);
+      expect(result.data).toHaveLength(1);
+      expect(result.total).toBe(1);
     });
 
     it('should include query params when provided', async () => {
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: [], meta: {}, error: null }),
+        json: async () => ({ data: [], meta: { pagination: {} }, error: null }),
       });
 
-      await getContents('anime', 2, 10);
+      await getMedia('anime', 2, 10);
 
       const call = (global.fetch as any).mock.calls[0][0];
       expect(call).toContain('type=anime');
@@ -54,16 +54,17 @@ describe('API Client', () => {
         statusText: 'Internal Server Error',
       });
 
-      const result = await getContents();
-      expect(result).toEqual({});
+      const result = await getMedia();
+      expect(result.data).toEqual([]);
+      expect(result.total).toBe(0);
     });
   });
 
   describe('getTrending', () => {
-    it('should fetch trending contents', async () => {
+    it('should fetch trending media', async () => {
       const mockResponse = {
-        data: [{ id: 1, title: 'Trending' }],
-        meta: { limit: 10, total: 1 },
+        data: [{ slug: 'trend', type: 'anime', title: 'Trending', createdAt: '', updatedAt: '' }],
+        meta: { pagination: { limit: 10, total: 1 } },
         error: null,
       };
 
@@ -75,21 +76,21 @@ describe('API Client', () => {
       const result = await getTrending('anime', 10);
 
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/trending'),
+        expect.stringContaining('/v1/media/trending'),
         expect.any(Object)
       );
-      expect(result).toEqual(mockResponse);
+      expect(result).toHaveLength(1);
     });
   });
 
-  describe('searchContents', () => {
+  describe('searchMedia', () => {
     it('should include search query in request', async () => {
       (global.fetch as any).mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: [], meta: { query: 'test', total: 0 }, error: null }),
+        json: async () => ({ data: [], meta: { pagination: { total: 0 } }, error: null }),
       });
 
-      await searchContents('test', 20);
+      await searchMedia('test', 20);
 
       const call = (global.fetch as any).mock.calls[0][0];
       expect(call).toContain('q=test');
@@ -97,18 +98,18 @@ describe('API Client', () => {
     });
   });
 
-  describe('fetchApi error handling', () => {
-    it('should return empty object on network error', async () => {
+  describe('error handling', () => {
+    it('should return empty on network error', async () => {
       (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
 
-      const result = await getContents();
-      expect(result).toEqual({});
+      const result = await getMedia();
+      expect(result.data).toEqual([]);
     });
 
-    it('should return empty array for list endpoints on error', async () => {
+    it('should return empty array for episodes on error', async () => {
       (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
 
-      const result = await getStreams(1);
+      const result = await getEpisodes('test-slug');
       expect(result).toEqual([]);
     });
   });

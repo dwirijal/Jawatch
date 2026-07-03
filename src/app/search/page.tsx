@@ -1,5 +1,4 @@
-import { searchContents } from '@/lib/api';
-import { ContentCard } from '@/components/ContentCard';
+import { searchMedia } from '@/lib/api';
 
 export default async function SearchPage({
   searchParams,
@@ -8,9 +7,14 @@ export default async function SearchPage({
 }) {
   const params = await searchParams;
   const query = params.q || '';
-  const result = query ? await searchContents(query, 50) : { data: [], meta: { query: '', total: 0 }, error: null };
+  const result = query ? await searchMedia(query, 50) : { data: [], total: 0 };
   const contents = result.data || [];
-  const total = result.meta?.total || 0;
+  const total = result.total || 0;
+
+  const getRoute = (type: string, slug: string) => {
+    if (type === 'anime' || type === 'donghua' || type === 'movie') return `/watch/${slug}`;
+    return `/read/${slug}`;
+  };
 
   return (
     <div className="min-h-screen bg-[rgb(var(--color-bg-primary))] text-[rgb(var(--color-fg-primary))]">
@@ -54,7 +58,21 @@ export default async function SearchPage({
             {contents.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {contents.map((content) => (
-                  <ContentCard key={content.id} content={content} />
+                  <a key={content.slug} href={getRoute(content.type, content.slug)} className="group block">
+                    <div className="aspect-[2/3] bg-[rgb(var(--color-bg-secondary))] rounded-lg overflow-hidden mb-3 relative">
+                      {content.coverImage ? (
+                        <img src={content.coverImage} alt={content.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-secondary))] to-[rgb(var(--color-bg-elevated))]">
+                          <svg className="w-16 h-16 text-[rgb(var(--color-fg-muted))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="text-[rgb(var(--color-fg-primary))] font-semibold text-sm line-clamp-2">{content.title}</h3>
+                    <p className="text-[rgb(var(--color-fg-secondary))] text-xs mt-1">{new Date(content.createdAt).getFullYear()}</p>
+                  </a>
                 ))}
               </div>
             ) : (
@@ -66,10 +84,7 @@ export default async function SearchPage({
                 <p className="text-[rgb(var(--color-fg-secondary))] mb-4">
                   Try adjusting your search or browse our catalog
                 </p>
-                <a
-                  href="/"
-                  className="inline-block px-6 py-3 bg-[rgb(var(--color-accent))] hover:bg-[rgb(var(--color-accent-hover))] text-[rgb(var(--color-fg-primary))] rounded-lg font-semibold transition-colors"
-                >
+                <a href="/" className="inline-block px-6 py-3 bg-[rgb(var(--color-accent))] hover:bg-[rgb(var(--color-accent-hover))] text-[rgb(var(--color-fg-primary))] rounded-lg font-semibold transition-colors">
                   Browse Catalog
                 </a>
               </div>

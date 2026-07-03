@@ -1,14 +1,14 @@
-import { getFullContent } from '@/lib/api';
+import { getMediaBySlug, getEpisodes, getEpisodeSources } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default async function WatchPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: idStr } = await params;
-  const id = Number(idStr);
-  const fullContent = await getFullContent(id);
+export const dynamicParams = true;
 
-  // Handle content not found
-  if (!fullContent || !fullContent.id) {
+export default async function WatchPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: slug } = await params;
+  const content = await getMediaBySlug(slug);
+
+  if (!content) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
         <div className="w-24 h-24 rounded-full bg-[rgb(var(--color-bg-secondary))] flex items-center justify-center mb-6">
@@ -20,67 +20,40 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
         <p className="text-[rgb(var(--color-fg-secondary))] mb-8 max-w-md">
           We couldn&apos;t find the content you&apos;re looking for. It may have been removed or doesn&apos;t exist yet.
         </p>
-        <Link
-          href="/"
-          className="px-6 py-3 bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))] rounded-lg font-semibold hover:bg-[rgb(var(--color-accent-hover))] transition-colors"
-        >
+        <Link href="/" className="px-6 py-3 bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))] rounded-lg font-semibold hover:bg-[rgb(var(--color-accent-hover))] transition-colors">
           Browse Catalog
         </Link>
       </div>
     );
   }
 
-  const content = fullContent;
-  const streams = fullContent.streams || [];
-  const downloads = fullContent.downloads || [];
-
-  // Group streams by episode
-  const byEpisode = new Map<number, typeof streams>();
-  for (const s of streams) {
-    const list = byEpisode.get(s.episode) || [];
-    list.push(s);
-    byEpisode.set(s.episode, list);
-  }
-
-  const episodes = Array.from(byEpisode.entries()).sort(([a], [b]) => a - b);
-  const currentEpisode = episodes[0]?.[0] || 1;
-  const currentStreams = byEpisode.get(currentEpisode) || [];
+  const episodes = await getEpisodes(slug);
+  const firstEp = episodes[0];
+  const sources = firstEp ? await getEpisodeSources(slug, firstEp.slug) : [];
+  const videoUrl = sources[0]?.url;
 
   return (
     <div className="min-h-screen">
       {/* Cinematic Header */}
       <div className="relative bg-gradient-to-b from-[rgb(var(--color-bg-secondary))] to-[rgb(var(--color-bg-primary))]">
         <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-8">
-          {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-[rgb(var(--color-fg-muted))] mb-6">
-            <Link href="/" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">
-              Home
-            </Link>
+            <Link href="/" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Home</Link>
             <span>/</span>
-            <Link href="/watch" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">
-              Anime
-            </Link>
+            <Link href="/" className="hover:text-[rgb(var(--color-fg-primary))] transition-colors">Watch</Link>
             <span>/</span>
             <span className="text-[rgb(var(--color-fg-primary))]">{content.title}</span>
           </div>
 
-          {/* Title and Meta */}
           <div className="flex flex-col md:flex-row gap-8 mb-8">
-            {/* Cover */}
-            {content.cover_url && (
+            {content.coverImage && (
               <div className="flex-shrink-0">
                 <div className="relative w-48 md:w-64 aspect-[2/3] rounded-lg overflow-hidden shadow-2xl">
-                  <Image
-                    src={content.cover_url}
-                    alt={content.title}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={content.coverImage} alt={content.title} fill className="object-cover" />
                 </div>
               </div>
             )}
 
-            {/* Info */}
             <div className="flex-1">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 heading-display text-[rgb(var(--color-fg-primary))]">
                 {content.title}
@@ -88,202 +61,91 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
 
               <div className="flex flex-wrap items-center gap-4 mb-6">
                 <span className="px-3 py-1 bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))] text-xs font-bold uppercase tracking-wider rounded">
-                  {content.content_type}
+                  {content.type}
                 </span>
-                {episodes.length > 0 && (
-                  <span className="text-[rgb(var(--color-fg-muted))] text-sm">
-                    {episodes.length} Episode{episodes.length !== 1 ? 's' : ''}
+                {content.status && (
+                  <span className="px-3 py-1 bg-[rgb(var(--color-fg-primary))]/10 text-[rgb(var(--color-fg-primary))] text-xs font-semibold uppercase tracking-wider rounded">
+                    {content.status}
                   </span>
                 )}
+                {content.rating?.average ? (
+                  <span className="flex items-center gap-1 text-[rgb(var(--color-fg-secondary))]">
+                    <svg className="w-5 h-5 text-[rgb(var(--color-accent))]" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    {content.rating.average.toFixed(1)}
+                  </span>
+                ) : null}
+                <span className="text-[rgb(var(--color-fg-secondary))] text-sm">
+                  {new Date(content.createdAt).getFullYear()}
+                </span>
               </div>
 
-              {content.description && (
-                <p className="text-[rgb(var(--color-fg-secondary))] text-lg leading-relaxed mb-6 line-clamp-4">
-                  {content.description}
+              {content.genres && content.genres.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {content.genres.map(g => (
+                    <span key={g.slug} className="px-3 py-1 bg-[rgb(var(--color-fg-primary))]/5 text-[rgb(var(--color-fg-secondary))] text-xs rounded-full">
+                      {g.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {content.synopsis && (
+                <p className="text-[rgb(var(--color-fg-secondary))] text-base leading-relaxed mb-8 max-w-2xl">
+                  {content.synopsis}
                 </p>
+              )}
+
+              {videoUrl && (
+                <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] font-bold rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                  </svg>
+                  Watch Episode 1
+                </a>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content - Two Column Layout */}
-      <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 py-8">
-        {episodes.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Video Player / Stream Section */}
-            <div className="lg:col-span-2">
-              <div className="bg-[rgb(var(--color-bg-secondary))] rounded-xl overflow-hidden shadow-2xl mb-8">
-                {/* Episode Selector */}
-                <div className="bg-[rgb(var(--color-bg-elevated))] px-6 py-4 border-b border-[rgba(var(--color-fg-primary),0.1)]">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-[rgb(var(--color-fg-primary))]">
-                      Episode {currentEpisode}
-                    </h3>
-                    <div className="flex gap-1">
-                      {episodes.map(([ep]) => (
-                        <a
-                          key={ep}
-                          href={`#episode-${ep}`}
-                          className={`px-3 py-1.5 text-sm font-semibold rounded transition-colors ${
-                            ep === currentEpisode
-                              ? 'bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))]'
-                              : 'bg-gray-700 text-[rgb(var(--color-fg-secondary))] hover:bg-[rgb(var(--color-bg-elevated))]'
-                          }`}
-                        >
-                          {ep}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+      {/* Video Player */}
+      {videoUrl && (
+        <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 mb-8">
+          <div className="aspect-video bg-black rounded-lg overflow-hidden">
+            {videoUrl.endsWith('.m3u8') ? (
+              <iframe src={videoUrl} className="w-full h-full" allowFullScreen />
+            ) : (
+              <video src={videoUrl} controls className="w-full h-full" />
+            )}
+          </div>
+        </div>
+      )}
 
-                {/* Stream Links */}
-                <div className="p-6">
-                  <div className="space-y-3">
-                    {currentStreams.map((stream, index) => (
-                      <a
-                        key={stream.id}
-                        href={stream.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center justify-between p-4 rounded-lg transition-all ${
-                          index === 0
-                            ? 'bg-[rgb(var(--color-accent))] hover:bg-[rgb(var(--color-accent-hover))] text-[rgb(var(--color-fg-primary))]'
-                            : 'bg-[rgb(var(--color-bg-elevated))] hover:bg-[rgb(var(--color-bg-elevated))] text-[rgb(var(--color-fg-primary))]'
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <svg
-                            className="w-8 h-8"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                          </svg>
-                          <div>
-                            <p className="font-semibold">
-                              {stream.quality || 'Stream'}
-                            </p>
-                            <p className="text-xs opacity-60">
-                              Click to open in new tab
-                            </p>
-                          </div>
-                        </div>
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </a>
-                    ))}
+      {/* Episode List */}
+      {episodes.length > 0 && (
+        <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-24 pb-16">
+          <h2 className="text-2xl font-bold text-[rgb(var(--color-fg-primary))] mb-6">Episodes</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {episodes.map((ep, i) => (
+              <div key={`${ep.slug}-${i}`} className="p-4 bg-[rgb(var(--color-bg-secondary))] rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 flex items-center justify-center bg-[rgb(var(--color-accent))] rounded-lg text-[rgb(var(--color-fg-primary))] font-bold">
+                    {ep.episodeNumber || i + 1}
+                  </div>
+                  <div>
+                    <h3 className="text-[rgb(var(--color-fg-primary))] font-semibold">Episode {ep.episodeNumber || i + 1}</h3>
+                    <p className="text-[rgb(var(--color-fg-muted))] text-xs">
+                      {new Date(ep.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               </div>
-
-              {/* Downloads Section */}
-              {downloads.length > 0 && (
-                <div className="bg-[rgb(var(--color-bg-secondary))] rounded-xl overflow-hidden shadow-2xl">
-                  <div className="bg-[rgb(var(--color-bg-elevated))] px-6 py-4 border-b border-[rgba(var(--color-fg-primary),0.1)]">
-                    <h3 className="text-xl font-bold text-[rgb(var(--color-fg-primary))] flex items-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      Downloads
-                    </h3>
-                  </div>
-                  <div className="p-6">
-                    <div className="space-y-3">
-                      {downloads.map((d) => (
-                        <a
-                          key={d.id}
-                          href={d.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-4 bg-[rgb(var(--color-bg-elevated))] rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors"
-                        >
-                          <div className="flex items-center gap-4">
-                            <svg className="w-6 h-6 text-[rgb(var(--color-fg-muted))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <div>
-                              <p className="font-semibold text-[rgb(var(--color-fg-primary))]">
-                                Episode {d.episode}
-                              </p>
-                              <p className="text-sm text-[rgb(var(--color-fg-muted))]">{d.label || 'Download Link'}</p>
-                            </div>
-                          </div>
-                          <svg className="w-5 h-5 text-[rgb(var(--color-fg-muted))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Sticky Episode Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-[rgb(var(--color-bg-secondary))] rounded-xl overflow-hidden shadow-2xl sticky top-24">
-                <div className="bg-[rgb(var(--color-bg-elevated))] px-6 py-4 border-b border-[rgba(var(--color-fg-primary),0.1)]">
-                  <h3 className="text-xl font-bold text-[rgb(var(--color-fg-primary))]">All Episodes</h3>
-                </div>
-                <div className="max-h-[500px] overflow-y-auto content-row">
-                  {episodes.map(([ep, strms]) => (
-                    <a
-                      key={ep}
-                      href={`#episode-${ep}`}
-                      className={`block p-4 border-b border-gray-800 hover:bg-[rgb(var(--color-bg-elevated))] transition-colors cursor-pointer ${
-                        ep === currentEpisode ? 'bg-[rgb(var(--color-bg-elevated))] border-l-2 border-l-red-600' : ''
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="font-semibold text-[rgb(var(--color-fg-primary))] text-sm">
-                          Episode {ep}
-                        </p>
-                        {strms.length > 0 && (
-                          <span className="text-xs text-[rgb(var(--color-accent))] font-bold">{strms.length}</span>
-                        )}
-                      </div>
-                      <p className="text-xs text-[rgb(var(--color-fg-muted))]">
-                        {strms.length} stream{strms.length !== 1 ? 's' : ''} available
-                      </p>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
-            <div className="w-24 h-24 rounded-full bg-[rgb(var(--color-bg-secondary))] flex items-center justify-center mb-6">
-              <svg className="w-12 h-12 text-[rgb(var(--color-fg-muted))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[rgb(var(--color-fg-primary))] mb-2">No Streams Available</h2>
-            <p className="text-[rgb(var(--color-fg-secondary))] text-lg mb-8 max-w-md">
-              This content hasn&apos;t been fully scraped yet. Our system is working on it. Please check back later or try a different title.
-            </p>
-            <Link
-              href="/"
-              className="px-6 py-3 bg-[rgb(var(--color-accent))] text-[rgb(var(--color-fg-primary))] rounded-lg font-semibold hover:bg-[rgb(var(--color-accent-hover))] transition-colors"
-            >
-              Browse Other Titles
-            </Link>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

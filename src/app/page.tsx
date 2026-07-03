@@ -1,60 +1,44 @@
-import { getContents } from '@/lib/api';
+import { getMedia } from '@/lib/api';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default async function HomePage() {
-  const response = await getContents(undefined, 1, 60);
-  const contents = response.data || [];
+  const { data: contents } = await getMedia(undefined, 1, 60);
 
-  const anime = contents.filter(c => c.content_type === 'anime');
-  const manga = contents.filter(c => c.content_type === 'manga');
-  const donghua = contents.filter(c => c.content_type === 'donghua');
-  const comic = contents.filter(c => c.content_type === 'comic');
-  const novel = contents.filter(c => c.content_type === 'novel');
-  const movie = contents.filter(c => c.content_type === 'movie');
+  const anime = contents.filter(c => c.type === 'anime');
+  const manga = contents.filter(c => c.type === 'manga');
+  const donghua = contents.filter(c => c.type === 'donghua');
+  const comic = contents.filter(c => c.type === 'comic');
+  const novel = contents.filter(c => c.type === 'novel');
+  const movie = contents.filter(c => c.type === 'movie');
 
-  // Hero content (first featured item)
   const heroContent = contents[0];
 
-  // Helper to check if content is "new" (scraped within last 7 days)
-  const isNew = (scrapedAt: string) => {
-    const scraped = new Date(scrapedAt);
+  const isNew = (createdAt: string) => {
+    const created = new Date(createdAt);
     const now = new Date();
-    const diffDays = Math.floor((now.getTime() - scraped.getTime()) / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
     return diffDays <= 7;
   };
 
-  // Helper to get content type label
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
-      anime: 'Anime',
-      manga: 'Manga',
-      donghua: 'Donghua',
-      comic: 'Comic',
-      novel: 'Novel',
-      movie: 'Movie',
-      other: 'Other'
+      anime: 'Anime', manga: 'Manga', donghua: 'Donghua',
+      comic: 'Comic', novel: 'Novel', movie: 'Movie', other: 'Other'
     };
     return labels[type] || 'Other';
   };
 
-  // Helper to get route based on type
-  const getRoute = (type: string, id: number) => {
-    if (type === 'anime' || type === 'donghua' || type === 'movie') {
-      return `/watch/${id}`;
-    }
-    return `/read/${id}`;
+  const getRoute = (type: string, slug: string) => {
+    if (type === 'anime' || type === 'donghua' || type === 'movie') return `/watch/${slug}`;
+    return `/read/${slug}`;
   };
 
-  // Helper to get action text
   const getActionText = (type: string) => {
-    if (type === 'anime' || type === 'donghua' || type === 'movie') {
-      return 'Watch Now';
-    }
+    if (type === 'anime' || type === 'donghua' || type === 'movie') return 'Watch Now';
     return 'Read Now';
   };
 
-  // Helper to get icon
   const getIcon = (type: string) => {
     if (type === 'anime' || type === 'donghua' || type === 'movie') {
       return (
@@ -70,7 +54,6 @@ export default async function HomePage() {
     );
   };
 
-  // Render a content section
   const renderSection = (title: string, subtitle: string, items: typeof contents, isGrid: boolean) => {
     if (items.length === 0) return null;
 
@@ -104,25 +87,25 @@ export default async function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {items.slice(0, 15).map((item, index) => (
                 <Link
-                  key={item.id}
-                  href={getRoute(item.content_type, item.id)}
+                  key={item.slug}
+                  href={getRoute(item.type, item.slug)}
                   className="content-card group"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="aspect-[2/3] bg-[rgb(var(--color-bg-secondary))] rounded-lg overflow-hidden mb-3 relative">
-                    {item.cover_url ? (
+                    {item.coverImage ? (
                       <Image
-                        src={item.cover_url}
+                        src={item.coverImage}
                         alt={item.title}
                         fill
                         className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-elevated))] to-[rgb(var(--color-bg-secondary))]">
-                        {getIcon(item.content_type)}
+                        {getIcon(item.type)}
                       </div>
                     )}
-                    {isNew(item.scraped_at) && (
+                    {isNew(item.createdAt) && (
                       <div className="absolute top-2 right-2 px-2 py-1 bg-[rgb(var(--color-success))] text-[rgb(var(--color-fg-primary))] text-xs font-bold rounded">
                         NEW
                       </div>
@@ -130,13 +113,13 @@ export default async function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.95)] via-[rgba(var(--color-bg-primary),0.6)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
                       <h4 className="text-[rgb(var(--color-fg-primary))] font-bold text-base mb-2 line-clamp-2">{item.title}</h4>
                       <div className="flex items-center gap-2 text-sm text-[rgb(var(--color-fg-secondary))] mb-3">
-                        <span>{new Date(item.scraped_at).getFullYear()}</span>
+                        <span>{new Date(item.createdAt).getFullYear()}</span>
                         <span className="w-1 h-1 bg-[rgb(var(--color-fg-subtle))] rounded-full"></span>
-                        <span>{getTypeLabel(item.content_type)}</span>
+                        <span>{getTypeLabel(item.type)}</span>
                       </div>
                       <button className="flex items-center justify-center gap-1 px-3 py-2 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] text-sm font-semibold rounded hover:bg-[rgb(var(--color-bg-elevated))] transition-colors">
-                        {getIcon(item.content_type)}
-                        {getActionText(item.content_type)}
+                        {getIcon(item.type)}
+                        {getActionText(item.type)}
                       </button>
                     </div>
                   </div>
@@ -148,25 +131,25 @@ export default async function HomePage() {
           <div className="content-row flex gap-4 overflow-x-auto pb-4 px-8 md:px-16 lg:px-24 snap-x snap-mandatory">
             {items.slice(0, 15).map((item, index) => (
               <Link
-                key={item.id}
-                href={getRoute(item.content_type, item.id)}
+                key={item.slug}
+                href={getRoute(item.type, item.slug)}
                 className="content-card flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] group snap-start"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="aspect-video bg-[rgb(var(--color-bg-secondary))] rounded-lg overflow-hidden mb-3 relative">
-                  {item.cover_url ? (
+                  {item.coverImage ? (
                     <Image
-                      src={item.cover_url}
+                      src={item.coverImage}
                       alt={item.title}
                       fill
                       className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-elevated))] to-[rgb(var(--color-bg-secondary))]">
-                      {getIcon(item.content_type)}
+                      {getIcon(item.type)}
                     </div>
                   )}
-                  {isNew(item.scraped_at) && (
+                  {isNew(item.createdAt) && (
                     <div className="absolute top-2 left-2 px-2 py-1 bg-[rgb(var(--color-success))] text-[rgb(var(--color-fg-primary))] text-xs font-bold rounded">
                       NEW
                     </div>
@@ -174,16 +157,16 @@ export default async function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.95)] via-[rgba(var(--color-bg-primary),0.6)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
                     <h4 className="text-[rgb(var(--color-fg-primary))] font-bold text-lg mb-2 line-clamp-2">{item.title}</h4>
                     <div className="flex items-center gap-2 text-sm text-[rgb(var(--color-fg-secondary))] mb-3">
-                      <span>{new Date(item.scraped_at).getFullYear()}</span>
+                      <span>{new Date(item.createdAt).getFullYear()}</span>
                       <span className="w-1 h-1 bg-[rgb(var(--color-fg-subtle))] rounded-full"></span>
-                      <span>{getTypeLabel(item.content_type)}</span>
+                      <span>{getTypeLabel(item.type)}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <button className="flex items-center gap-1 px-3 py-1.5 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] text-sm font-semibold rounded hover:bg-[rgb(var(--color-bg-elevated))] transition-colors">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                         </svg>
-                        {getActionText(item.content_type)}
+                        {getActionText(item.type)}
                       </button>
                       <button className="flex items-center gap-1 px-3 py-1.5 bg-[rgb(var(--color-fg-primary))]/20 text-[rgb(var(--color-fg-primary))] text-sm font-semibold rounded hover:bg-[rgb(var(--color-fg-primary))]/30 transition-colors">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,9 +192,9 @@ export default async function HomePage() {
         <section className="relative h-[85vh] min-h-[600px] mb-12 overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0">
-            {heroContent.cover_url ? (
+            {heroContent.coverImage ? (
               <Image
-                src={heroContent.cover_url}
+                src={heroContent.coverImage}
                 alt={heroContent.title}
                 fill
                 className="object-cover"
@@ -233,9 +216,9 @@ export default async function HomePage() {
                   Featured
                 </span>
                 <span className="px-3 py-1 bg-[rgb(var(--color-fg-primary))]/10 backdrop-blur-sm text-[rgb(var(--color-fg-primary))] text-xs font-semibold uppercase tracking-wider rounded">
-                  {getTypeLabel(heroContent.content_type)}
+                  {getTypeLabel(heroContent.type)}
                 </span>
-                {isNew(heroContent.scraped_at) && (
+                {isNew(heroContent.createdAt) && (
                   <span className="px-3 py-1 bg-[rgb(var(--color-success))] text-[rgb(var(--color-fg-primary))] text-xs font-bold uppercase tracking-wider rounded">
                     New
                   </span>
@@ -250,34 +233,34 @@ export default async function HomePage() {
               {/* Metadata */}
               <div className="flex items-center gap-4 mb-6 text-[rgb(var(--color-fg-secondary))]">
                 <span className="text-sm font-semibold">
-                  {heroContent.year || new Date(heroContent.scraped_at).getFullYear()}
+                  {new Date(heroContent.createdAt).getFullYear()}
                 </span>
                 <span className="w-1 h-1 bg-[rgb(var(--color-fg-subtle))] rounded-full"></span>
                 <span className="text-sm">
-                  {getActionText(heroContent.content_type).replace(' Now', '')}
+                  {getActionText(heroContent.type).replace(' Now', '')}
                 </span>
               </div>
 
               {/* Description */}
-              {heroContent.description && (
+              {heroContent.synopsis && (
                 <p className="text-lg md:text-xl text-[rgb(var(--color-fg-primary))] mb-8 line-clamp-3">
-                  {heroContent.description}
+                  {heroContent.synopsis}
                 </p>
               )}
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4">
                 <Link
-                  href={getRoute(heroContent.content_type, heroContent.id)}
+                  href={getRoute(heroContent.type, heroContent.slug)}
                   className="px-4 sm:px-8 py-4 bg-[rgb(var(--color-fg-primary))] text-[rgb(var(--color-bg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-bg-elevated))] transition-colors flex items-center gap-2"
                 >
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                   </svg>
-                  {getActionText(heroContent.content_type)}
+                  {getActionText(heroContent.type)}
                 </Link>
                 <Link
-                  href={getRoute(heroContent.content_type, heroContent.id)}
+                  href={getRoute(heroContent.type, heroContent.slug)}
                   className="px-4 sm:px-8 py-4 bg-[rgb(var(--color-fg-primary))]/10 backdrop-blur-sm text-[rgb(var(--color-fg-primary))] font-bold text-lg rounded-lg hover:bg-[rgb(var(--color-fg-primary))]/20 transition-colors flex items-center gap-2"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -313,12 +296,6 @@ export default async function HomePage() {
           <p className="text-[rgb(var(--color-fg-secondary))] text-lg mb-8 max-w-md">
             Your library is empty. Start the scraper to populate your streaming collection.
           </p>
-          <div className="bg-[rgb(var(--color-bg-secondary))]/50 border border-gray-800 rounded-lg p-6 max-w-md">
-            <p className="text-sm text-[rgb(var(--color-fg-secondary))] mb-3">Run this command:</p>
-            <code className="block px-4 py-3 bg-[rgb(var(--color-bg-primary))] rounded text-green-400 text-sm font-mono">
-              sudo bash setup.sh
-            </code>
-          </div>
         </div>
       )}
     </div>

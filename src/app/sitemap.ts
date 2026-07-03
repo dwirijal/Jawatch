@@ -1,36 +1,17 @@
-import { getContents } from '@/lib/api';
+import { getMedia } from '@/lib/api';
 
 export default async function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-  // Fetch all content for sitemap
-  const response = await getContents(undefined, 1, 1000);
-  const contents = response.data || [];
-
+  const baseUrl = 'https://jawatch.web.id';
   const staticUrls = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/watch`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/read`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
+    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.5 },
   ];
 
+  const { data: contents } = await getMedia(undefined, 1, 500);
+
   const contentUrls = contents.map((content) => ({
-    url: `${baseUrl}/${content.content_type === 'anime' ? 'watch' : 'read'}/${content.id}`,
-    lastModified: new Date(content.scraped_at),
+    url: `${baseUrl}/${content.type === 'anime' || content.type === 'donghua' || content.type === 'movie' ? 'watch' : 'read'}/${content.slug}`,
+    lastModified: new Date(content.updatedAt || content.createdAt),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));

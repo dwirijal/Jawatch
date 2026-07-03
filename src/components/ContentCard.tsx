@@ -3,21 +3,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Content } from '@/lib/api';
+import { Media } from '@/lib/api';
 
-export function ContentCard({ content }: { content: Content }) {
-  const isNew = new Date(content.scraped_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
+export function ContentCard({ content }: { content: Media }) {
+  const isNew = new Date(content.createdAt).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
   const [imgError, setImgError] = useState(false);
 
   return (
     <Link
-      href={content.content_type === 'anime' ? `/watch/${content.id}` : `/read/${content.id}`}
+      href={content.type === 'anime' || content.type === 'donghua' || content.type === 'movie' ? `/watch/${content.slug}` : `/read/${content.slug}`}
       className="group block"
     >
       <div className="aspect-[2/3] bg-[rgb(var(--color-bg-secondary))] rounded-lg overflow-hidden mb-3 relative">
-        {content.cover_url && !imgError ? (
+        {content.coverImage && !imgError ? (
           <Image
-            src={content.cover_url}
+            src={content.coverImage}
             alt={content.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -31,24 +31,13 @@ export function ContentCard({ content }: { content: Content }) {
           </div>
         )}
         {isNew && (
-          <div className="absolute top-2 right-2 px-2 py-1 bg-[rgb(var(--color-accent))] text-white text-xs font-bold rounded">
+          <div className="absolute top-2 right-2 px-2 py-1 bg-[rgb(var(--color-success))] text-[rgb(var(--color-fg-primary))] text-xs font-bold rounded">
             NEW
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(var(--color-bg-primary),0.9)] via-[rgba(var(--color-bg-primary),0.4)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-          <div className="text-[rgb(var(--color-fg-primary))]">
-            <p className="text-sm font-semibold">
-              {content.content_type === 'anime' ? 'Watch Now' : 'Read Now'}
-            </p>
-            <p className="text-xs text-[rgb(var(--color-fg-secondary))] mt-1">
-              {content.content_type === 'anime' ? 'Stream episodes' : 'Start reading'}
-            </p>
-          </div>
-        </div>
       </div>
-      <h3 className="text-sm font-semibold text-white line-clamp-2 group-hover:text-[rgb(var(--color-accent))] transition-colors">
-        {content.title}
-      </h3>
+      <h3 className="text-[rgb(var(--color-fg-primary))] font-semibold text-sm line-clamp-2">{content.title}</h3>
+      <p className="text-[rgb(var(--color-fg-secondary))] text-xs mt-1">{new Date(content.createdAt).getFullYear()}</p>
     </Link>
   );
 }
