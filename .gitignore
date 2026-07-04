@@ -27,3 +27,5 @@ let
 
 # Build artifacts
 *.tsbuildinfo
+.vercel
+.env*

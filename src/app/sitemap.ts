@@ -1,20 +1,51 @@
+import { MetadataRoute } from 'next';
 import { getMedia } from '@/lib/api';
 
-export default async function sitemap() {
-  const baseUrl = 'https://jawatch.web.id';
-  const staticUrls = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 1 },
-    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.5 },
+export const revalidate = 300; // 5m
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jawatch.web.id';
+  
+  const staticRoutes = [
+    '',
+    '/discover',
+    '/discover/anime',
+    '/discover/manga',
+    '/discover/movie',
+    '/discover/donghua',
+    '/discover/comic',
+    '/discover/novel',
+    '/trending',
+    '/popular',
+    '/latest',
+    '/random',
+    '/search',
+    '/genres',
+    '/library',
+    '/library/bookmarks',
+    '/library/history',
+    '/library/reading-progress',
+    '/library/watch-progress',
+    '/library/lists',
+    '/profile',
+    '/notifications'
   ];
 
-  const { data: contents } = await getMedia(undefined, 1, 500);
+  const { data: mediaItems } = await getMedia(undefined, 1, 500).catch(() => ({ data: [] }));
 
-  const contentUrls = contents.map((content) => ({
-    url: `${baseUrl}/${content.type === 'anime' || content.type === 'donghua' || content.type === 'movie' ? 'watch' : 'read'}/${content.slug}`,
-    lastModified: new Date(content.updatedAt || content.createdAt),
+  const dynamicRoutes = mediaItems.map((item) => ({
+    url: `${baseUrl}/media/${item.slug}`,
+    lastModified: new Date(item.updatedAt || item.createdAt || new Date()),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
 
-  return [...staticUrls, ...contentUrls];
+  const statics = staticRoutes.map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: route === '' ? 1.0 : 0.5,
+  }));
+
+  return [...statics, ...dynamicRoutes];
 }
