@@ -1,8 +1,12 @@
 {
   "framework": "nextjs",
-  "regions": ["sin1"],
-  "installCommand": "npm install --frozen-lockfile",
+  "regions": [
+    "sin1"
+  ],
+  "installCommand": "bun install --frozen-lockfile",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://api.karepmuwes.my.id"
+    "NEXT_PUBLIC_API_URL": "https://api.karepmuwes.my.id",
+    "NEXT_PUBLIC_SANKA_API_URL": "https://www.sankavollerei.web.id",
+    "NEXT_PUBLIC_SANKA_TIMEOUT_MS": "8000"
   }
 }

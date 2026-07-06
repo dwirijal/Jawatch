@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/notifications'
   ];
 
-  const { data: mediaItems } = await getMedia(undefined, 1, 500).catch(() => ({ data: [] }));
+  const { data: mediaItems } = await getMedia(undefined, 1, 120).catch(() => ({ data: [] }));
 
   const dynamicRoutes = mediaItems.map((item) => ({
     url: `${baseUrl}/media/${item.slug}`,

@@ -1,0 +1,83 @@
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('next/image', () => ({
+  default: ({ alt = '', ...props }: any) => <img alt={alt} {...props} />,
+}));
+
+vi.mock('@/components/VideoPlayer', () => ({
+  VideoPlayer: ({ episodes, initialEpIndex }: any) => (
+    <div data-testid="video-player-props">
+      {initialEpIndex}:{episodes.map((episode: any) => episode.slug).join(',')}
+    </div>
+  ),
+}));
+
+vi.mock('@/lib/api', () => ({
+  getMediaBySlug: vi.fn(),
+  getEpisodeSources: vi.fn(),
+  getEpisodes: vi.fn(),
+  getChapters: vi.fn(),
+  getMediaRelated: vi.fn(),
+}));
+
+const api = await import('@/lib/api');
+const media = {
+  slug: 'anime-slug',
+  type: 'anime' as const,
+  title: 'Night Signal',
+  synopsis: 'A signal in the dark.',
+  coverImage: 'https://image.test/cover.jpg',
+  status: 'ongoing',
+  createdAt: '',
+  updatedAt: '',
+};
+const episodes = [
+  { slug: 'episode-1', episodeNumber: 1, title: 'Opening Night', createdAt: '' },
+  { slug: 'episode-2', episodeNumber: 2, title: 'Second Signal', createdAt: '' },
+];
+
+describe('watch-room pages', () => {
+  it('passes the real episode list and matching index to the episode player', async () => {
+    vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
+    vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
+    vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
+    const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
+
+    render(await EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'episode-2' }) }));
+
+    expect(screen.getByTestId('video-player-props')).toHaveTextContent('1:episode-1,episode-2');
+  });
+
+  it('falls back to the current episode when the queue fails', async () => {
+    vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
+    vi.mocked(api.getEpisodes).mockRejectedValue(new Error('queue down'));
+    vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
+    const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
+
+    render(await EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'episode-2' }) }));
+
+    expect(screen.getByTestId('video-player-props')).toHaveTextContent('0:episode-2');
+  });
+
+  it('returns not found when the current episode does not exist', async () => {
+    vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
+    vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
+    vi.mocked(api.getEpisodeSources).mockRejectedValue(new Error('Sanka /anime/episode/not-real: data tidak ditemukan'));
+    const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
+
+    await expect(EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'not-real' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
+  });
+
+  it('renders a start watching CTA on video media details', async () => {
+    vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
+    vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
+    vi.mocked(api.getMediaRelated).mockResolvedValue([]);
+    const { default: MediaPage } = await import('@/app/media/[slug]/page');
+
+    render(await MediaPage({ params: Promise.resolve({ slug: 'anime-slug' }) }));
+
+    expect(screen.getByRole('link', { name: /start watching/i })).toHaveAttribute('href', '/media/anime-slug/episodes/episode-1');
+  });
+});

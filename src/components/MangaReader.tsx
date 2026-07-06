@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { Chapter, ChapterPage } from '@/lib/api';
+import { getChapterPages, type Chapter, type ChapterPage } from '@/lib/api';
 
 interface Props {
   slug: string;
@@ -14,32 +14,31 @@ export function MangaReader({ slug, chapters, initialPages }: Props) {
   const [pages, setPages] = useState(initialPages);
   const [loading, setLoading] = useState(false);
   const [showList, setShowList] = useState(false);
+  const [error, setError] = useState('');
 
   const switchChapter = useCallback(async (idx: number) => {
-	if (idx === chIndex) return;
-	setLoading(true);
-	const ch = chapters[idx];
-	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/media/${slug}/chapters/${ch.slug}/pages`);
-		const json = await res.json();
-		const newPages = Array.isArray(json.data) ? json.data : (json.data ? [json.data] : []);
-		setPages(newPages);
-		setChIndex(idx);
-		setShowList(false);
-		window.scrollTo({ top: 0, behavior: 'smooth' });
-	} catch {
-		// keep old pages
-	} finally {
-		setLoading(false);
-	}
-}, [chIndex, chapters, slug]);
+    if (idx === chIndex) return;
+    setLoading(true);
+    setError('');
+    const ch = chapters[idx];
+    try {
+      const newPages = await getChapterPages(slug, ch.slug);
+      setPages(newPages);
+      setChIndex(idx);
+      setShowList(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {
+      setError('Gagal memuat chapter. Halaman lama tetap ditampilkan.');
+    } finally {
+      setLoading(false);
+    }
+  }, [chIndex, chapters, slug]);
 
-useEffect(() => {
-	if (chIndex < chapters.length - 1) {
-		const nextCh = chapters[chIndex + 1];
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/media/${slug}/chapters/${nextCh.slug}/pages`).catch(() => {});
-	}
-}, [chIndex, chapters, slug]);
+  useEffect(() => {
+    if (chIndex >= chapters.length - 1) return;
+    const nextCh = chapters[chIndex + 1];
+    getChapterPages(slug, nextCh.slug).catch(() => {});
+  }, [chIndex, chapters, slug]);
 
 
   return (
@@ -74,6 +73,10 @@ useEffect(() => {
             </button>
           ))}
         </div>
+      )}
+
+      {error && (
+        <p className="text-xs text-red-400" role="alert">{error}</p>
       )}
 
       {/* Pages */}

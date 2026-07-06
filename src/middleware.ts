@@ -5,7 +5,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8484';
 
 async function checkNSFW(slug: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/v1/media/${slug}`, {
+    const res = await fetch(`${API_BASE}/v1/jw/media/${slug}`, {
       headers: { 'Accept': 'application/json' },
       cache: 'no-store'
     });
@@ -31,6 +31,8 @@ export async function middleware(request: NextRequest) {
   const mediaMatch = pathname.match(/^\/media\/([^\/]+)/);
   if (mediaMatch) {
     const slug = mediaMatch[1];
+    if (slug.includes('~')) return NextResponse.next();
+
     const isNSFW = await checkNSFW(slug);
     
     if (isNSFW && !isAuthenticated(request)) {

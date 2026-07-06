@@ -1,58 +1,40 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { ContentCard } from '@/components/ContentCard';
 import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { ContentCard } from '@/components/ContentCard';
 
 describe('ContentCard Component', () => {
   const mockContent = {
-    id: 1,
+    slug: 'attack-on-titan',
+    type: 'anime' as const,
     title: 'Attack on Titan',
-    content_type: 'anime' as const,
-    cover_url: 'https://example.com/cover.jpg',
-    scraped_at: new Date().toISOString(),
-    last_scraped_at: new Date().toISOString(),
-    source_id: 1,
+    coverImage: 'https://example.com/cover.jpg',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
-  it('should render content title', () => {
+  it('renders content title', () => {
     render(<ContentCard content={mockContent} />);
-
     expect(screen.getByText('Attack on Titan')).toBeInTheDocument();
   });
 
-  it('should show "Watch Now" for anime content', () => {
+  it('links anime content to watch route', () => {
     render(<ContentCard content={mockContent} />);
-
-    expect(screen.getByText('Watch Now')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/watch/attack-on-titan');
   });
 
-  it('should show "Read Now" for manga content', () => {
-    const mangaContent = {
-      ...mockContent,
-      content_type: 'manga' as const,
-    };
-
-    render(<ContentCard content={mangaContent} />);
-
-    expect(screen.getByText('Read Now')).toBeInTheDocument();
+  it('links manga content to read route', () => {
+    render(<ContentCard content={{ ...mockContent, slug: 'attack-on-titan-manga', type: 'manga' }} />);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/read/attack-on-titan-manga');
   });
 
-  it('should link to /watch/{id} for anime', () => {
+  it('renders content type label in overlay', () => {
     render(<ContentCard content={mockContent} />);
-
-    const link = screen.getByRole('link');
-    expect(link.getAttribute('href')).toBe('/watch/1');
+    expect(screen.getByText('anime')).toBeInTheDocument();
   });
 
-  it('should link to /read/{id} for manga', () => {
-    const mangaContent = {
-      ...mockContent,
-      content_type: 'manga' as const,
-    };
-
-    render(<ContentCard content={mangaContent} />);
-
-    const link = screen.getByRole('link');
-    expect(link.getAttribute('href')).toBe('/read/1');
+  it('shows new badge for recently created content', () => {
+    render(<ContentCard content={mockContent} />);
+    expect(screen.getByText('NEW')).toBeInTheDocument();
   });
 });

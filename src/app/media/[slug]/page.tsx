@@ -1,6 +1,7 @@
 import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated } from '@/lib/api';
 import { Badge, Button, Tabs, Gauge, Strip } from '@/components/ui';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export default async function MediaPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -42,6 +43,14 @@ export default async function MediaPage({ params }: { params: Promise<{ slug: st
 
         <div className="mt-8">
           <p className="text-muted leading-relaxed max-w-[640px] mb-8">{content.synopsis}</p>
+          {isVideo && items.length > 0 && (
+            <Link
+              href={`/media/${slug}/episodes/${items[0].slug}`}
+              className="mb-8 inline-block border border-amber px-[26px] py-[13px] font-mono text-xs uppercase tracking-[.06em] text-amber transition-colors duration-150 hover:bg-amber hover:text-void"
+            >
+              Start watching
+            </Link>
+          )}
           <Strip items={items.map((it: any, i: number) => ({
              number: `${isVideo ? 'EP' : 'CH'} ${it.episodeNumber || it.chapterNumber || i + 1}`,
              name: it.title || 'Untitled',

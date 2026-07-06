@@ -29,3 +29,7 @@ let
 *.tsbuildinfo
 .vercel
 .env*
+
+# Local Claude artifacts
+.claude/
+.superpowers/

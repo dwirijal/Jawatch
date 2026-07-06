@@ -22,27 +22,59 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable}`}>
       <body className="bg-void text-paper font-sans antialiased min-h-screen flex flex-col">
-        <header className="border-b border-hairline bg-void/80 backdrop-blur sticky top-0 z-50">
-          <div className="max-w-[1160px] mx-auto px-8 h-16 flex items-center justify-between">
-            <Link href="/" className="font-serif text-xl font-bold tracking-tight text-amber hover:opacity-80 transition-opacity">
-              jawatch
+        {/* Sticky Nav */}
+        <header className="sticky top-0 z-50 border-b border-hairline bg-void/85 backdrop-blur-md">
+          <div className="max-w-[1160px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+            {/* Logo */}
+            <Link href="/" className="font-serif text-xl font-bold tracking-tight text-amber hover:opacity-80 transition-opacity shrink-0">
+              <span className="hidden sm:inline">jawatch</span>
+              <span className="sm:hidden text-base">jw</span>
             </Link>
-            <nav className="flex items-center gap-6 font-mono text-xs uppercase tracking-wider">
+
+            {/* Search bar */}
+            <form action="/search" className="flex-1 max-w-[420px] relative">
+              <input
+                name="q"
+                type="search"
+                placeholder="Search titles..."
+                className="w-full bg-surface border border-hairline rounded-[4px] px-3.5 py-2 text-[13px] font-mono text-paper placeholder:text-muted/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
+              />
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </form>
+
+            {/* Nav links */}
+            <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-[.08em]">
               <Link href="/discover" className="text-muted hover:text-paper transition-colors">Discover</Link>
               <Link href="/trending" className="text-muted hover:text-paper transition-colors">Trending</Link>
               <Link href="/popular" className="text-muted hover:text-paper transition-colors">Popular</Link>
               <Link href="/latest" className="text-muted hover:text-paper transition-colors">Latest</Link>
-              <Link href="/library" className="text-muted hover:text-paper transition-colors">Library</Link>
+              <Link href="/random" className="text-muted hover:text-amber transition-colors">🎲</Link>
             </nav>
+
+            {/* Mobile hamburger placeholder */}
+            <div className="md:hidden">
+              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-[.08em] text-teal-bright hover:text-amber transition-colors">
+                Browse
+              </Link>
+            </div>
           </div>
         </header>
+
+        {/* Main */}
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-hairline py-8 bg-surface mt-auto">
-          <div className="max-w-[1160px] mx-auto px-8 flex justify-between items-center font-mono text-[10px] text-muted">
-            <div>© {new Date().getFullYear()} JAWATCH. ALL RIGHTS RESERVED.</div>
-            <div className="flex gap-4">
-              <Link href="/genres" className="hover:text-paper transition-colors">GENRES</Link>
-              <Link href="/random" className="hover:text-paper transition-colors">RANDOM</Link>
+
+        {/* Footer */}
+        <footer className="border-t border-hairline mt-20">
+          <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="font-mono text-[11px] text-muted">
+              jawatch &copy; {new Date().getFullYear()}
+            </div>
+            <div className="flex gap-6 font-mono text-[11px]">
+              <Link href="/sitemap.xml" className="text-muted hover:text-paper transition-colors">Sitemap</Link>
+              <Link href="/discover" className="text-muted hover:text-paper transition-colors">Browse</Link>
+              <Link href="/library" className="text-muted hover:text-paper transition-colors">Library</Link>
             </div>
           </div>
         </footer>
