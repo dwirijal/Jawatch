@@ -22,6 +22,8 @@ export function ContentCard({ content }: { content: Media }) {
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 16vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             onError={() => setImgError(true)}
+            unoptimized
+            referrerPolicy="no-referrer"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[rgb(var(--color-bg-secondary))] to-[rgb(var(--color-bg-elevated))]">

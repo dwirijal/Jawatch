@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { getLatest } from '@/lib/api';
 import { Card } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: 'Latest',
+  description: 'Rilisan terbaru anime, donghua, manga, comic, movie, dan novel di jawatch.',
+  alternates: { canonical: '/latest' },
+};
 
 export default async function LatestPage() {
   const contents = await getLatest(undefined, 60);

@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { getPopular } from '@/lib/api';
 import { Card } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: 'Popular',
+  description: 'Judul populer di jawatch untuk tontonan dan bacaan berikutnya.',
+  alternates: { canonical: '/popular' },
+};
 
 export default async function PopularPage() {
   const contents = await getPopular(60);

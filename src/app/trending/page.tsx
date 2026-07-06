@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { getTrending } from '@/lib/api';
 import { Card } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: 'Trending',
+  description: 'Judul yang sedang ramai ditonton dan dibaca di jawatch.',
+  alternates: { canonical: '/trending' },
+};
 
 export default async function TrendingPage() {
   const contents = await getTrending(undefined, 60);

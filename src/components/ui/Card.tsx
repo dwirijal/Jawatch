@@ -34,6 +34,8 @@ export function Card({
           sizes="(max-width:640px) 50vw, 20vw"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
           onError={() => setImgError(true)}
+          unoptimized
+          referrerPolicy="no-referrer"
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[#2a2530] to-[#141318]" />

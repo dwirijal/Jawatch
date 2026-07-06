@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { getMedia } from '@/lib/api';
 import { Card } from '@/components/ui';
+
+export const metadata: Metadata = {
+  title: 'Discover',
+  description: 'Jelajahi katalog anime, manga, donghua, movie, comic, dan novel di jawatch.',
+  alternates: { canonical: '/discover' },
+};
 
 export default async function DiscoverPage() {
   const { data: contents } = await getMedia(undefined, 1, 60);

@@ -4,10 +4,37 @@ import './globals.css';
 import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jawatch.web.id';
+const siteName = 'jawatch';
+const description = 'Streaming anime, donghua, movie, manga, comic, and novel Indonesia with a cinema-first watch and read experience.';
 
 export const metadata: Metadata = {
-  title: 'jawatch',
-  description: 'Cinematic media streaming & reading platform',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: siteName,
+    template: `%s | ${siteName}`,
+  },
+  description,
+  applicationName: siteName,
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    siteName,
+    title: siteName,
+    description,
+    url: '/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteName,
+    description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {

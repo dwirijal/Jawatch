@@ -93,6 +93,7 @@ export function MangaReader({ slug, chapters, initialPages }: Props) {
               alt={`Page ${i + 1}`}
               className="w-full h-auto"
               loading={i < 3 ? 'eager' : 'lazy'}
+              referrerPolicy="no-referrer"
             />
           ))}
         </div>

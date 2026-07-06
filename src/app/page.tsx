@@ -1,6 +1,7 @@
 import { getMedia } from '@/lib/api';
 import { Card } from '@/components/ui';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const revalidate = 300;
 
@@ -30,10 +31,19 @@ export default async function HomePage() {
     return (
       <section className="relative overflow-hidden min-h-[70vh] sm:min-h-[85vh] flex items-end">
         {/* Parallax poster backdrop */}
-        <div
-          className="absolute inset-0 hero-parallax"
-          style={{ backgroundImage: `url(${heroContent.coverImage})` }}
-        />
+        <div className="absolute inset-0 hero-parallax">
+          {heroContent.coverImage && (
+            <Image
+              src={heroContent.coverImage}
+              alt={heroContent.title}
+              fill
+              className="object-cover opacity-30"
+              unoptimized
+              referrerPolicy="no-referrer"
+              priority
+            />
+          )}
+        </div>
 
         {/* Cinematic gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-void via-void/85 to-void/40" />

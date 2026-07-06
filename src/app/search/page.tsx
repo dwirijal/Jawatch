@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { searchMedia } from '@/lib/api';
 import { ContentCard } from '@/components/ContentCard';
+
+export const metadata: Metadata = {
+  title: 'Search',
+  description: 'Cari anime, manga, donghua, movie, comic, dan novel di jawatch.',
+  alternates: { canonical: '/search' },
+};
 
 export default async function SearchPage({
   searchParams,
