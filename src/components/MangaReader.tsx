@@ -8,10 +8,12 @@ interface Props {
   slug: string;
   chapters: Chapter[];
   initialPages: ChapterPage[];
+  currentChapterSlug: string;
 }
 
-export function MangaReader({ slug, chapters, initialPages }: Props) {
-  const [chIndex, setChIndex] = useState(0);
+export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }: Props) {
+  const initialIdx = chapters.findIndex((c) => c.slug === currentChapterSlug);
+  const [chIndex, setChIndex] = useState(initialIdx !== -1 ? initialIdx : 0);
   const [pages, setPages] = useState(initialPages);
   const [loading, setLoading] = useState(false);
   const [showList, setShowList] = useState(false);
