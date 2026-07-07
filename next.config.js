@@ -12,7 +12,7 @@ const securityHeaders = [
 ]
 
 const nextConfig = {
-  output: 'standalone',
+  // Removed output: 'standalone' to fix Vercel missing module errors
   images: {
     remotePatterns: [
       {
