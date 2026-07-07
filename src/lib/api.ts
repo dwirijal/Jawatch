@@ -1,4 +1,6 @@
-const MEDIA_API_BASE = stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL || 'https://www.sankavollerei.web.id');
+const MEDIA_API_BASE = process.env.JAWATCH_MEDIA_API_URL !== undefined
+  ? stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL)
+  : 'https://www.sankavollerei.web.id';
 const MEDIA_API_TIMEOUT_MS = Number(process.env.JAWATCH_MEDIA_API_TIMEOUT_MS || 8000);
 const EMPTY_DATE = '1970-01-01T00:00:00.000Z';
 
@@ -91,6 +93,10 @@ function mapGenres(list: any[] | undefined | null, key: 'title' | 'name' = 'titl
 
   return list
     .map((item) => {
+      if (typeof item === 'string') {
+        const trimmed = item.trim();
+        return { slug: trimmed.toLowerCase(), name: trimmed };
+      }
       const name = String(item?.[key] || '').trim();
       const slug = String(item?.genreId || item?.slug || item?.value || '').trim();
       if (!name || !slug) return null;
@@ -181,12 +187,14 @@ function baseMedia(type: MediaType, slug: string, title: string, coverImage?: st
   };
 }
 
-function mapAnimeListItem(item: any): Media {
+function mapAnimeListItem(item: any, provider = 'anime'): Media {
+  const slug = item.animeId || item.slug;
+  const score = item.score?.value || item.score;
   return {
-    ...baseMedia('anime', encodeMediaRef('anime', 'anime', item.animeId), item.title, item.poster),
+    ...baseMedia('anime', encodeMediaRef('anime', provider, slug), item.title, item.poster),
     status: item.status,
-    rating: toRating(item.score),
-    genres: mapGenres(item.genreList),
+    rating: toRating(score),
+    genres: mapGenres(item.genreList || item.genres, 'name'),
   };
 }
 
@@ -206,15 +214,50 @@ function mapComicListItem(item: any, provider = 'komikstation'): Media {
 }
 
 function mapAnimeDetail(ref: MediaRef, payload: any): Media {
-  const data = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, payload).data;
+  let data: any;
+  let alternativeTitles: string[] | null = null;
+  let synopsis = '';
+  let status = '';
+  let rating: any;
+  let genres: any[] = [];
+  let studios: any[] | null = null;
+
+  if (ref.provider === 'anime') {
+    data = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, payload).data;
+    alternativeTitles = data.japanese ? [data.japanese] : null;
+    synopsis = Array.isArray(data.synopsis?.paragraphs) ? data.synopsis.paragraphs.join('\n\n') : '';
+    status = data.status;
+    rating = data.score;
+    genres = mapGenres(data.genreList);
+    studios = data.studios ? [{ slug: String(data.studios).toLowerCase().replace(/\s+/g, '-'), name: data.studios }] : null;
+  } else if (ref.provider === 'samehadaku') {
+    data = unwrapUpstreamEnvelope(`/anime/samehadaku/anime/${ref.slug}`, payload).data;
+    alternativeTitles = data.japanese ? [data.japanese] : null;
+    synopsis = Array.isArray(data.synopsis?.paragraphs) ? data.synopsis.paragraphs.join('\n\n') : '';
+    status = data.status;
+    rating = data.score?.value || data.score;
+    genres = mapGenres(data.genreList);
+    studios = data.studios ? [{ slug: String(data.studios).toLowerCase().replace(/\s+/g, '-'), name: data.studios }] : null;
+  } else if (ref.provider === 'animasu') {
+    data = payload.detail || payload;
+    alternativeTitles = data.synonym ? [data.synonym] : null;
+    synopsis = data.synopsis || '';
+    status = data.status;
+    rating = data.rating;
+    genres = mapGenres(data.genres, 'name');
+    studios = data.studio ? [{ slug: String(data.studio).toLowerCase().replace(/\s+/g, '-'), name: data.studio }] : null;
+  } else {
+    data = payload;
+  }
+
   return {
     ...baseMedia('anime', encodeMediaRef('anime', ref.provider, ref.slug), data.title, data.poster),
-    alternativeTitles: data.japanese ? [data.japanese] : null,
-    synopsis: Array.isArray(data.synopsis?.paragraphs) ? data.synopsis.paragraphs.join('\n\n') : '',
-    status: data.status,
-    rating: toRating(data.score),
-    genres: mapGenres(data.genreList),
-    studios: data.studios ? [{ slug: String(data.studios).toLowerCase().replace(/\s+/g, '-'), name: data.studios }] : null,
+    alternativeTitles,
+    synopsis,
+    status,
+    rating: toRating(rating),
+    genres,
+    studios,
   };
 }
 
@@ -230,28 +273,33 @@ function mapDonghuaDetail(ref: MediaRef, payload: any): Media {
 }
 
 function mapComicDetail(ref: MediaRef, payload: any): Media {
-  const data = ref.provider === 'komikstation'
-    ? unwrapUpstreamEnvelope(`/comic/komikstation/manga/${ref.slug}`, payload)
-    : payload;
+  let data = payload;
+  if (ref.provider === 'komikstation') {
+    data = unwrapUpstreamEnvelope(`/comic/komikstation/manga/${ref.slug}`, payload);
+  } else if (ref.provider === 'komikindo') {
+    data = payload.data || payload;
+  }
+
+  const cover = data.image || data.imageSrc || data.thumbnail;
+  const status = data.status || data.detail?.status;
+  const rating = data.rating;
+  const rawGenres = data.genres;
+  const synopsis = data.synopsis || data.synopsis_full || data.summary || data.description;
+  const author = data.author || data.detail?.author;
 
   return {
-    ...baseMedia('comic', encodeMediaRef('comic', ref.provider, ref.slug), data.title, data.image || data.imageSrc),
-    alternativeTitles: data.alternative ? [data.alternative] : data.title_indonesian ? [data.title_indonesian] : null,
-    synopsis: data.synopsis || data.synopsis_full || data.summary,
-    status: data.status,
-    rating: toRating(data.rating),
-    genres: mapGenres(data.genres, 'name'),
-    authors: data.author ? [{ slug: String(data.author).toLowerCase().replace(/\s+/g, '-'), name: data.author }] : null,
+    ...baseMedia('comic', encodeMediaRef('comic', ref.provider, ref.slug), data.title, cover),
+    alternativeTitles: data.alternative ? [data.alternative] : data.detail?.alternativeTitle ? [data.detail.alternativeTitle] : null,
+    synopsis,
+    status,
+    rating: toRating(rating),
+    genres: mapGenres(rawGenres, 'name'),
+    authors: author ? [{ slug: String(author).toLowerCase().replace(/\s+/g, '-'), name: author }] : null,
   };
 }
 
 function mapAnimeGenreItem(item: any): Media {
-  return {
-    ...baseMedia('anime', encodeMediaRef('anime', 'anime', item.animeId), item.title, item.poster),
-    status: item.status,
-    rating: toRating(item.score),
-    genres: mapGenres(item.genreList),
-  };
+  return mapAnimeListItem(item, 'anime');
 }
 
 function normalizeComicGenreSlug(link: string): string {
@@ -274,7 +322,7 @@ async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<
       const body = unwrapUpstreamEnvelope('/anime/home', await fetchUpstreamJson('/anime/home'));
       const ongoing = Array.isArray(body.data?.ongoing?.animeList) ? body.data.ongoing.animeList : [];
       const completed = Array.isArray(body.data?.completed?.animeList) ? body.data.completed.animeList : [];
-      return [...ongoing, ...completed].map(mapAnimeListItem).slice(0, limit || 20);
+      return [...ongoing, ...completed].map((item: any) => mapAnimeListItem(item, 'anime')).slice(0, limit || 20);
     }
     case 'donghua': {
       const body = unwrapUpstreamEnvelope('/anime/donghub/list', await fetchUpstreamJson('/anime/donghub/list'));
@@ -403,13 +451,19 @@ export async function getMediaBySlug(slug: string): Promise<Media | null> {
   const ref = decodeMediaRef(slug);
   if (!ref) return null;
 
-  if (ref.type === 'anime') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+  if (ref.type === 'anime') {
+    if (ref.provider === 'anime') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+    if (ref.provider === 'samehadaku') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/samehadaku/anime/${ref.slug}`));
+    if (ref.provider === 'animasu') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`));
+  }
   if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
 
   if (ref.type === 'comic') {
     if (ref.provider === 'komikstation') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
     if (ref.provider === 'generic') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/comic/${ref.slug}`));
     if (ref.provider === 'mangasusuku') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/mangasusuku/detail/${ref.slug}`));
+    if (ref.provider === 'kiryuu') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/kiryuu/manga/${ref.slug}`));
+    if (ref.provider === 'komikindo') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikindo/detail/${ref.slug}`));
   }
 
   return null;
@@ -465,7 +519,7 @@ export async function getStudios(): Promise<{ slug: string; name: string }[]> {
 export async function getMediaByStudio(slug: string): Promise<Media[]> {
   try {
     const body = unwrapUpstreamEnvelope(`/anime/animekompi/studio/${slug}`, await fetchUpstreamJson(`/anime/animekompi/studio/${slug}`));
-    return (Array.isArray(body.data) ? body.data : []).map(mapAnimeListItem);
+    return (Array.isArray(body.data) ? body.data : []).map((item: any) => mapAnimeListItem(item, 'anime'));
   } catch (error) {
     if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
     throw error;
@@ -496,13 +550,33 @@ export async function getEpisodes(slug: string): Promise<Episode[]> {
   if (!ref) return [];
 
   if (ref.type === 'anime') {
-    const body = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
-    return (Array.isArray(body.data?.episodeList) ? body.data.episodeList : []).map((item: any, index: number) => ({
-      slug: item.episodeId,
-      episodeNumber: Number(item.eps ?? index + 1) || index + 1,
-      title: item.title,
-      createdAt: EMPTY_DATE,
-    }));
+    if (ref.provider === 'anime') {
+      const body = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+      return (Array.isArray(body.data?.episodeList) ? body.data.episodeList : []).map((item: any, index: number) => ({
+        slug: item.episodeId,
+        episodeNumber: Number(item.eps ?? index + 1) || index + 1,
+        title: item.title,
+        createdAt: EMPTY_DATE,
+      }));
+    }
+    if (ref.provider === 'samehadaku') {
+      const body = unwrapUpstreamEnvelope(`/anime/samehadaku/anime/${ref.slug}`, await fetchUpstreamJson(`/anime/samehadaku/anime/${ref.slug}`));
+      return (Array.isArray(body.data?.episodeList) ? body.data.episodeList : []).map((item: any, index: number) => ({
+        slug: item.episodeId,
+        episodeNumber: Number(item.title) || index + 1,
+        title: `Episode ${item.title}`,
+        createdAt: EMPTY_DATE,
+      }));
+    }
+    if (ref.provider === 'animasu') {
+      const body = await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`);
+      return (Array.isArray(body.episodes) ? body.episodes : []).map((item: any, index: number) => ({
+        slug: item.slug,
+        episodeNumber: chapterNumberFromTitle(item.name, index + 1),
+        title: item.name,
+        createdAt: EMPTY_DATE,
+      }));
+    }
   }
 
   if (ref.type === 'donghua') {
@@ -523,14 +597,34 @@ export async function getEpisodeSources(slug: string, epSlug: string): Promise<E
   if (!ref) return [];
 
   if (ref.type === 'anime') {
-    const body = unwrapUpstreamEnvelope(`/anime/episode/${epSlug}`, await fetchUpstreamJson(`/anime/episode/${epSlug}`));
-    const sources: EpisodeSource[] = [];
+    if (ref.provider === 'anime') {
+      const body = unwrapUpstreamEnvelope(`/anime/episode/${epSlug}`, await fetchUpstreamJson(`/anime/episode/${epSlug}`));
+      const sources: EpisodeSource[] = [];
 
-    if (body.data?.defaultStreamingUrl) {
-      sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
+      if (body.data?.defaultStreamingUrl) {
+        sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
+      }
+
+      return sources;
     }
+    if (ref.provider === 'samehadaku') {
+      const body = unwrapUpstreamEnvelope(`/anime/samehadaku/episode/${epSlug}`, await fetchUpstreamJson(`/anime/samehadaku/episode/${epSlug}`));
+      const sources: EpisodeSource[] = [];
 
-    return sources;
+      if (body.data?.defaultStreamingUrl) {
+        sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
+      }
+
+      return sources;
+    }
+    if (ref.provider === 'animasu') {
+      const body = await fetchUpstreamJson(`/anime/animasu/episode/${epSlug}`);
+      return (Array.isArray(body.streams) ? body.streams : []).map((item: any) => ({
+        url: item.url,
+        label: item.name,
+        quality: String(item.name).split(' ')[0] || 'auto',
+      }));
+    }
   }
 
   if (ref.type === 'donghua') {
@@ -582,6 +676,27 @@ export async function getChapters(slug: string): Promise<Chapter[]> {
     }));
   }
 
+  if (ref.provider === 'kiryuu') {
+    const body = await fetchUpstreamJson(`/comic/kiryuu/manga/${ref.slug}`);
+    return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.title, index + 1),
+      title: item.title,
+      createdAt: toDate(item.date),
+    }));
+  }
+
+  if (ref.provider === 'komikindo') {
+    const body = await fetchUpstreamJson(`/comic/komikindo/detail/${ref.slug}`);
+    const data = body.data || body;
+    return (Array.isArray(data.chapters) ? data.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.title, index + 1),
+      title: item.title,
+      createdAt: toDate(item.releaseTime),
+    }));
+  }
+
   return [];
 }
 
@@ -614,6 +729,23 @@ export async function getChapterPages(slug: string, chSlug: string): Promise<Cha
     }));
   }
 
+  if (ref.provider === 'kiryuu') {
+    const body = await fetchUpstreamJson(`/comic/kiryuu/chapter/${chSlug}`);
+    return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
+      url,
+      pageNumber: index + 1,
+    }));
+  }
+
+  if (ref.provider === 'komikindo') {
+    const body = await fetchUpstreamJson(`/comic/komikindo/chapter/${chSlug}`);
+    const data = body.data || body;
+    return (Array.isArray(data.images) ? data.images : []).map((img: any, index: number) => ({
+      url: img.url || img,
+      pageNumber: index + 1,
+    }));
+  }
+
   return [];
 }
 
@@ -628,16 +760,61 @@ async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
 
 export async function searchMedia(query: string, limit?: number): Promise<{ data: Media[]; total: number }> {
   const encoded = encodeURIComponent(query);
-  const [animeBody, donghuaBody, comicBody] = await Promise.all([
+  const [
+    otakudesuBody,
+    samehadakuBody,
+    animasuBody,
+    donghuaBody,
+    komikstationBody,
+    kiryuuBody,
+    komikindoBody,
+  ] = await Promise.all([
     safeSearchSource(fetchUpstreamJson(`/anime/search/${encoded}`)),
+    safeSearchSource(fetchUpstreamJson(`/anime/samehadaku/search?q=${encoded}`)),
+    safeSearchSource(fetchUpstreamJson(`/anime/animasu/search/${encoded}`)),
     safeSearchSource(fetchUpstreamJson(`/anime/donghub/search/${encoded}`)),
     safeSearchSource(fetchUpstreamJson(`/comic/komikstation/search/${encoded}/1`)),
+    safeSearchSource(fetchUpstreamJson(`/comic/kiryuu/search/${encoded}/1`)),
+    safeSearchSource(fetchUpstreamJson(`/comic/komikindo/search/${encoded}/1`)),
   ]);
 
-  const anime = animeBody ? firstArray(animeBody?.data?.animeList, animeBody?.animeList, animeBody?.data).map(mapAnimeListItem) : [];
-  const donghua = donghuaBody ? firstArray(donghuaBody?.data, donghuaBody?.results, donghuaBody?.animeList).map(mapDonghuaListItem) : [];
-  const comic = comicBody ? firstArray(comicBody?.seriesList, comicBody?.results, comicBody?.data).map((item: any) => mapComicListItem(item, 'komikstation')) : [];
-  const data = [...anime, ...donghua, ...comic].slice(0, limit || 20);
+  const animeOtakudesu = otakudesuBody
+    ? firstArray(otakudesuBody?.data?.animeList, otakudesuBody?.animeList, otakudesuBody?.data).map((item) => mapAnimeListItem(item, 'anime'))
+    : [];
+
+  const animeSamehadaku = samehadakuBody
+    ? firstArray(samehadakuBody?.data?.animeList, samehadakuBody?.animeList, samehadakuBody?.data).map((item) => mapAnimeListItem(item, 'samehadaku'))
+    : [];
+
+  const animeAnimasu = animasuBody
+    ? firstArray(animasuBody?.animes, animasuBody?.data?.animeList, animasuBody?.animeList, animasuBody?.data, animasuBody?.results).map((item) => mapAnimeListItem(item, 'animasu'))
+    : [];
+
+  const donghua = donghuaBody
+    ? firstArray(donghuaBody?.data, donghuaBody?.results, donghuaBody?.animeList).map(mapDonghuaListItem)
+    : [];
+
+  const comicKomikstation = komikstationBody
+    ? firstArray(komikstationBody?.seriesList, komikstationBody?.results, komikstationBody?.data).map((item) => mapComicListItem(item, 'komikstation'))
+    : [];
+
+  const comicKiryuu = kiryuuBody
+    ? firstArray(kiryuuBody?.seriesList, kiryuuBody?.results, kiryuuBody?.mangaList, kiryuuBody?.data).map((item) => mapComicListItem(item, 'kiryuu'))
+    : [];
+
+  const comicKomikindo = komikindoBody
+    ? firstArray(komikindoBody?.komikList, komikindoBody?.results, komikindoBody?.data, komikindoBody?.seriesList).map((item) => mapComicListItem(item, 'komikindo'))
+    : [];
+
+  const data = [
+    ...animeOtakudesu,
+    ...animeSamehadaku,
+    ...animeAnimasu,
+    ...donghua,
+    ...comicKomikstation,
+    ...comicKiryuu,
+    ...comicKomikindo,
+  ].slice(0, limit || 20);
 
   return { data, total: data.length };
 }
