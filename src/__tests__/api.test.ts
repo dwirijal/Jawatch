@@ -90,7 +90,8 @@ describe('API Client', () => {
     setFetchMock(fetchMock);
     const { searchMedia } = await loadApi();
 
-    await expect(searchMedia('one piece', 20)).rejects.toThrow('Media source unavailable');
+    await expect(searchMedia('one piece', 20)).resolves.toEqual({ data: [], total: 0 });
+    expect(fetchMock).toHaveBeenCalled();
   });
 
   it('fans out popular rows across verified comic endpoints', async () => {

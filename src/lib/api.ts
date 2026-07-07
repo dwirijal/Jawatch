@@ -617,17 +617,26 @@ export async function getChapterPages(slug: string, chSlug: string): Promise<Cha
   return [];
 }
 
+async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
+  try {
+    return await promise;
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return null;
+    throw error;
+  }
+}
+
 export async function searchMedia(query: string, limit?: number): Promise<{ data: Media[]; total: number }> {
   const encoded = encodeURIComponent(query);
   const [animeBody, donghuaBody, comicBody] = await Promise.all([
-    fetchUpstreamJson(`/anime/search/${encoded}`),
-    fetchUpstreamJson(`/anime/donghub/search/${encoded}`),
-    fetchUpstreamJson(`/comic/komikstation/search/${encoded}/1`),
+    safeSearchSource(fetchUpstreamJson(`/anime/search/${encoded}`)),
+    safeSearchSource(fetchUpstreamJson(`/anime/donghub/search/${encoded}`)),
+    safeSearchSource(fetchUpstreamJson(`/comic/komikstation/search/${encoded}/1`)),
   ]);
 
-  const anime = firstArray(animeBody?.data?.animeList, animeBody?.animeList, animeBody?.data).map(mapAnimeListItem);
-  const donghua = firstArray(donghuaBody?.data, donghuaBody?.results, donghuaBody?.animeList).map(mapDonghuaListItem);
-  const comic = firstArray(comicBody?.seriesList, comicBody?.results, comicBody?.data).map((item: any) => mapComicListItem(item, 'komikstation'));
+  const anime = animeBody ? firstArray(animeBody?.data?.animeList, animeBody?.animeList, animeBody?.data).map(mapAnimeListItem) : [];
+  const donghua = donghuaBody ? firstArray(donghuaBody?.data, donghuaBody?.results, donghuaBody?.animeList).map(mapDonghuaListItem) : [];
+  const comic = comicBody ? firstArray(comicBody?.seriesList, comicBody?.results, comicBody?.data).map((item: any) => mapComicListItem(item, 'komikstation')) : [];
   const data = [...anime, ...donghua, ...comic].slice(0, limit || 20);
 
   return { data, total: data.length };
