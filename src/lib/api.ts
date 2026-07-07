@@ -1,4 +1,4 @@
-const MEDIA_API_BASE = process.env.JAWATCH_MEDIA_API_URL ? stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL) : '';
+const MEDIA_API_BASE = stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL || (process.env.VERCEL ? 'https://www.sankavollerei.web.id' : ''));
 const MEDIA_API_TIMEOUT_MS = Number(process.env.JAWATCH_MEDIA_API_TIMEOUT_MS || 8000);
 const EMPTY_DATE = '1970-01-01T00:00:00.000Z';
 
