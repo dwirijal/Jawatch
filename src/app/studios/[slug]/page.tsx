@@ -15,7 +15,7 @@ export default async function StudioSlugPage({ params }: { params: Promise<{ slu
         {contents.map((item) => (
           <Card
             key={item.slug}
-            href={(item.type === 'anime' || item.type === 'donghua' || item.type === 'movie') ? `/watch/${item.slug}` : `/read/${item.slug}`}
+            href={`/media/${item.slug}`}
             kind={item.type}
             title={item.title}
             coverImage={item.coverImage}

@@ -1,35 +1,36 @@
+import type { Metadata } from 'next';
 import { getMedia } from '@/lib/api';
-import { Card } from '@/components/ui';
+import { MediaGrid } from '@/components/sections/MediaGrid';
+import { SectionHeader } from '@/components/sections/SectionHeader';
 import { notFound } from 'next/navigation';
 
-export default async function DiscoverTypePage({ params }: { params: Promise<{ type: string }> }) {
-  const { type } = await params;
-  const validTypes = ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'];
+const validTypes = ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'];
 
-  if (!validTypes.includes(type)) {
-    notFound();
-  }
+type Props = { params: Promise<{ type: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { type } = await params;
+
+  if (!validTypes.includes(type)) return { robots: { index: false, follow: false } };
+
+  return {
+    title: `Discover ${type}`,
+    description: `Curated ${type} picks from the jawatch catalog.`,
+    alternates: { canonical: `/discover/${type}` },
+  };
+}
+
+export default async function DiscoverTypePage({ params }: Props) {
+  const { type } = await params;
+
+  if (!validTypes.includes(type)) notFound();
 
   const { data: contents } = await getMedia(type, 1, 60);
 
   return (
-    <div className="max-w-[1160px] mx-auto px-8 py-12">
-      <div className="mb-8">
-        <div className="font-mono text-xs text-amber uppercase tracking-[.1em]">Discover</div>
-        <h1 className="font-serif text-3xl font-semibold text-paper capitalize mt-2">{type}</h1>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-[2px] bg-hairline border border-hairline overflow-hidden">
-        {contents.map((item) => (
-          <Card
-            key={item.slug}
-            href={(item.type === 'anime' || item.type === 'donghua' || item.type === 'movie') ? `/watch/${item.slug}` : `/read/${item.slug}`}
-            kind={item.type}
-            title={item.title}
-            coverImage={item.coverImage}
-          />
-        ))}
-      </div>
+    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+      <SectionHeader eyebrow="Discover" title={type} description={`Curated ${type} picks from the jawatch catalog.`} href="/discover" actionLabel="All formats" />
+      <MediaGrid items={contents} />
     </div>
   );
 }

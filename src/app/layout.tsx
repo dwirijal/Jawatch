@@ -2,29 +2,25 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
+import { siteUrl } from '@/lib/site-url';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jawatch.web.id';
 const siteName = 'jawatch';
 const description = 'Streaming anime, donghua, movie, manga, comic, and novel Indonesia with a cinema-first watch and read experience.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(siteUrl()),
   title: {
     default: siteName,
     template: `%s | ${siteName}`,
   },
   description,
   applicationName: siteName,
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     type: 'website',
     siteName,
     title: siteName,
     description,
-    url: '/',
   },
   twitter: {
     card: 'summary_large_image',

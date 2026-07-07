@@ -1,15 +1,12 @@
 import { MetadataRoute } from 'next';
-
-function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL || 'https://jawatch.web.id').replace(/\/+$/, '');
-}
+import { siteUrl } from '@/lib/site-url';
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/library', '/profile', '/notifications', '/login'],
+      disallow: ['/api', '/library', '/profile', '/notifications', '/login', '/search'],
     },
     sitemap: `${siteUrl()}/sitemap.xml`,
   };

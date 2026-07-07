@@ -1,30 +1,36 @@
 # Jawatch
 
-dwizzyOS media stream frontend. Next.js app router. Queries the avicenna API.
+Standalone Next.js media frontend backed by a server-side media source.
 
 ## Env
 
-```
-NEXT_PUBLIC_API_URL   avicenna base, e.g. http://localhost:8484 (dev) / http://avicenna:8484 (compose)
+```dotenv
+JAWATCH_MEDIA_API_URL=https://media-source.example
+JAWATCH_MEDIA_API_TIMEOUT_MS=8000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-See `.env.example`. Default `http://localhost:8484` if unset.
+See `.env.example`.
 
 ## Routes
 
-```
-/                  home -> getContents
-/search            -> searchContents
-/read/[id]         -> getFullContent (manga)
-/watch/[id]        -> getFullContent (anime)
-/sitemap.xml       -> getContents
+```text
+/                  home
+/discover          catalog browse
+/latest            latest releases
+/search?q=         search results
+/media/[slug]      media detail
+/media/[slug]/episodes/[episodeSlug] video player
+/media/[slug]/chapters/[chapterSlug] reader
+/sitemap.xml       public sitemap
 ```
 
 ## Run
 
-```
+```bash
 cp .env.example .env.local
-npm install
-npm run dev      # http://localhost:3000
-npm run build
+bun install
+bun dev
+bun run test:run
+bun build
 ```

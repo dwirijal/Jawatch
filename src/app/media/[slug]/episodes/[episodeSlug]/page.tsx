@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { getMediaBySlug, getEpisodeSources, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { notFound } from 'next/navigation';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+};
 
 export default async function EpisodePage({ params }: { params: Promise<{ slug: string; episodeSlug: string }> }) {
   const { slug, episodeSlug } = await params;
@@ -9,10 +14,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ slug: 
     getEpisodes(slug)
       .then((items) => ({ items, failed: false }))
       .catch(() => ({ items: [], failed: true })),
-    getEpisodeSources(slug, episodeSlug).catch((error: unknown) => {
-      if (error instanceof Error && error.message.includes('data tidak ditemukan')) return [];
-      throw error;
-    }),
+    getEpisodeSources(slug, episodeSlug).catch(() => []),
   ]);
 
   if (!content || sources.length === 0) notFound();

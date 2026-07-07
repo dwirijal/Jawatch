@@ -1,6 +1,11 @@
+import type { Metadata } from 'next';
 import { getMediaBySlug, getChapterPages } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
 import { notFound } from 'next/navigation';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+};
 
 export default async function ChapterPage({ params }: { params: Promise<{ slug: string; chapterSlug: string }> }) {
   const { slug, chapterSlug } = await params;

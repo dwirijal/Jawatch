@@ -1,5 +1,10 @@
+import type { Metadata } from 'next';
 import { getRandom } from '@/lib/api';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+};
 
 export default async function RandomPage() {
   const content = await getRandom();
@@ -8,9 +13,5 @@ export default async function RandomPage() {
     redirect('/');
   }
 
-  const route = (content.type === 'anime' || content.type === 'donghua' || content.type === 'movie') 
-    ? `/watch/${content.slug}` 
-    : `/read/${content.slug}`;
-
-  redirect(route);
+  redirect(`/media/${content.slug}`);
 }

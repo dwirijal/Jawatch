@@ -1,11 +1,15 @@
+import type { Metadata } from 'next';
+import { EmptyState } from '@/components/sections/EmptyState';
+import { Bell } from 'lucide-react';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function NotificationsPage() {
   return (
-    <div className="max-w-[1160px] mx-auto px-8 py-12">
-      <div className="mb-8">
-        <div className="font-mono text-xs text-amber uppercase tracking-[.1em]">User</div>
-        <h1 className="font-serif text-3xl font-semibold text-paper mt-2">Notifications</h1>
-      </div>
-      <p className="text-muted">Belum ada notifikasi.</p>
+    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+      <EmptyState icon={<Bell className="h-6 w-6" aria-hidden="true" />} eyebrow="Notifications" title="Quiet for now" description="Release alerts need account storage. For now, discover pages are the source of truth." href="/latest" actionLabel="See latest" />
     </div>
   );
 }

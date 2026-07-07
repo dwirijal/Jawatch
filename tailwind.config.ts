@@ -9,6 +9,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        card: {
+          DEFAULT: "rgb(var(--card) / <alpha-value>)",
+          foreground: "rgb(var(--card-foreground) / <alpha-value>)",
+        },
+        muted: {
+          DEFAULT: "rgb(var(--muted) / <alpha-value>)",
+          foreground: "rgb(var(--muted-foreground) / <alpha-value>)",
+        },
+        border: "rgb(var(--border) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+        },
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          foreground: "rgb(var(--accent-foreground) / <alpha-value>)",
+        },
+        destructive: "rgb(var(--destructive) / <alpha-value>)",
         void: "#0B0B0D",
         surface: {
           DEFAULT: "#16151A",
@@ -16,7 +36,6 @@ const config: Config = {
         },
         hairline: "#2C2A32",
         paper: "#F2EFE9",
-        muted: "#8C8A85",
         amber: {
           DEFAULT: "#E8A33D",
           dim: "#8A6529",

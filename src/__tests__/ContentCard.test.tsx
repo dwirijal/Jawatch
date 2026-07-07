@@ -18,14 +18,14 @@ describe('ContentCard Component', () => {
     expect(screen.getByText('Attack on Titan')).toBeInTheDocument();
   });
 
-  it('links anime content to watch route', () => {
+  it('links content to canonical media route', () => {
     render(<ContentCard content={mockContent} />);
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/watch/attack-on-titan');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/media/attack-on-titan');
   });
 
-  it('links manga content to read route', () => {
+  it('uses the same canonical route for readable content', () => {
     render(<ContentCard content={{ ...mockContent, slug: 'attack-on-titan-manga', type: 'manga' }} />);
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/read/attack-on-titan-manga');
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/media/attack-on-titan-manga');
   });
 
   it('renders content type label in overlay', () => {

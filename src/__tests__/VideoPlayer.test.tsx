@@ -2,15 +2,11 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { VideoPlayer } from '@/components/VideoPlayer';
-import { getEpisodeSources } from '@/lib/api';
+import { getEpisodeSourcesClient } from '@/lib/client-media';
 
-vi.mock('@/lib/api', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
-  return {
-    ...actual,
-    getEpisodeSources: vi.fn(),
-  };
-});
+vi.mock('@/lib/client-media', () => ({
+  getEpisodeSourcesClient: vi.fn(),
+}));
 
 const episodes = [
   { slug: 'episode-1', episodeNumber: 1, title: 'Opening Night', createdAt: '' },
@@ -18,7 +14,7 @@ const episodes = [
   { slug: 'episode-3', episodeNumber: 3, title: 'Third Door', createdAt: '' },
 ];
 
-const getEpisodeSourcesMock = vi.mocked(getEpisodeSources);
+const getEpisodeSourcesMock = vi.mocked(getEpisodeSourcesClient);
 
 describe('VideoPlayer watch room', () => {
   beforeEach(() => {
@@ -36,7 +32,7 @@ describe('VideoPlayer watch room', () => {
       />,
     );
 
-    expect(screen.getByText(/now watching/i)).toBeInTheDocument();
+    expect(screen.getByText(/now playing/i)).toBeInTheDocument();
     expect(screen.getByText(/episode 2/i)).toBeInTheDocument();
     expect(screen.getByText('Second Signal')).toBeInTheDocument();
     expect(screen.getByTitle('Second Signal')).toHaveAttribute('src', 'https://player.test/episode-2');

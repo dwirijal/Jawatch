@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/lib/api', () => ({
   getMedia: vi.fn(),
+  getGenres: vi.fn(),
   getMediaBySlug: vi.fn(),
   getChapters: vi.fn(),
   getEpisodes: vi.fn(),
@@ -23,7 +24,9 @@ const media = {
 describe('SEO routes', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://jawatch.test';
+    vi.mocked(api.getGenres).mockResolvedValue([]);
+    process.env.SITE_URL = 'https://jawatch.test';
+    delete process.env.NEXT_PUBLIC_SITE_URL;
   });
 
   it('builds a public-only sitemap with media detail URLs', async () => {
@@ -34,6 +37,8 @@ describe('SEO routes', () => {
 
     expect(urls).toContain('https://jawatch.test/discover');
     expect(urls).toContain('https://jawatch.test/media/anime~anime~night-signal');
+    expect(urls).not.toContain('https://jawatch.test/search');
+    expect(urls).not.toContain('https://jawatch.test/random');
     expect(urls).not.toContain('https://jawatch.test/library');
     expect(urls).not.toContain('https://jawatch.test/profile');
     expect(urls).not.toContain('https://jawatch.test/notifications');
@@ -46,10 +51,22 @@ describe('SEO routes', () => {
       rules: {
         userAgent: '*',
         allow: '/',
-        disallow: ['/library', '/profile', '/notifications', '/login'],
+        disallow: ['/api', '/library', '/profile', '/notifications', '/login', '/search'],
       },
       sitemap: 'https://jawatch.test/sitemap.xml',
     });
+  });
+
+  it('adds genre URLs and dedupes media URLs in the sitemap', async () => {
+    vi.mocked(api.getGenres).mockResolvedValue([{ name: 'Action', slug: 'action' }]);
+    vi.mocked(api.getMedia).mockResolvedValue({ data: [media, media], total: 2, hasMore: false });
+    const { default: sitemap } = await import('@/app/sitemap');
+
+    const urls = (await sitemap()).map((entry) => entry.url);
+
+    expect(urls).toContain('https://jawatch.test/genres/action');
+    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime~anime~night-signal')).toHaveLength(1);
+    expect(api.getMedia).toHaveBeenCalledTimes(1);
   });
 
   it('uses media data for detail metadata', async () => {

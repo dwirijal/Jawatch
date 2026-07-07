@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next';
-import { getMedia } from '@/lib/api';
+import { getGenres, getMedia } from '@/lib/api';
+import { siteUrl } from '@/lib/site-url';
 
 export const revalidate = 300;
+
+const SITEMAP_MEDIA_LIMIT = 1000;
 
 const staticRoutes = [
   { path: '', priority: 1, changeFrequency: 'daily' as const },
@@ -15,19 +18,27 @@ const staticRoutes = [
   { path: '/trending', priority: 0.7, changeFrequency: 'daily' as const },
   { path: '/popular', priority: 0.7, changeFrequency: 'daily' as const },
   { path: '/latest', priority: 0.7, changeFrequency: 'daily' as const },
-  { path: '/random', priority: 0.3, changeFrequency: 'weekly' as const },
-  { path: '/search', priority: 0.3, changeFrequency: 'weekly' as const },
   { path: '/genres', priority: 0.5, changeFrequency: 'weekly' as const },
 ];
 
-function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL || 'https://jawatch.web.id').replace(/\/+$/, '');
+function safeDate(value: string | undefined, fallback: Date): Date {
+  if (!value) return fallback;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? fallback : date;
+}
+
+async function getSitemapMedia() {
+  const { data } = await getMedia(undefined, 1, SITEMAP_MEDIA_LIMIT).catch(() => ({ data: [] }));
+  return [...new Map(data.map((item) => [item.slug, item])).values()];
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteUrl();
   const now = new Date();
-  const { data: mediaItems } = await getMedia(undefined, 1, 120).catch(() => ({ data: [] }));
+  const [mediaItems, genres] = await Promise.all([
+    getSitemapMedia(),
+    getGenres().catch(() => []),
+  ]);
 
   return [
     ...staticRoutes.map((route) => ({
@@ -36,9 +47,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),
+    ...genres.map((genre) => ({
+      url: `${baseUrl}/genres/${genre.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    })),
     ...mediaItems.map((item) => ({
       url: `${baseUrl}/media/${item.slug}`,
-      lastModified: new Date(item.updatedAt || item.createdAt || now),
+      lastModified: safeDate(item.updatedAt || item.createdAt, now),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),

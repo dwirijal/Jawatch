@@ -3,14 +3,14 @@ export function Badge({
   variant = 'default',
 }: {
   children: React.ReactNode;
-  variant?: 'default' | 'amber' | 'teal' | 'solid';
+  variant?: 'default' | 'primary' | 'accent' | 'solid';
 }) {
   const base = 'font-mono text-[10px] tracking-[.07em] uppercase px-[9px] py-1 border rounded-[2px]';
   const styles = {
-    default: 'border-hairline text-muted',
-    amber: 'border-amber-dim text-amber',
-    teal: 'border-teal text-teal-bright',
-    solid: 'bg-amber text-void border-amber',
+    default: 'border-border text-muted-foreground',
+    primary: 'border-primary/60 text-primary',
+    accent: 'border-accent/60 text-accent',
+    solid: 'bg-primary text-primary-foreground border-primary',
   };
   return <span className={`${base} ${styles[variant]}`}>{children}</span>;
 }

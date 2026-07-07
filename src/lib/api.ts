@@ -1,28 +1,26 @@
-const PROXY_API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8484';
-const SANKA_API_BASE = process.env.NEXT_PUBLIC_SANKA_API_URL || 'https://www.sankavollerei.web.id';
-const USE_SANKA = process.env.NEXT_PUBLIC_USE_SANKA === '1';
-const SANKA_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_SANKA_TIMEOUT_MS || 8000);
+const MEDIA_API_BASE = process.env.JAWATCH_MEDIA_API_URL ? stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL) : '';
+const MEDIA_API_TIMEOUT_MS = Number(process.env.JAWATCH_MEDIA_API_TIMEOUT_MS || 8000);
 const EMPTY_DATE = '1970-01-01T00:00:00.000Z';
 
 type MediaType = 'anime' | 'manga' | 'movie' | 'donghua' | 'comic' | 'novel';
 
-type SankaRef = {
+type MediaRef = {
   type: MediaType;
   provider: string;
   slug: string;
 };
 
-class SankaTimeoutError extends Error {
-  constructor(path: string) {
-    super(`Sanka timeout: ${path}`);
-    this.name = 'SankaTimeoutError';
+class MediaApiTimeoutError extends Error {
+  constructor() {
+    super('Media source timeout');
+    this.name = 'MediaApiTimeoutError';
   }
 }
 
-class SankaPreviewError extends Error {
-  constructor(path: string, message: string) {
-    super(`Sanka ${path}: ${message}`);
-    this.name = 'SankaPreviewError';
+class MediaApiError extends Error {
+  constructor(message = 'Media source unavailable') {
+    super(message);
+    this.name = 'MediaApiError';
   }
 }
 
@@ -48,27 +46,34 @@ export interface Chapter { slug: string; chapterNumber: number; title?: string; 
 export interface EpisodeSource { slug?: string; quality?: string; url: string; label?: string; }
 export interface ChapterPage { slug?: string; pageNumber?: number; url: string; }
 
-function encodeSankaSlug(type: MediaType, provider: string, slug: string): string {
-  return `${type}~${provider.replace(/~/g, '-')}~${sankaSlug(slug).replace(/~/g, '-')}`;
+function encodeMediaRef(type: MediaType, provider: string, slug: string): string {
+  return `m~${Buffer.from(JSON.stringify({ type, provider, slug: endpointSlug(slug) })).toString('base64url')}`;
 }
 
-function decodeSankaSlug(slug: string): SankaRef | null {
-  const parts = slug.split('~');
+function decodeMediaRef(value: string): MediaRef | null {
+  if (value.startsWith('m~')) {
+    try {
+      const parsed = JSON.parse(Buffer.from(value.slice(2), 'base64url').toString('utf8'));
+      if (!['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'].includes(parsed?.type)) return null;
+      if (typeof parsed.provider !== 'string' || typeof parsed.slug !== 'string') return null;
+      return { type: parsed.type as MediaType, provider: parsed.provider, slug: parsed.slug };
+    } catch {
+      return null;
+    }
+  }
+
+  const parts = value.split('~');
   if (parts.length < 3) return null;
 
   const [type, provider, ...rest] = parts;
   if (!['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'].includes(type)) return null;
   if (!provider || rest.length === 0) return null;
 
-  return {
-    type: type as MediaType,
-    provider,
-    slug: rest.join('~'),
-  };
+  return { type: type as MediaType, provider, slug: rest.join('~') };
 }
 
 function isTimeoutError(error: unknown): boolean {
-  return error instanceof SankaTimeoutError;
+  return error instanceof MediaApiTimeoutError;
 }
 
 function toDate(value?: string | null): string {
@@ -98,7 +103,7 @@ function stripTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
 }
 
-function sankaSlug(value: string): string {
+function endpointSlug(value: string): string {
   return stripTrailingSlash(String(value || '').trim()).split('/').pop() || '';
 }
 
@@ -109,93 +114,14 @@ function chapterNumberFromTitle(title?: string, fallback = 1): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-async function proxyReq<T>(path: string): Promise<T[]> {
-  try {
-    const res = await fetch(`${PROXY_API_BASE}${path}`, {
-      next: { revalidate: 300 },
-      headers: { Accept: 'application/json' },
-    });
-    if (!res.ok) return [];
-    const body = await res.json();
-    if (!body.data) return [];
-    return Array.isArray(body.data) ? body.data : [body.data];
-  } catch (error) {
-    console.error(`API err: ${path}`, error);
-    return [];
-  }
-}
+async function fetchUpstreamJson(path: string) {
+  if (!MEDIA_API_BASE) throw new MediaApiError();
 
-async function proxyGetMedia(type?: string, page?: number, limit?: number): Promise<{ data: Media[]; total: number; hasMore: boolean }> {
-  const p = new URLSearchParams();
-  if (type) p.set('type', type);
-  if (page) p.set('page', String(page));
-  if (limit) p.set('limit', String(limit));
-  const data = await proxyReq<Media>(`/v1/jw/media?${p.toString()}`);
-  return { data, total: data.length, hasMore: data.length === (limit || 20) };
-}
-
-async function proxyGetTrending(type?: string, limit?: number): Promise<Media[]> {
-  const p = new URLSearchParams();
-  if (type) p.set('type', type);
-  if (limit) p.set('limit', String(limit));
-  return proxyReq<Media>(`/v1/jw/media/trending?${p.toString()}`);
-}
-
-async function proxyGetPopular(limit?: number): Promise<Media[]> {
-  const p = new URLSearchParams();
-  if (limit) p.set('limit', String(limit));
-  return proxyReq<Media>(`/v1/jw/media/popular?${p.toString()}`);
-}
-
-async function proxyGetLatest(type?: string, limit?: number): Promise<Media[]> {
-  const p = new URLSearchParams();
-  if (type) p.set('type', type);
-  if (limit) p.set('limit', String(limit));
-  return proxyReq<Media>(`/v1/jw/media/latest?${p.toString()}`);
-}
-
-async function proxyGetRandom(): Promise<Media | null> {
-  const data = await proxyReq<Media>('/v1/jw/media/random');
-  return data[0] || null;
-}
-
-async function proxyGetMediaBySlug(slug: string): Promise<Media | null> {
-  const data = await proxyReq<Media>(`/v1/jw/media/${slug}`);
-  return data[0] || null;
-}
-
-async function proxyGetGenres(): Promise<{ slug: string; name: string }[]> {
-  return proxyReq<{ slug: string; name: string }>(`/v1/genres`);
-}
-
-async function proxyGetMediaByGenre(slug: string): Promise<Media[]> {
-  return proxyReq<Media>(`/v1/genres/${slug}`);
-}
-
-async function proxyGetStudios(): Promise<{ slug: string; name: string }[]> { return proxyReq<{ slug: string; name: string }>(`/v1/studios`); }
-async function proxyGetMediaByStudio(slug: string): Promise<Media[]> { return proxyReq<Media>(`/v1/studios/${slug}`); }
-async function proxyGetAuthors(): Promise<{ slug: string; name: string }[]> { return proxyReq<{ slug: string; name: string }>(`/v1/authors`); }
-async function proxyGetMediaByAuthor(slug: string): Promise<Media[]> { return proxyReq<Media>(`/v1/authors/${slug}`); }
-async function proxyGetMediaRelated(slug: string): Promise<Media[]> { return proxyReq<Media>(`/v1/jw/media/${slug}/related`); }
-async function proxyGetMediaReviews(slug: string): Promise<any[]> { return proxyReq<any>(`/v1/jw/media/${slug}/reviews`); }
-async function proxyGetMediaComments(slug: string): Promise<any[]> { return proxyReq<any>(`/v1/jw/media/${slug}/comments`); }
-async function proxyGetEpisodes(slug: string): Promise<Episode[]> { return proxyReq<Episode>(`/v1/jw/media/${slug}/episodes`); }
-async function proxyGetEpisodeSources(slug: string, epSlug: string): Promise<EpisodeSource[]> { return proxyReq<EpisodeSource>(`/v1/jw/media/${slug}/episodes/${epSlug}/sources`); }
-async function proxyGetChapters(slug: string): Promise<Chapter[]> { return proxyReq<Chapter>(`/v1/jw/media/${slug}/chapters`); }
-async function proxyGetChapterPages(slug: string, chSlug: string): Promise<ChapterPage[]> { return proxyReq<ChapterPage>(`/v1/jw/media/${slug}/chapters/${chSlug}/pages`); }
-async function proxySearchMedia(query: string, limit?: number): Promise<{ data: Media[]; total: number }> {
-  const p = new URLSearchParams({ q: query });
-  if (limit) p.set('limit', String(limit));
-  const data = await proxyReq<Media>(`/v1/jw/search?${p.toString()}`);
-  return { data, total: data.length };
-}
-
-async function fetchSankaJson(path: string) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), SANKA_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), MEDIA_API_TIMEOUT_MS);
 
   try {
-    const res = await fetch(`${SANKA_API_BASE}${path}`, {
+    const res = await fetch(`${MEDIA_API_BASE}${path}`, {
       headers: { Accept: 'application/json' },
       signal: controller.signal,
       next: { revalidate: 300 },
@@ -207,17 +133,17 @@ async function fetchSankaJson(path: string) {
     try {
       body = text ? JSON.parse(text) : null;
     } catch {
-      throw new SankaPreviewError(path, `non-JSON response (${res.status})`);
+      throw new MediaApiError('Media source returned an invalid response');
     }
 
     if (!res.ok) {
-      throw new SankaPreviewError(path, body?.message || body?.errors?.message || `HTTP ${res.status}`);
+      throw new MediaApiError();
     }
 
     return body;
   } catch (error) {
     if ((error as Error).name === 'AbortError') {
-      throw new SankaTimeoutError(path);
+      throw new MediaApiTimeoutError();
     }
     throw error;
   } finally {
@@ -225,7 +151,7 @@ async function fetchSankaJson(path: string) {
   }
 }
 
-function unwrapSanka(path: string, body: any) {
+function unwrapUpstreamEnvelope(path: string, body: any) {
   const isSuccess =
     body?.status === 'success' ||
     body?.success === true ||
@@ -233,23 +159,15 @@ function unwrapSanka(path: string, body: any) {
     body?.ok === true;
 
   if (!isSuccess) {
-    throw new SankaPreviewError(path, body?.message || body?.errors?.message || 'unexpected envelope');
+    throw new MediaApiError('Unexpected media source envelope');
   }
 
   return body;
 }
 
-async function useSankaOrProxy<T>(sankaFn: () => Promise<T>, proxyFn: () => Promise<T>): Promise<T> {
-  if (!USE_SANKA) return proxyFn();
-
-  try {
-    return await sankaFn();
-  } catch (error) {
-    if (isTimeoutError(error)) {
-      return proxyFn();
-    }
-    throw error;
-  }
+function emptyMediaListOnSourceError(error: unknown): Media[] {
+  if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+  throw error;
 }
 
 function baseMedia(type: MediaType, slug: string, title: string, coverImage?: string): Media {
@@ -265,7 +183,7 @@ function baseMedia(type: MediaType, slug: string, title: string, coverImage?: st
 
 function mapAnimeListItem(item: any): Media {
   return {
-    ...baseMedia('anime', encodeSankaSlug('anime', 'anime', item.animeId), item.title, item.poster),
+    ...baseMedia('anime', encodeMediaRef('anime', 'anime', item.animeId), item.title, item.poster),
     status: item.status,
     rating: toRating(item.score),
     genres: mapGenres(item.genreList),
@@ -274,23 +192,23 @@ function mapAnimeListItem(item: any): Media {
 
 function mapDonghuaListItem(item: any): Media {
   return {
-    ...baseMedia('donghua', encodeSankaSlug('donghua', 'donghub', item.slug), item.title, item.poster),
+    ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), item.title, item.poster),
     status: item.status,
   };
 }
 
 function mapComicListItem(item: any, provider = 'komikstation'): Media {
   return {
-    ...baseMedia('comic', encodeSankaSlug('comic', provider, item.slug), item.title, item.image || item.imageSrc || item.thumbnail),
+    ...baseMedia('comic', encodeMediaRef('comic', provider, item.slug), item.title, item.image || item.imageSrc || item.thumbnail),
     status: item.status,
     rating: toRating(item.rating),
   };
 }
 
-function mapAnimeDetail(ref: SankaRef, payload: any): Media {
-  const data = unwrapSanka(`/anime/anime/${ref.slug}`, payload).data;
+function mapAnimeDetail(ref: MediaRef, payload: any): Media {
+  const data = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, payload).data;
   return {
-    ...baseMedia('anime', encodeSankaSlug('anime', ref.provider, ref.slug), data.title, data.poster),
+    ...baseMedia('anime', encodeMediaRef('anime', ref.provider, ref.slug), data.title, data.poster),
     alternativeTitles: data.japanese ? [data.japanese] : null,
     synopsis: Array.isArray(data.synopsis?.paragraphs) ? data.synopsis.paragraphs.join('\n\n') : '',
     status: data.status,
@@ -300,10 +218,10 @@ function mapAnimeDetail(ref: SankaRef, payload: any): Media {
   };
 }
 
-function mapDonghuaDetail(ref: SankaRef, payload: any): Media {
-  const data = unwrapSanka(`/anime/donghub/detail/${ref.slug}`, payload).data;
+function mapDonghuaDetail(ref: MediaRef, payload: any): Media {
+  const data = unwrapUpstreamEnvelope(`/anime/donghub/detail/${ref.slug}`, payload).data;
   return {
-    ...baseMedia('donghua', encodeSankaSlug('donghua', ref.provider, ref.slug), data.title, data.poster),
+    ...baseMedia('donghua', encodeMediaRef('donghua', ref.provider, ref.slug), data.title, data.poster),
     synopsis: data.synopsis,
     status: data.info?.status,
     genres: mapGenres(data.genres, 'name'),
@@ -311,13 +229,13 @@ function mapDonghuaDetail(ref: SankaRef, payload: any): Media {
   };
 }
 
-function mapComicDetail(ref: SankaRef, payload: any): Media {
+function mapComicDetail(ref: MediaRef, payload: any): Media {
   const data = ref.provider === 'komikstation'
-    ? unwrapSanka(`/comic/komikstation/manga/${ref.slug}`, payload)
+    ? unwrapUpstreamEnvelope(`/comic/komikstation/manga/${ref.slug}`, payload)
     : payload;
 
   return {
-    ...baseMedia('comic', encodeSankaSlug('comic', ref.provider, ref.slug), data.title, data.image || data.imageSrc),
+    ...baseMedia('comic', encodeMediaRef('comic', ref.provider, ref.slug), data.title, data.image || data.imageSrc),
     alternativeTitles: data.alternative ? [data.alternative] : data.title_indonesian ? [data.title_indonesian] : null,
     synopsis: data.synopsis || data.synopsis_full || data.summary,
     status: data.status,
@@ -329,7 +247,7 @@ function mapComicDetail(ref: SankaRef, payload: any): Media {
 
 function mapAnimeGenreItem(item: any): Media {
   return {
-    ...baseMedia('anime', encodeSankaSlug('anime', 'anime', item.animeId), item.title, item.poster),
+    ...baseMedia('anime', encodeMediaRef('anime', 'anime', item.animeId), item.title, item.poster),
     status: item.status,
     rating: toRating(item.score),
     genres: mapGenres(item.genreList),
@@ -344,26 +262,26 @@ function normalizeComicGenreSlug(link: string): string {
 function mapComicGenreItem(item: any): Media {
   const slug = normalizeComicGenreSlug(item.link || '');
   return {
-    ...baseMedia('comic', encodeSankaSlug('comic', 'generic', slug), item.title, item.image),
+    ...baseMedia('comic', encodeMediaRef('comic', 'generic', slug), item.title, item.image),
     status: item.status,
     genres: item.genre ? [{ slug: String(item.genre).toLowerCase(), name: item.genre }] : [],
   };
 }
 
-async function getSankaMediaByType(type: MediaType, limit?: number): Promise<Media[]> {
+async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<Media[]> {
   switch (type) {
     case 'anime': {
-      const body = unwrapSanka('/anime/home', await fetchSankaJson('/anime/home'));
+      const body = unwrapUpstreamEnvelope('/anime/home', await fetchUpstreamJson('/anime/home'));
       const ongoing = Array.isArray(body.data?.ongoing?.animeList) ? body.data.ongoing.animeList : [];
       const completed = Array.isArray(body.data?.completed?.animeList) ? body.data.completed.animeList : [];
       return [...ongoing, ...completed].map(mapAnimeListItem).slice(0, limit || 20);
     }
     case 'donghua': {
-      const body = unwrapSanka('/anime/donghub/list', await fetchSankaJson('/anime/donghub/list'));
+      const body = unwrapUpstreamEnvelope('/anime/donghub/list', await fetchUpstreamJson('/anime/donghub/list'));
       return (Array.isArray(body.data) ? body.data : []).map(mapDonghuaListItem).slice(0, limit || 20);
     }
     case 'comic': {
-      const body = unwrapSanka('/comic/komikstation/list', await fetchSankaJson('/comic/komikstation/list'));
+      const body = unwrapUpstreamEnvelope('/comic/komikstation/list', await fetchUpstreamJson('/comic/komikstation/list'));
       return (Array.isArray(body.results) ? body.results : []).map((item: any) => mapComicListItem(item, 'komikstation')).slice(0, limit || 20);
     }
     default:
@@ -371,143 +289,137 @@ async function getSankaMediaByType(type: MediaType, limit?: number): Promise<Med
   }
 }
 
-async function proxySupplementTypes(limit?: number) {
-  const { data } = await proxyGetMedia(undefined, 1, limit || 20);
-  return data.filter((item) => item.type === 'movie' || item.type === 'novel');
+function emptyMediaPage(): { data: Media[]; total: number; hasMore: boolean } {
+  return { data: [], total: 0, hasMore: false };
+}
+
+function slugFromTitle(title: string): string {
+  return String(title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function firstArray(...values: any[]): any[] {
+  for (const value of values) if (Array.isArray(value)) return value;
+  return [];
+}
+
+async function getComicRecommendations(limit?: number): Promise<Media[]> {
+  const body = await fetchUpstreamJson('/comic/komikstation/recommendation');
+  return firstArray(body.results, body.recommendations, body.mangaList, body.data)
+    .map((item: any) => mapComicListItem(item, 'komikstation'))
+    .slice(0, limit || 20);
+}
+
+async function getTopWeeklyComics(limit?: number): Promise<Media[]> {
+  const body = await fetchUpstreamJson('/comic/komikstation/top-weekly');
+  return firstArray(body.results, body.mangaList, body.data)
+    .map((item: any) => mapComicListItem(item, 'komikstation'))
+    .slice(0, limit || 20);
 }
 
 export async function getMedia(type?: string, page?: number, limit?: number): Promise<{ data: Media[]; total: number; hasMore: boolean }> {
-  if (!USE_SANKA) return proxyGetMedia(type, page, limit);
-
-  if (type === 'movie' || type === 'novel' || type === 'manga') {
-    return proxyGetMedia(type, page, limit);
-  }
-
-  return useSankaOrProxy(async () => {
-    const perTypeLimit = Math.max(1, Math.ceil((limit || 20) / 3));
+  try {
+    const size = limit || 20;
 
     if (type) {
-      const data = await getSankaMediaByType(type as MediaType, limit);
-      return { data, total: data.length, hasMore: data.length === (limit || 20) };
+      const data = await getUpstreamMediaByType(type as MediaType, size);
+      return { data, total: data.length, hasMore: false };
     }
 
-    const [anime, donghua, comic, proxyExtras] = await Promise.all([
-      getSankaMediaByType('anime', perTypeLimit),
-      getSankaMediaByType('donghua', perTypeLimit),
-      getSankaMediaByType('comic', perTypeLimit),
-      proxySupplementTypes(perTypeLimit),
+    const perTypeLimit = Math.max(1, Math.ceil(size / 3));
+    const [anime, donghua, comic] = await Promise.all([
+      getUpstreamMediaByType('anime', perTypeLimit),
+      getUpstreamMediaByType('donghua', perTypeLimit),
+      getUpstreamMediaByType('comic', perTypeLimit),
     ]);
 
-    const data = [...anime, ...donghua, ...comic, ...proxyExtras].slice(0, limit || 20);
-    return { data, total: data.length, hasMore: data.length === (limit || 20) };
-  }, () => proxyGetMedia(type, page, limit));
-}
-
-export async function getTrending(type?: string, limit?: number): Promise<Media[]> {
-  if (!USE_SANKA || type === 'movie' || type === 'novel' || type === 'manga') {
-    return proxyGetTrending(type, limit);
+    const data = [...anime, ...donghua, ...comic].slice(0, size);
+    return { data, total: data.length, hasMore: false };
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return emptyMediaPage();
+    throw error;
   }
-
-  return useSankaOrProxy(async () => {
-    const { data } = await getMedia(type, 1, limit || 20);
-    return data;
-  }, () => proxyGetTrending(type, limit));
 }
 
 export async function getPopular(limit?: number): Promise<Media[]> {
-  if (!USE_SANKA) return proxyGetPopular(limit);
-
-  return useSankaOrProxy(async () => {
-    const [comicBody, proxyExtras] = await Promise.all([
-      fetchSankaJson('/comic/mangasusuku/popular').then((body) => unwrapSanka('/comic/mangasusuku/popular', body)),
-      proxySupplementTypes(limit),
+  try {
+    const size = limit || 20;
+    const [weekly, recommendations, popularBody] = await Promise.all([
+      getTopWeeklyComics(Math.ceil(size / 3)),
+      getComicRecommendations(Math.ceil(size / 3)),
+      fetchUpstreamJson('/comic/mangasusuku/popular'),
     ]);
 
-    const comics = (Array.isArray(comicBody.mangaList) ? comicBody.mangaList : []).map((item: any) => {
-      const slug = String(item.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const popular = firstArray(popularBody.mangaList, popularBody.results, popularBody.data).map((item: any) => {
+      const slug = item.slug || slugFromTitle(item.title);
       return mapComicListItem({ ...item, slug }, 'mangasusuku');
     });
 
-    return [...comics, ...proxyExtras].slice(0, limit || 20);
-  }, () => proxyGetPopular(limit));
+    return [...weekly, ...recommendations, ...popular].slice(0, size);
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+    throw error;
+  }
+}
+
+export async function getTrending(type?: string, limit?: number): Promise<Media[]> {
+  if (type) return getMedia(type, 1, limit || 20).then((result) => result.data);
+  return getPopular(limit);
 }
 
 export async function getLatest(type?: string, limit?: number): Promise<Media[]> {
-  if (!USE_SANKA || type === 'movie' || type === 'novel' || type === 'manga') {
-    return proxyGetLatest(type, limit);
-  }
-
-  return useSankaOrProxy(async () => {
+  try {
     if (type === 'comic') {
-      const body = unwrapSanka('/comic/mangasusuku/latest', await fetchSankaJson('/comic/mangasusuku/latest'));
+      const body = unwrapUpstreamEnvelope('/comic/mangasusuku/latest', await fetchUpstreamJson('/comic/mangasusuku/latest'));
       return (Array.isArray(body.mangaList) ? body.mangaList : []).map((item: any) => {
-        const slug = String(item.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const slug = item.slug || slugFromTitle(item.title);
         return mapComicListItem({ ...item, slug }, 'mangasusuku');
       }).slice(0, limit || 20);
     }
 
     if (type === 'donghua') {
-      const body = unwrapSanka('/anime/donghub/latest', await fetchSankaJson('/anime/donghub/latest'));
+      const body = unwrapUpstreamEnvelope('/anime/donghub/latest', await fetchUpstreamJson('/anime/donghub/latest'));
       const list = Array.isArray(body.data) ? body.data : Array.isArray(body.latest_release) ? body.latest_release : [];
       return list.map((item: any) => ({
-        ...baseMedia('donghua', encodeSankaSlug('donghua', 'donghub', item.slug), item.title, item.poster),
+        ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), item.title, item.poster),
         status: item.status,
       })).slice(0, limit || 20);
     }
 
     const { data } = await getMedia(type, 1, limit || 20);
     return data;
-  }, () => proxyGetLatest(type, limit));
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+    throw error;
+  }
 }
 
 export async function getRandom(): Promise<Media | null> {
-  if (!USE_SANKA) return proxyGetRandom();
-
-  return useSankaOrProxy(async () => {
-    const { data } = await getMedia(undefined, 1, 24);
-    if (data.length === 0) return null;
-    return data[Math.floor(Math.random() * data.length)] || null;
-  }, () => proxyGetRandom());
+  const { data } = await getMedia(undefined, 1, 24);
+  if (data.length === 0) return null;
+  return data[Math.floor(Math.random() * data.length)] || null;
 }
 
 export async function getMediaBySlug(slug: string): Promise<Media | null> {
-  const ref = decodeSankaSlug(slug);
-  if (!USE_SANKA || !ref) return proxyGetMediaBySlug(slug);
+  const ref = decodeMediaRef(slug);
+  if (!ref) return null;
 
-  return useSankaOrProxy(async () => {
-    if (ref.type === 'anime') {
-      return mapAnimeDetail(ref, await fetchSankaJson(`/anime/anime/${ref.slug}`));
-    }
+  if (ref.type === 'anime') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+  if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
 
-    if (ref.type === 'donghua') {
-      return mapDonghuaDetail(ref, await fetchSankaJson(`/anime/donghub/detail/${ref.slug}`));
-    }
+  if (ref.type === 'comic') {
+    if (ref.provider === 'komikstation') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
+    if (ref.provider === 'generic') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/comic/${ref.slug}`));
+    if (ref.provider === 'mangasusuku') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/mangasusuku/detail/${ref.slug}`));
+  }
 
-    if (ref.type === 'comic') {
-      if (ref.provider === 'komikstation') {
-        return mapComicDetail(ref, await fetchSankaJson(`/comic/komikstation/manga/${ref.slug}`));
-      }
-
-      if (ref.provider === 'generic') {
-        return mapComicDetail(ref, await fetchSankaJson(`/comic/comic/${ref.slug}`));
-      }
-
-      if (ref.provider === 'mangasusuku') {
-        return mapComicDetail(ref, await fetchSankaJson(`/comic/mangasusuku/detail/${ref.slug}`));
-      }
-    }
-
-    return proxyGetMediaBySlug(slug);
-  }, () => proxyGetMediaBySlug(slug));
+  return null;
 }
 
 export async function getGenres(): Promise<{ slug: string; name: string }[]> {
-  if (!USE_SANKA) return proxyGetGenres();
-
-  return useSankaOrProxy(async () => {
+  try {
     const [animeBody, comicBody] = await Promise.all([
-      unwrapSanka('/anime/genre', await fetchSankaJson('/anime/genre')),
-      fetchSankaJson('/comic/genres'),
+      unwrapUpstreamEnvelope('/anime/genre', await fetchUpstreamJson('/anime/genre')),
+      fetchUpstreamJson('/comic/genres'),
     ]);
 
     const genres = new Map<string, { slug: string; name: string }>();
@@ -516,208 +428,226 @@ export async function getGenres(): Promise<{ slug: string; name: string }[]> {
     Object.values(comicBody || {}).forEach((item: any) => {
       const slug = String(item?.value || '').trim();
       const name = String(item?.name || '').trim();
-      if (slug && name && !genres.has(slug)) {
-        genres.set(slug, { slug, name });
-      }
+      if (slug && name && !genres.has(slug)) genres.set(slug, { slug, name });
     });
 
     return Array.from(genres.values());
-  }, () => proxyGetGenres());
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+    throw error;
+  }
 }
 
 export async function getMediaByGenre(slug: string): Promise<Media[]> {
-  if (!USE_SANKA) return proxyGetMediaByGenre(slug);
+  const [animeBody, comicBody] = await Promise.all([
+    fetchUpstreamJson(`/anime/genre/${slug}`),
+    fetchUpstreamJson(`/comic/genre/${slug}`),
+  ]);
 
-  return useSankaOrProxy(async () => {
-    const [animeBody, comicBody, proxyItems] = await Promise.all([
-      fetchSankaJson(`/anime/genre/${slug}`),
-      fetchSankaJson(`/comic/genre/${slug}`),
-      proxyGetMediaByGenre(slug),
-    ]);
+  const animeData = unwrapUpstreamEnvelope(`/anime/genre/${slug}`, animeBody).data;
+  const animeItems = (Array.isArray(animeData?.animeList) ? animeData.animeList : []).map(mapAnimeGenreItem);
+  const comicItems = (Array.isArray(comicBody?.comics) ? comicBody.comics : []).map(mapComicGenreItem);
 
-    const animeData = unwrapSanka(`/anime/genre/${slug}`, animeBody).data;
-    const animeItems = (Array.isArray(animeData?.animeList) ? animeData.animeList : []).map(mapAnimeGenreItem);
-
-    const comicItems = (Array.isArray(comicBody?.comics) ? comicBody.comics : []).map(mapComicGenreItem);
-    const proxyExtras = proxyItems.filter((item) => item.type === 'movie' || item.type === 'novel');
-
-    return [...animeItems, ...comicItems, ...proxyExtras];
-  }, () => proxyGetMediaByGenre(slug));
+  return [...animeItems, ...comicItems];
 }
 
-export async function getStudios(): Promise<{ slug: string; name: string }[]> { return proxyGetStudios(); }
-export async function getMediaByStudio(slug: string): Promise<Media[]> { return proxyGetMediaByStudio(slug); }
-export async function getAuthors(): Promise<{ slug: string; name: string }[]> { return proxyGetAuthors(); }
-export async function getMediaByAuthor(slug: string): Promise<Media[]> { return proxyGetMediaByAuthor(slug); }
+export async function getStudios(): Promise<{ slug: string; name: string }[]> {
+  try {
+    const body = unwrapUpstreamEnvelope('/anime/animekompi/studios', await fetchUpstreamJson('/anime/animekompi/studios'));
+    return (Array.isArray(body.data) ? body.data : [])
+      .map((item: any) => ({ slug: String(item?.value || '').trim(), name: String(item?.name || '').trim() }))
+      .filter((item: any) => item.slug && item.name);
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+    throw error;
+  }
+}
+export async function getMediaByStudio(slug: string): Promise<Media[]> {
+  try {
+    const body = unwrapUpstreamEnvelope(`/anime/animekompi/studio/${slug}`, await fetchUpstreamJson(`/anime/animekompi/studio/${slug}`));
+    return (Array.isArray(body.data) ? body.data : []).map(mapAnimeListItem);
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) return [];
+    throw error;
+  }
+}
+export async function getAuthors(): Promise<{ slug: string; name: string }[]> { return []; }
+export async function getMediaByAuthor(slug: string): Promise<Media[]> { return []; }
 export async function getMediaRelated(slug: string): Promise<Media[]> {
-  if (decodeSankaSlug(slug)) return [];
-  return proxyGetMediaRelated(slug);
+  const current = await getMediaBySlug(slug);
+  if (!current) return [];
+  const genres = current.genres?.map(g => g.slug).filter(Boolean) || [];
+  const pools = await Promise.all(genres.slice(0, 3).map((genre) => getMediaByGenre(genre).catch(() => [])));
+  const seen = new Set([current.slug]);
+  const out: Media[] = [];
+  for (const item of pools.flat()) {
+    if (seen.has(item.slug) || item.type !== current.type) continue;
+    seen.add(item.slug);
+    out.push(item);
+    if (out.length >= 12) break;
+  }
+  return out;
 }
-export async function getMediaReviews(slug: string): Promise<any[]> {
-  if (decodeSankaSlug(slug)) return [];
-  return proxyGetMediaReviews(slug);
-}
-export async function getMediaComments(slug: string): Promise<any[]> {
-  if (decodeSankaSlug(slug)) return [];
-  return proxyGetMediaComments(slug);
-}
+export async function getMediaReviews(slug: string): Promise<any[]> { return []; }
+export async function getMediaComments(slug: string): Promise<any[]> { return []; }
 
 export async function getEpisodes(slug: string): Promise<Episode[]> {
-  const ref = decodeSankaSlug(slug);
-  if (!USE_SANKA || !ref) return proxyGetEpisodes(slug);
+  const ref = decodeMediaRef(slug);
+  if (!ref) return [];
 
-  return useSankaOrProxy(async () => {
-    if (ref.type === 'anime') {
-      const body = unwrapSanka(`/anime/anime/${ref.slug}`, await fetchSankaJson(`/anime/anime/${ref.slug}`));
-      return (Array.isArray(body.data?.episodeList) ? body.data.episodeList : []).map((item: any, index: number) => ({
-        slug: item.episodeId,
-        episodeNumber: Number(item.eps ?? index + 1) || index + 1,
-        title: item.title,
-        createdAt: EMPTY_DATE,
-      }));
-    }
+  if (ref.type === 'anime') {
+    const body = unwrapUpstreamEnvelope(`/anime/anime/${ref.slug}`, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+    return (Array.isArray(body.data?.episodeList) ? body.data.episodeList : []).map((item: any, index: number) => ({
+      slug: item.episodeId,
+      episodeNumber: Number(item.eps ?? index + 1) || index + 1,
+      title: item.title,
+      createdAt: EMPTY_DATE,
+    }));
+  }
 
-    if (ref.type === 'donghua') {
-      const body = unwrapSanka(`/anime/donghub/detail/${ref.slug}`, await fetchSankaJson(`/anime/donghub/detail/${ref.slug}`));
-      return (Array.isArray(body.data?.episodes) ? body.data.episodes : []).map((item: any, index: number) => ({
-        slug: item.slug,
-        episodeNumber: Number(item.episode ?? index + 1) || index + 1,
-        title: item.title,
-        createdAt: EMPTY_DATE,
-      }));
-    }
+  if (ref.type === 'donghua') {
+    const body = unwrapUpstreamEnvelope(`/anime/donghub/detail/${ref.slug}`, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
+    return (Array.isArray(body.data?.episodes) ? body.data.episodes : []).map((item: any, index: number) => ({
+      slug: item.slug,
+      episodeNumber: Number(item.episode ?? index + 1) || index + 1,
+      title: item.title,
+      createdAt: EMPTY_DATE,
+    }));
+  }
 
-    return proxyGetEpisodes(slug);
-  }, () => proxyGetEpisodes(slug));
+  return [];
 }
 
 export async function getEpisodeSources(slug: string, epSlug: string): Promise<EpisodeSource[]> {
-  const ref = decodeSankaSlug(slug);
-  if (!USE_SANKA || !ref) return proxyGetEpisodeSources(slug, epSlug);
+  const ref = decodeMediaRef(slug);
+  if (!ref) return [];
 
-  return useSankaOrProxy(async () => {
-    if (ref.type === 'anime') {
-      const body = unwrapSanka(`/anime/episode/${epSlug}`, await fetchSankaJson(`/anime/episode/${epSlug}`));
-      const sources: EpisodeSource[] = [];
+  if (ref.type === 'anime') {
+    const body = unwrapUpstreamEnvelope(`/anime/episode/${epSlug}`, await fetchUpstreamJson(`/anime/episode/${epSlug}`));
+    const sources: EpisodeSource[] = [];
 
-      if (body.data?.defaultStreamingUrl) {
-        sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
-      }
-
-      return sources;
+    if (body.data?.defaultStreamingUrl) {
+      sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
     }
 
-    if (ref.type === 'donghua') {
-      const body = unwrapSanka(`/anime/donghub/episode/${epSlug}`, await fetchSankaJson(`/anime/donghub/episode/${epSlug}`));
-      return (Array.isArray(body.data?.streams) ? body.data.streams : [])
-        .filter((item: any) => item?.url)
-        .map((item: any) => ({
-          url: item.url,
-          label: item.server,
-          quality: item.server,
-        }));
-    }
+    return sources;
+  }
 
-    return proxyGetEpisodeSources(slug, epSlug);
-  }, () => proxyGetEpisodeSources(slug, epSlug));
+  if (ref.type === 'donghua') {
+    const body = unwrapUpstreamEnvelope(`/anime/donghub/episode/${epSlug}`, await fetchUpstreamJson(`/anime/donghub/episode/${epSlug}`));
+    return (Array.isArray(body.data?.streams) ? body.data.streams : [])
+      .filter((item: any) => item?.url)
+      .map((item: any) => ({
+        url: item.url,
+        label: item.server,
+        quality: item.server,
+      }));
+  }
+
+  return [];
 }
 
 export async function getChapters(slug: string): Promise<Chapter[]> {
-  const ref = decodeSankaSlug(slug);
-  if (!USE_SANKA || !ref) return proxyGetChapters(slug);
+  const ref = decodeMediaRef(slug);
+  if (!ref) return [];
+  if (ref.type !== 'comic') return [];
 
-  return useSankaOrProxy(async () => {
-    if (ref.type !== 'comic') {
-      return proxyGetChapters(slug);
-    }
+  if (ref.provider === 'komikstation') {
+    const body = unwrapUpstreamEnvelope(`/comic/komikstation/manga/${ref.slug}`, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
+    return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.title, index + 1),
+      title: item.title,
+      createdAt: toDate(item.date),
+    }));
+  }
 
-    if (ref.provider === 'komikstation') {
-      const body = unwrapSanka(`/comic/komikstation/manga/${ref.slug}`, await fetchSankaJson(`/comic/komikstation/manga/${ref.slug}`));
-      return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
-        slug: stripTrailingSlash(item.slug),
-        chapterNumber: chapterNumberFromTitle(item.title, index + 1),
-        title: item.title,
-        createdAt: toDate(item.date),
-      }));
-    }
+  if (ref.provider === 'generic') {
+    const body = await fetchUpstreamJson(`/comic/comic/${ref.slug}`);
+    return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.chapter, index + 1),
+      title: item.chapter,
+      createdAt: toDate(item.date),
+    }));
+  }
 
-    if (ref.provider === 'generic') {
-      const body = await fetchSankaJson(`/comic/comic/${ref.slug}`);
-      return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
-        slug: stripTrailingSlash(item.slug),
-        chapterNumber: chapterNumberFromTitle(item.chapter, index + 1),
-        title: item.chapter,
-        createdAt: toDate(item.date),
-      }));
-    }
+  if (ref.provider === 'mangasusuku') {
+    const body = unwrapUpstreamEnvelope(`/comic/mangasusuku/detail/${ref.slug}`, await fetchUpstreamJson(`/comic/mangasusuku/detail/${ref.slug}`));
+    return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.title, index + 1),
+      title: item.title,
+      createdAt: toDate(item.date),
+    }));
+  }
 
-    if (ref.provider === 'mangasusuku') {
-      const body = unwrapSanka(`/comic/mangasusuku/detail/${ref.slug}`, await fetchSankaJson(`/comic/mangasusuku/detail/${ref.slug}`));
-      return (Array.isArray(body.chapters) ? body.chapters : []).map((item: any, index: number) => ({
-        slug: stripTrailingSlash(item.slug),
-        chapterNumber: chapterNumberFromTitle(item.title, index + 1),
-        title: item.title,
-        createdAt: toDate(item.date),
-      }));
-    }
-
-    return proxyGetChapters(slug);
-  }, () => proxyGetChapters(slug));
+  return [];
 }
 
 export async function getChapterPages(slug: string, chSlug: string): Promise<ChapterPage[]> {
-  const ref = decodeSankaSlug(slug);
-  if (!USE_SANKA || !ref) return proxyGetChapterPages(slug, chSlug);
+  const ref = decodeMediaRef(slug);
+  if (!ref) return [];
+  if (ref.type !== 'comic') return [];
 
-  return useSankaOrProxy(async () => {
-    if (ref.type !== 'comic') {
-      return proxyGetChapterPages(slug, chSlug);
-    }
+  if (ref.provider === 'komikstation') {
+    const body = unwrapUpstreamEnvelope(`/comic/komikstation/chapter/${chSlug}`, await fetchUpstreamJson(`/comic/komikstation/chapter/${chSlug}`));
+    return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
+      url,
+      pageNumber: index + 1,
+    }));
+  }
 
-    if (ref.provider === 'komikstation') {
-      const body = unwrapSanka(`/comic/komikstation/chapter/${chSlug}`, await fetchSankaJson(`/comic/komikstation/chapter/${chSlug}`));
-      return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
-        url,
-        pageNumber: index + 1,
-      }));
-    }
+  if (ref.provider === 'generic') {
+    const body = await fetchUpstreamJson(`/comic/chapter/${chSlug}`);
+    return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
+      url,
+      pageNumber: index + 1,
+    }));
+  }
 
-    if (ref.provider === 'generic') {
-      const body = await fetchSankaJson(`/comic/chapter/${chSlug}`);
-      return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
-        url,
-        pageNumber: index + 1,
-      }));
-    }
+  if (ref.provider === 'mangasusuku') {
+    const body = unwrapUpstreamEnvelope(`/comic/mangasusuku/chapter/${chSlug}`, await fetchUpstreamJson(`/comic/mangasusuku/chapter/${chSlug}`));
+    return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
+      url,
+      pageNumber: index + 1,
+    }));
+  }
 
-    if (ref.provider === 'mangasusuku') {
-      const body = unwrapSanka(`/comic/mangasusuku/chapter/${chSlug}`, await fetchSankaJson(`/comic/mangasusuku/chapter/${chSlug}`));
-      return (Array.isArray(body.images) ? body.images : []).map((url: string, index: number) => ({
-        url,
-        pageNumber: index + 1,
-      }));
-    }
-
-    return proxyGetChapterPages(slug, chSlug);
-  }, () => proxyGetChapterPages(slug, chSlug));
+  return [];
 }
 
 export async function searchMedia(query: string, limit?: number): Promise<{ data: Media[]; total: number }> {
-  if (!USE_SANKA) return proxySearchMedia(query, limit);
+  const encoded = encodeURIComponent(query);
+  const [animeBody, donghuaBody, comicBody] = await Promise.all([
+    fetchUpstreamJson(`/anime/search/${encoded}`),
+    fetchUpstreamJson(`/anime/donghub/search/${encoded}`),
+    fetchUpstreamJson(`/comic/komikstation/search/${encoded}/1`),
+  ]);
 
-  return useSankaOrProxy(async () => {
-    const encoded = encodeURIComponent(query);
-    const [animeBody, comicBody, proxyResult] = await Promise.all([
-      fetchSankaJson(`/anime/search/${encoded}`),
-      fetchSankaJson(`/comic/komikstation/search/${encoded}/1`),
-      proxySearchMedia(query, limit),
-    ]);
+  const anime = firstArray(animeBody?.data?.animeList, animeBody?.animeList, animeBody?.data).map(mapAnimeListItem);
+  const donghua = firstArray(donghuaBody?.data, donghuaBody?.results, donghuaBody?.animeList).map(mapDonghuaListItem);
+  const comic = firstArray(comicBody?.seriesList, comicBody?.results, comicBody?.data).map((item: any) => mapComicListItem(item, 'komikstation'));
+  const data = [...anime, ...donghua, ...comic].slice(0, limit || 20);
 
-    const anime = (Array.isArray(animeBody?.data?.animeList) ? animeBody.data.animeList : []).map(mapAnimeListItem);
-    const comic = (Array.isArray(comicBody?.seriesList) ? comicBody.seriesList : []).map((item: any) => mapComicListItem(item, 'komikstation'));
-    const proxyExtras = proxyResult.data.filter((item) => item.type === 'movie' || item.type === 'novel');
-    const data = [...anime, ...comic, ...proxyExtras].slice(0, limit || 20);
+  return { data, total: data.length };
+}
 
-    return { data, total: data.length };
-  }, () => proxySearchMedia(query, limit));
+
+export async function getHomeRails(): Promise<Array<{ title: string; href: string; items: Media[] }>> {
+  const [featured, latestDonghua, recommendations, topWeekly, popular] = await Promise.all([
+    getMedia('anime', 1, 15).then((result) => result.data),
+    getLatest('donghua', 15),
+    getComicRecommendations(15).catch(emptyMediaListOnSourceError),
+    getTopWeeklyComics(15).catch(emptyMediaListOnSourceError),
+    getPopular(15),
+  ]);
+
+  return [
+    { title: 'Featured Anime', href: '/discover/anime', items: featured },
+    { title: 'Latest Donghua', href: '/discover/donghua', items: latestDonghua },
+    { title: 'Comic Recommendations', href: '/discover/comic', items: recommendations },
+    { title: 'Top Weekly Comics', href: '/trending', items: topWeekly },
+    { title: 'Popular Comics', href: '/popular', items: popular },
+  ].filter((rail) => rail.items.length > 0);
 }

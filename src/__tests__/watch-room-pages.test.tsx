@@ -64,7 +64,7 @@ describe('watch-room pages', () => {
   it('returns not found when the current episode does not exist', async () => {
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
     vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
-    vi.mocked(api.getEpisodeSources).mockRejectedValue(new Error('Sanka /anime/episode/not-real: data tidak ditemukan'));
+    vi.mocked(api.getEpisodeSources).mockRejectedValue(new Error('Media source unavailable'));
     const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
 
     await expect(EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'not-real' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');

@@ -8,8 +8,7 @@ import { Media } from '@/lib/api';
 export function ContentCard({ content }: { content: Media }) {
   const isNew = new Date(content.createdAt).getTime() > Date.now() - 7 * 86400000;
   const [imgError, setImgError] = useState(false);
-  const href = content.type === 'anime' || content.type === 'donghua' || content.type === 'movie'
-    ? `/watch/${content.slug}` : `/read/${content.slug}`;
+  const href = `/media/${content.slug}`;
 
   return (
     <Link href={href} className="group block">
