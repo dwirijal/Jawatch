@@ -1,10 +1,5 @@
 {
-  "framework": "nextjs",
-  "regions": [
-    "sin1"
-  ],
-  "installCommand": "bun install --frozen-lockfile",
-  "env": {
-    "JAWATCH_MEDIA_API_TIMEOUT_MS": "8000"
-  }
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
+  "framework": "nextjs"
 }
