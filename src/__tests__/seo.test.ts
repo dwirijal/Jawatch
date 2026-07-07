@@ -29,14 +29,24 @@ describe('SEO routes', () => {
     delete process.env.NEXT_PUBLIC_SITE_URL;
   });
 
-  it('builds a public-only sitemap with media detail URLs', async () => {
-    vi.mocked(api.getMedia).mockResolvedValue({ data: [media], total: 1, hasMore: false });
+  it('builds a public-only sitemap with supported discovery routes only', async () => {
+    vi.mocked(api.getGenres).mockResolvedValue([]);
+    vi.mocked(api.getMedia).mockResolvedValue({ data: [], total: 0, hasMore: false });
     const { default: sitemap } = await import('@/app/sitemap');
 
     const urls = (await sitemap()).map((entry) => entry.url);
 
-    expect(urls).toContain('https://jawatch.test/discover');
-    expect(urls).toContain('https://jawatch.test/media/anime~anime~night-signal');
+    expect(urls).toContain('https://jawatch.test/discover/anime');
+    expect(urls).toContain('https://jawatch.test/discover/donghua');
+    expect(urls).toContain('https://jawatch.test/discover/comic');
+    expect(urls).toContain('https://jawatch.test/popular');
+    expect(urls).toContain('https://jawatch.test/latest');
+    expect(urls).toContain('https://jawatch.test/genres');
+
+    expect(urls).not.toContain('https://jawatch.test/discover/manga');
+    expect(urls).not.toContain('https://jawatch.test/discover/movie');
+    expect(urls).not.toContain('https://jawatch.test/discover/novel');
+    expect(urls).not.toContain('https://jawatch.test/trending');
     expect(urls).not.toContain('https://jawatch.test/search');
     expect(urls).not.toContain('https://jawatch.test/random');
     expect(urls).not.toContain('https://jawatch.test/library');
