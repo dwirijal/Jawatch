@@ -99,6 +99,20 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                 ))}
               </div>
             )}
+            {content.studios && content.studios.length > 0 && (
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[9px] uppercase tracking-[.14em] text-muted-foreground/70">Studio</span>
+                {content.studios.map((studio) => (
+                  <Link
+                    key={studio.slug}
+                    href={`/studios/${studio.slug}`}
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
+                    {studio.name}
+                  </Link>
+                ))}
+              </div>
+            )}
             {startHref && (
               <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-[4px] bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-void transition-colors hover:bg-primary/90">
                 {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
