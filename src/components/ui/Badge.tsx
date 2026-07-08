@@ -7,7 +7,7 @@ export function Badge({
 }) {
   const base = 'font-mono text-[10px] tracking-micro uppercase px-[9px] py-1 border rounded-sm';
   const styles = {
-    default: 'border-border text-muted-foreground-foreground',
+    default: 'border-border text-muted-foreground',
     primary: 'border-primary/60 text-primary',
     accent: 'border-accent/60 text-accent',
     solid: 'bg-primary text-primary-foreground border-primary',

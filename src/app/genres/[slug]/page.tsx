@@ -29,7 +29,7 @@ export default async function GenreSlugPage({ params }: Props) {
   return (
     <Container y="48px">
       <SectionHeader eyebrow="Genre" title={title} href="/genres" actionLabel="All genres" />
-      <p className="mb-4 font-mono text-xs text-muted-foreground-foreground">{contents.length} titles</p>
+      <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
       <MediaGrid items={contents} />
     </Container>
   );

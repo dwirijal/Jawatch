@@ -92,7 +92,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   <Link
                     key={genre.slug}
                     href={`/genres/${genre.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {genre.name}
                   </Link>
@@ -101,12 +101,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             )}
             {content.studios && content.studios.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground/70">Studio</span>
+                <span className="font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground/70">Studio</span>
                 {content.studios.map((studio) => (
                   <Link
                     key={studio.slug}
                     href={`/studios/${studio.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {studio.name}
                   </Link>
