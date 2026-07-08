@@ -69,11 +69,11 @@ export default function RootLayout({
 
             {/* Nav links */}
             <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-[.08em]">
-              <Link href="/discover" className="text-muted hover:text-paper transition-colors">Discover</Link>
-              <Link href="/trending" className="text-muted hover:text-paper transition-colors">Trending</Link>
-              <Link href="/popular" className="text-muted hover:text-paper transition-colors">Popular</Link>
-              <Link href="/latest" className="text-muted hover:text-paper transition-colors">Latest</Link>
-              <Link href="/random" className="text-muted hover:text-amber transition-colors">🎲</Link>
+              <Link href="/discover" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Discover</Link>
+              <Link href="/trending" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Trending</Link>
+              <Link href="/popular" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Popular</Link>
+              <Link href="/latest" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Latest</Link>
+              <Link href="/random" className="p-2 min-h-[44px] flex items-center text-muted hover:text-amber transition-colors">🎲</Link>
             </nav>
 
             {/* Mobile hamburger placeholder */}

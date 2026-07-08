@@ -18,7 +18,7 @@ export function SectionHeader({ eyebrow, title, description, href, actionLabel =
         {description && <p className="mt-2 max-w-2xl text-xs text-muted">{description}</p>}
       </div>
       {href && (
-        <Link href={href} className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-amber transition-colors hover:text-amber/80">
+        <Link href={href} className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-amber transition-colors hover:text-amber/80 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 p-2 sm:p-0">
           {actionLabel}
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>

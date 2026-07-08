@@ -18,13 +18,22 @@
     --destructive: 239 68 68;
     --color-bg-primary: var(--background);
     --color-bg-secondary: var(--card);
-    --color-bg-elevated: var(--muted);
+    --color-bg-elevated: var(--card);
     --color-fg-primary: var(--foreground);
     --color-fg-secondary: var(--muted-foreground);
     --color-fg-muted: var(--muted-foreground);
     --color-accent: var(--primary);
     --color-accent-hover: 251 191 36;
     --color-success: var(--accent);
+  }
+
+  * {
+    @apply border;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--primary));
+    outline-offset: 2px;
   }
 
   body {

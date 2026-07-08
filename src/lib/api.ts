@@ -6,11 +6,31 @@ const EMPTY_DATE = '1970-01-01T00:00:00.000Z';
 
 type MediaType = 'anime' | 'manga' | 'movie' | 'donghua' | 'comic' | 'novel';
 
-type MediaRef = {
+export type MediaRef = {
   type: MediaType;
   provider: string;
   slug: string;
 };
+
+const CANONICAL_PROVIDER_SEPARATOR = ';';
+
+function toMediaType(value: unknown): MediaType | null {
+  return typeof value === 'string' && ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'].includes(value)
+    ? value as MediaType
+    : null;
+}
+
+function encodeCanonicalPart(value: string): string {
+  return encodeURIComponent(String(value || '').trim());
+}
+
+function decodeCanonicalPart(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
 
 class MediaApiTimeoutError extends Error {
   constructor() {
@@ -52,13 +72,39 @@ function encodeMediaRef(type: MediaType, provider: string, slug: string): string
   return `m~${Buffer.from(JSON.stringify({ type, provider, slug: endpointSlug(slug) })).toString('base64url')}`;
 }
 
-function decodeMediaRef(value: string): MediaRef | null {
+export function buildCanonicalPath(ref: MediaRef): string {
+  const slug = encodeCanonicalPart(endpointSlug(ref.slug));
+  const provider = String(ref.provider || '').trim();
+  const providerSuffix = provider && provider !== 'generic'
+    ? `${CANONICAL_PROVIDER_SEPARATOR}${encodeCanonicalPart(provider)}`
+    : '';
+  return `/media/${ref.type}/${slug}${providerSuffix}`;
+}
+
+export function decodeMediaRef(value: string): MediaRef | null {
+  const canonicalParts = value.split('/');
+  if (canonicalParts.length === 2) {
+    const type = toMediaType(canonicalParts[0]);
+    if (!type) return null;
+
+    const separatorIndex = canonicalParts[1].indexOf(CANONICAL_PROVIDER_SEPARATOR);
+    const encodedSlug = separatorIndex === -1 ? canonicalParts[1] : canonicalParts[1].slice(0, separatorIndex);
+    const encodedProvider = separatorIndex === -1 ? 'generic' : canonicalParts[1].slice(separatorIndex + 1);
+    const slug = endpointSlug(decodeCanonicalPart(encodedSlug));
+    const provider = decodeCanonicalPart(encodedProvider).trim();
+
+    if (!slug || !provider) return null;
+    return { type, provider, slug };
+  }
+
   if (value.startsWith('m~')) {
     try {
       const parsed = JSON.parse(Buffer.from(value.slice(2), 'base64url').toString('utf8'));
-      if (!['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'].includes(parsed?.type)) return null;
-      if (typeof parsed.provider !== 'string' || typeof parsed.slug !== 'string') return null;
-      return { type: parsed.type as MediaType, provider: parsed.provider, slug: parsed.slug };
+      const type = toMediaType(parsed?.type);
+      if (!type || typeof parsed.provider !== 'string' || typeof parsed.slug !== 'string') return null;
+      const slug = endpointSlug(parsed.slug);
+      if (!slug) return null;
+      return { type, provider: parsed.provider, slug };
     } catch {
       return null;
     }
@@ -67,11 +113,12 @@ function decodeMediaRef(value: string): MediaRef | null {
   const parts = value.split('~');
   if (parts.length < 3) return null;
 
-  const [type, provider, ...rest] = parts;
-  if (!['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'].includes(type)) return null;
-  if (!provider || rest.length === 0) return null;
+  const [rawType, provider, ...rest] = parts;
+  const type = toMediaType(rawType);
+  const slug = endpointSlug(rest.join('~'));
+  if (!type || !provider || !slug) return null;
 
-  return { type: type as MediaType, provider, slug: rest.join('~') };
+  return { type, provider, slug };
 }
 
 function isTimeoutError(error: unknown): boolean {
@@ -122,6 +169,7 @@ function chapterNumberFromTitle(title?: string, fallback = 1): number {
 
 async function fetchUpstreamJson(path: string) {
   if (!MEDIA_API_BASE) throw new MediaApiError();
+  if (!path.startsWith('/')) throw new MediaApiError('Invalid request path');
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), MEDIA_API_TIMEOUT_MS);
