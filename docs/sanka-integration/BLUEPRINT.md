@@ -17,6 +17,25 @@
 - `alqanime` is NOT yet in `PROVIDER_CANDIDATES` — must be registered.
 - NSFW flag currently unused for mangasusuku/nekopoi. **Gap to close.**
 
+## CROSS-SOURCE COLLISION GUARD (hard rule — user note 2026-07-08)
+`/anime/{source}` and `/comic/{source}` trees MIRROR each other: every source exposes near-identical
+detail/search/list/episode endpoints. Risk: two sources return the same title; calling the wrong
+provider's path, or merging payloads across sources, corrupts ownership.
+
+Rules every plan MUST follow:
+1. **Namespace every call by provider.** `registerMedia(type, provider, slug, title)` keys on `provider`.
+   A call to `/anime/alqanime/detail/{slug}` is owned by `alqanime` ONLY — never route it to animasu/samehadaku.
+2. **Dedup at canonical-slug resolution, NOT by merging upstream payloads.** Canonical key = `type|normalized-title`.
+   Two providers returning "Naruto" → ONE `Media`, each with its own `MediaRef` (provider+upstreamSlug).
+   Provider-specific refs are kept; one source's JSON is never blended into another's.
+3. **Each plan names the EXACT provider-prefixed path it calls.** No generic "/anime/detail". Ambiguous = bug.
+4. **`resolveCanonicalRef` picks candidate provider per `PROVIDER_CANDIDATES[type]`** — chosen provider dictates
+   which upstream path is fetched. Surface slug encodes provider; source always known.
+5. **Mirrored paths do NOT share mappers.** `mapAlqanimeDetail` ≠ `mapAnimasuDetail` even if shapes look alike —
+   shapes drift per source; one mapper per source prevents silent field loss.
+
+Endpoint ownership matrix (generated): see `ENDPOINT-OWNERSHIP.md`.
+
 ## Cross-source dedup strategy
 - Canonical key = `type|normalized-title`. `slugFromTitle()` exists; reuse + extend.
 - `registerMedia(type, provider, slug, title)` already dedupes by canonical slug across providers.
