@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { HeroSpotlight } from '@/components/sections/HeroSpotlight';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
-import { getHomeRails } from '@/lib/api';
+import { getHomeRails, getGenres } from '@/lib/api';
 import Link from 'next/link';
 
 export const revalidate = 300;
@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const rails = await getHomeRails();
   const contents = rails.flatMap((rail) => rail.items);
+  const genres = await getGenres();
 
   return (
     <>
@@ -52,6 +53,21 @@ export default async function HomePage() {
             </section>
           ))}
         </div>
+
+        <section className="mt-20">
+          <SectionHeader eyebrow="Browse" title="Genres" href="/genres" />
+          <div className="flex flex-wrap gap-2">
+            {genres.map((genre) => (
+              <Link
+                key={genre.slug}
+                href={`/genres/${genre.slug}`}
+                className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-[.08em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                {genre.name}
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="mt-24 rounded-[4px] border border-border bg-card/40 px-6 py-16 text-center grain relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber/30 to-transparent" />
