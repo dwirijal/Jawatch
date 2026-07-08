@@ -53,7 +53,7 @@ describe('SEO routes', () => {
     expect(urls).toContain('https://jawatch.test/popular');
     expect(urls).toContain('https://jawatch.test/latest');
     expect(urls).toContain('https://jawatch.test/genres');
-    expect(urls).toContain('https://jawatch.test/media/anime/night-signal;anime');
+    expect(urls).toContain('https://jawatch.test/media/anime/night-signal');
 
     expect(urls).not.toContain('https://jawatch.test/discover/manga');
     expect(urls).not.toContain('https://jawatch.test/discover/movie');
@@ -89,10 +89,10 @@ describe('SEO routes', () => {
 
     const entries = await sitemap();
     const urls = entries.map((entry) => entry.url);
-    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date;anime');
+    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date');
 
     expect(urls).toContain('https://jawatch.test/genres/action');
-    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal;anime')).toHaveLength(1);
+    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal')).toHaveLength(1);
     expect(fallbackEntry?.lastModified).not.toEqual(new Date('1970-01-01T00:00:00.000Z'));
     expect(api.getMedia).toHaveBeenCalledTimes(1);
   });
@@ -112,9 +112,9 @@ describe('SEO routes', () => {
 
   it('uses media data for detail metadata', async () => {
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
-    const { generateMetadata } = await import('@/app/media/[slug]/page');
+    const { generateMetadata } = await import('@/app/media/[type]/[slug]/page');
 
-    const metadata = await generateMetadata({ params: Promise.resolve({ slug: media.slug }) });
+    const metadata = await generateMetadata({ params: Promise.resolve({ type: media.type, slug: media.slug }) });
 
     expect(metadata.title).toEqual({ absolute: 'Night Signal | jawatch' });
     expect(metadata.description).toBe('A signal in the dark.');

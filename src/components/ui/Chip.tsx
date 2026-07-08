@@ -1,3 +1,5 @@
+import { radius, space, text } from "./tokens";
+
 export function Chip({
   children,
   active,
@@ -10,11 +12,12 @@ export function Chip({
   return (
     <button
       onClick={onClick}
-      className={`font-sans text-[12.5px] px-[13px] py-[6px] border rounded-[20px] cursor-pointer transition-colors ${
+      className={`font-sans cursor-pointer border transition-colors ${
         active
           ? 'bg-paper text-void border-paper'
           : 'border-border text-foreground hover:border-paper'
       }`}
+      style={{ fontSize: text.chip, padding: `${space.sm} ${space.lg}`, borderRadius: radius.pill }}
     >
       {children}
     </button>

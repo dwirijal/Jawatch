@@ -72,13 +72,106 @@ function encodeMediaRef(type: MediaType, provider: string, slug: string): string
   return `m~${Buffer.from(JSON.stringify({ type, provider, slug: endpointSlug(slug) })).toString('base64url')}`;
 }
 
+const canonicalToRef = new Map<string, MediaRef>();
+const upstreamToCanonical = new Map<string, string>();
+
+const PROVIDER_CANDIDATES: Record<MediaType, string[]> = {
+  anime: ['anime', 'samehadaku', 'animasu'],
+  donghua: ['donghub'],
+  comic: ['komikstation', 'generic', 'mangasusuku', 'kiryuu', 'komikindo'],
+  manga: [],
+  movie: [],
+  novel: [],
+};
+
+export function registerMedia(type: MediaType, provider: string, upstreamSlug: string, title: string): string {
+  const canonicalSlug = slugFromTitle(title);
+  const upstreamKey = `${type}/${provider}/${upstreamSlug}`;
+
+  const existingCanonical = upstreamToCanonical.get(upstreamKey);
+  if (existingCanonical) return existingCanonical;
+
+  const key = `${type}/${canonicalSlug}`;
+  const existingRef = canonicalToRef.get(key);
+
+  if (existingRef && (existingRef.provider !== provider || existingRef.slug !== upstreamSlug)) {
+    const collidedSlug = `${canonicalSlug}--${provider}`;
+    const collidedKey = `${type}/${collidedSlug}`;
+    canonicalToRef.set(collidedKey, { type, provider, slug: upstreamSlug });
+    upstreamToCanonical.set(upstreamKey, collidedSlug);
+    return collidedSlug;
+  } else {
+    canonicalToRef.set(key, { type, provider, slug: upstreamSlug });
+    upstreamToCanonical.set(upstreamKey, canonicalSlug);
+    return canonicalSlug;
+  }
+}
+
+export async function resolveCanonicalRef(type: MediaType, canonicalSlug: string): Promise<MediaRef | null> {
+  const key = `${type}/${canonicalSlug}`;
+  const existing = canonicalToRef.get(key);
+  if (existing) return existing;
+
+  const candidates = PROVIDER_CANDIDATES[type] || [];
+
+  for (const provider of candidates) {
+    if (canonicalSlug.endsWith(`--${provider}`)) {
+      const baseSlug = canonicalSlug.slice(0, -(provider.length + 2));
+      const ref = { type, provider, slug: baseSlug };
+      canonicalToRef.set(key, ref);
+      upstreamToCanonical.set(`${type}/${provider}/${baseSlug}`, canonicalSlug);
+      return ref;
+    }
+  }
+
+  const results = await Promise.allSettled(
+    candidates.map(async (provider) => {
+      const ref = { type, provider, slug: canonicalSlug };
+      const media = await getMediaBySlugInternal(ref);
+      if (media) return ref;
+      throw new Error('Not found');
+    })
+  );
+
+  for (const res of results) {
+    if (res.status === 'fulfilled' && res.value) {
+      const ref = res.value;
+      canonicalToRef.set(key, ref);
+      upstreamToCanonical.set(`${type}/${ref.provider}/${ref.slug}`, canonicalSlug);
+      return ref;
+    }
+  }
+
+  return null;
+}
+
+export async function resolveLegacySlug(slug: string): Promise<MediaRef | null> {
+  const ref = decodeMediaRef(slug);
+  if (ref && ref.provider !== 'resolve') return ref;
+
+  const types: MediaType[] = ['anime', 'donghua', 'comic'];
+  for (const type of types) {
+    const resolved = await resolveCanonicalRef(type, slug);
+    if (resolved) return resolved;
+  }
+  return null;
+}
+
+async function resolveRefIfNeeded(ref: MediaRef | null): Promise<MediaRef | null> {
+  if (!ref) return null;
+  if (ref.provider === 'resolve') {
+    return resolveCanonicalRef(ref.type, ref.slug);
+  }
+  return ref;
+}
+
 export function buildCanonicalPath(ref: MediaRef): string {
-  const slug = encodeCanonicalPart(endpointSlug(ref.slug));
-  const provider = String(ref.provider || '').trim();
-  const providerSuffix = provider && provider !== 'generic'
-    ? `${CANONICAL_PROVIDER_SEPARATOR}${encodeCanonicalPart(provider)}`
-    : '';
-  return `/media/${ref.type}/${slug}${providerSuffix}`;
+  const upstreamKey = `${ref.type}/${ref.provider}/${ref.slug}`;
+  let canonicalSlug = upstreamToCanonical.get(upstreamKey);
+  if (!canonicalSlug) {
+    canonicalSlug = slugFromTitle(ref.slug);
+  }
+  return `/media/${ref.type}/${canonicalSlug}`;
 }
 
 export function decodeMediaRef(value: string): MediaRef | null {
@@ -87,14 +180,16 @@ export function decodeMediaRef(value: string): MediaRef | null {
     const type = toMediaType(canonicalParts[0]);
     if (!type) return null;
 
-    const separatorIndex = canonicalParts[1].indexOf(CANONICAL_PROVIDER_SEPARATOR);
-    const encodedSlug = separatorIndex === -1 ? canonicalParts[1] : canonicalParts[1].slice(0, separatorIndex);
-    const encodedProvider = separatorIndex === -1 ? 'generic' : canonicalParts[1].slice(separatorIndex + 1);
-    const slug = endpointSlug(decodeCanonicalPart(encodedSlug));
-    const provider = decodeCanonicalPart(encodedProvider).trim();
+    const secondPart = canonicalParts[1];
+    if (secondPart.startsWith('m~') || secondPart.includes('~')) {
+      return decodeMediaRef(secondPart);
+    }
 
-    if (!slug || !provider) return null;
-    return { type, provider, slug };
+    const key = `${type}/${secondPart}`;
+    const registered = canonicalToRef.get(key);
+    if (registered) return registered;
+
+    return { type, provider: 'resolve', slug: secondPart };
   }
 
   if (value.startsWith('m~')) {
@@ -225,6 +320,10 @@ function emptyMediaListOnSourceError(error: unknown): Media[] {
 }
 
 function baseMedia(type: MediaType, slug: string, title: string, coverImage?: string): Media {
+  const ref = decodeMediaRef(slug);
+  if (ref && ref.provider !== 'resolve') {
+    registerMedia(type, ref.provider, ref.slug, title);
+  }
   return {
     slug,
     type,
@@ -495,26 +594,32 @@ export async function getRandom(): Promise<Media | null> {
   return data[Math.floor(Math.random() * data.length)] || null;
 }
 
-export async function getMediaBySlug(slug: string): Promise<Media | null> {
-  const ref = decodeMediaRef(slug);
-  if (!ref) return null;
+export async function getMediaBySlugInternal(ref: MediaRef): Promise<Media | null> {
+  try {
+    if (ref.type === 'anime') {
+      if (ref.provider === 'anime') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
+      if (ref.provider === 'samehadaku') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/samehadaku/anime/${ref.slug}`));
+      if (ref.provider === 'animasu') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`));
+    }
+    if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
 
-  if (ref.type === 'anime') {
-    if (ref.provider === 'anime') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/anime/${ref.slug}`));
-    if (ref.provider === 'samehadaku') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/samehadaku/anime/${ref.slug}`));
-    if (ref.provider === 'animasu') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`));
+    if (ref.type === 'comic') {
+      if (ref.provider === 'komikstation') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
+      if (ref.provider === 'generic') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/comic/${ref.slug}`));
+      if (ref.provider === 'mangasusuku') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/mangasusuku/detail/${ref.slug}`));
+      if (ref.provider === 'kiryuu') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/kiryuu/manga/${ref.slug}`));
+      if (ref.provider === 'komikindo') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikindo/detail/${ref.slug}`));
+    }
+  } catch {
+    return null;
   }
-  if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
-
-  if (ref.type === 'comic') {
-    if (ref.provider === 'komikstation') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
-    if (ref.provider === 'generic') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/comic/${ref.slug}`));
-    if (ref.provider === 'mangasusuku') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/mangasusuku/detail/${ref.slug}`));
-    if (ref.provider === 'kiryuu') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/kiryuu/manga/${ref.slug}`));
-    if (ref.provider === 'komikindo') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikindo/detail/${ref.slug}`));
-  }
-
   return null;
+}
+
+export async function getMediaBySlug(slug: string): Promise<Media | null> {
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
+  if (!ref) return null;
+  return getMediaBySlugInternal(ref);
 }
 
 export async function getGenres(): Promise<{ slug: string; name: string }[]> {
@@ -594,7 +699,7 @@ export async function getMediaReviews(slug: string): Promise<any[]> { return [];
 export async function getMediaComments(slug: string): Promise<any[]> { return []; }
 
 export async function getEpisodes(slug: string): Promise<Episode[]> {
-  const ref = decodeMediaRef(slug);
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
 
   if (ref.type === 'anime') {
@@ -641,7 +746,7 @@ export async function getEpisodes(slug: string): Promise<Episode[]> {
 }
 
 export async function getEpisodeSources(slug: string, epSlug: string): Promise<EpisodeSource[]> {
-  const ref = decodeMediaRef(slug);
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
 
   if (ref.type === 'anime') {
@@ -690,7 +795,7 @@ export async function getEpisodeSources(slug: string, epSlug: string): Promise<E
 }
 
 export async function getChapters(slug: string): Promise<Chapter[]> {
-  const ref = decodeMediaRef(slug);
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
   if (ref.type !== 'comic') return [];
 
@@ -749,7 +854,7 @@ export async function getChapters(slug: string): Promise<Chapter[]> {
 }
 
 export async function getChapterPages(slug: string, chSlug: string): Promise<ChapterPage[]> {
-  const ref = decodeMediaRef(slug);
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
   if (ref.type !== 'comic') return [];
 

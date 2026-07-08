@@ -11,7 +11,7 @@ export function Gauge({
   const circumference = 2 * Math.PI * 42; // r=42
   const offset = circumference * (1 - pct);
   // teal → amber gradient based on rating
-  const color = pct > 0.7 ? '#E8A33D' : '#5FAFA3';
+  const color = pct > 0.7 ? 'rgb(var(--primary))' : 'rgb(var(--accent))';
 
   return (
     <div className="relative w-24 h-24">

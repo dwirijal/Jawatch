@@ -3,9 +3,9 @@ import { SectionHeader } from '@/components/sections/SectionHeader';
 import { getGenres } from '@/lib/api';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-
 export const revalidate = 300;
+
+export const metadata: Metadata = {
   title: 'Genres',
   description: 'Browse jawatch titles by genre, mood, trope, or format lane.',
   alternates: { canonical: '/genres' },

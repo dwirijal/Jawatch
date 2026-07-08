@@ -19,6 +19,7 @@ const config: Config = {
           foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
         },
         accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-bright": "rgb(var(--accent-bright) / <alpha-value>)",
         destructive: "rgb(var(--destructive) / <alpha-value>)",
         void: "rgb(var(--background))",
         surface: "rgb(var(--card))",
@@ -31,6 +32,25 @@ const config: Config = {
         sans: ["Inter", "sans-serif"],
         serif: ["Fraunces", "serif"],
         mono: ["IBM Plex Mono", "monospace"],
+      },
+      animation: {
+        "fade-in-up": "fadeInUp 0.6s ease-out forwards",
+        "scale-in": "scaleIn 0.4s ease-out forwards",
+        "slide-in-right": "slideInRight 0.5s ease-out forwards",
+      },
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        scaleIn: {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        slideInRight: {
+          "0%": { opacity: "0", transform: "translateX(30px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
     },
   },

@@ -7,10 +7,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const ref = decodeMediaRef(slug);
-  const content = await getMediaBySlug(slug);
+export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
+  const { type, slug } = await params;
+  const decodeSlug = `${type}/${slug}`;
+  const ref = decodeMediaRef(decodeSlug);
+  const content = await getMediaBySlug(decodeSlug);
 
   if (!content || !ref) {
     return {
@@ -44,24 +45,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function MediaPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const ref = decodeMediaRef(slug);
+export default async function MediaPage({ params }: { params: Promise<{ type: string; slug: string }> }) {
+  const { type, slug } = await params;
+  const decodeSlug = `${type}/${slug}`;
+  const ref = decodeMediaRef(decodeSlug);
 
-  if (slug.startsWith('m~') && ref) {
-    redirect(buildCanonicalPath(ref));
-  }
-
-  const content = await getMediaBySlug(slug);
+  const content = await getMediaBySlug(decodeSlug);
   if (!content || !ref) notFound();
 
   const canonicalPath = buildCanonicalPath(ref);
   const year = content.createdAt ? new Date(content.createdAt).getUTCFullYear() : null;
   const isVideo = ['anime', 'donghua', 'movie'].includes(content.type);
-  const items = isVideo ? await getEpisodes(slug) : await getChapters(slug);
+  const items = isVideo ? await getEpisodes(decodeSlug) : await getChapters(decodeSlug);
   const firstItem = items[0];
   const startHref = firstItem ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${firstItem.slug}` : null;
-  const related = await getMediaRelated(slug);
+  const related = await getMediaRelated(decodeSlug);
 
   return (
     <div className="min-h-screen bg-background grain">

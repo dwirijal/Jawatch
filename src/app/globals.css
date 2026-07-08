@@ -15,6 +15,7 @@
     --primary-foreground: 8 8 11;
     --accent: 91 178 169;
     --accent-foreground: 5 18 18;
+    --accent-bright: 126 214 203;
     --destructive: 239 68 68;
     --color-bg-primary: var(--background);
     --color-bg-secondary: var(--card);
@@ -25,10 +26,6 @@
     --color-accent: var(--primary);
     --color-accent-hover: 251 191 36;
     --color-success: var(--accent);
-  }
-
-  * {
-    @apply border;
   }
 
   :focus-visible {
