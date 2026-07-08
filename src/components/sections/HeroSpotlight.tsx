@@ -30,26 +30,26 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
       <div className="relative z-10 mx-auto grid min-h-[82vh] w-full max-w-[1160px] items-end gap-10 px-4 pb-16 pt-28 sm:px-8 md:grid-cols-[minmax(0,1fr)_300px] md:pb-24">
         <div className="max-w-3xl">
           <div className="mb-5 flex flex-wrap items-center gap-3">
-            <span className="rounded-sm border border-amber/60 px-2 py-1 font-mono text-[10px] uppercase tracking-[.14em] text-primary">{item.type}</span>
+            <span className="rounded-sm border border-amber/60 px-2 py-1 font-mono text-[10px] uppercase tracking-wide2 text-primary">{item.type}</span>
             {item.rating?.average ? (
               <span className="inline-flex items-center gap-1 font-mono text-xs text-primary">
                 <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
                 {item.rating.average.toFixed(1)}
               </span>
             ) : null}
-            <span className="font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground">Now on the shelf</span>
+            <span className="font-mono text-[10px] uppercase tracking-wide2 text-muted-foreground-foreground">Now on the shelf</span>
           </div>
 
           <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-none tracking-tight text-foreground text-shadow-lg sm:text-7xl">{item.title}</h1>
-          {genres && <p className="mt-5 font-mono text-xs uppercase tracking-[.08em] text-muted-foreground">{genres}</p>}
-          {item.synopsis && <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground line-clamp-3">{item.synopsis}</p>}
+          {genres && <p className="mt-5 font-mono text-xs uppercase tracking-tag text-muted-foreground-foreground">{genres}</p>}
+          {item.synopsis && <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground-foreground line-clamp-3">{item.synopsis}</p>}
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={primaryHref} className="inline-flex items-center gap-2 rounded-[4px] bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-void transition-colors hover:bg-primary/90">
+            <Link href={primaryHref} className="inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
               {isReadable ? <BookOpen className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4 fill-void" aria-hidden="true" />}
               Start watching
             </Link>
-            <Link href={primaryHref} className="inline-flex items-center gap-2 border border-border bg-card/75 px-[26px] py-[13px] font-mono text-xs uppercase tracking-[.06em] text-foreground transition-colors hover:border-amber/60 hover:text-primary">
+            <Link href={primaryHref} className="inline-flex items-center gap-2 border border-border bg-card/75 px-[26px] py-[13px] font-mono text-xs uppercase tracking-xs text-foreground transition-colors hover:border-amber/60 hover:text-primary">
               <Info className="h-4 w-4" aria-hidden="true" />
               Details
             </Link>
@@ -57,7 +57,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
         </div>
 
         {item.coverImage && (
-          <div className="relative hidden aspect-[2/3] overflow-hidden rounded-[4px] border border-amber/20 bg-card shadow-2xl shadow-amber/5 md:block">
+          <div className="relative hidden aspect-[2/3] overflow-hidden rounded-page border border-amber/20 bg-card shadow-2xl shadow-amber/5 md:block">
             <Image src={item.coverImage} alt="" fill sizes="300px" className="object-cover" priority unoptimized referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-void/40 to-transparent" />
           </div>

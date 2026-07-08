@@ -63,23 +63,23 @@ export function Card({
 
       {/* New badge */}
       {isNew && (
-        <span className="absolute top-2 right-2 font-mono text-[9px] tracking-[.07em] uppercase px-[6px] py-[2px] bg-primary text-void rounded-[2px] z-10 text-shadow-sm font-semibold">
+        <span className="absolute top-2 right-2 font-mono text-[9px] tracking-micro uppercase px-[6px] py-[2px] bg-primary text-void rounded-sm z-10 text-shadow-sm font-semibold">
           New
         </span>
       )}
 
       {/* Rating badge */}
       {rating && rating > 0 && (
-        <span className="absolute top-2 left-2 font-mono text-[9px] tracking-[.05em] px-[6px] py-[2px] bg-background/80 backdrop-blur-sm text-primary rounded-[2px] z-10 border border-border/80">
+        <span className="absolute top-2 left-2 font-mono text-[9px] tracking-[.05em] px-[6px] py-[2px] bg-background/80 backdrop-blur-sm text-primary rounded-sm z-10 border border-border/80">
           ★ {rating.toFixed(1)}
         </span>
       )}
 
       {/* Bottom info */}
       <div className="absolute left-0 right-0 bottom-0 p-3 z-10 bg-gradient-to-t from-void via-void/40 to-transparent">
-        <div className="font-mono text-[9px] tracking-[.1em] uppercase text-accent-bright font-semibold">{kind}</div>
+        <div className="font-mono text-[9px] tracking-label uppercase text-accent-bright font-semibold">{kind}</div>
         <div className="font-serif font-medium text-[13.5px] leading-tight mt-1 text-foreground line-clamp-2 group-hover:line-clamp-none transition-all duration-200">{title}</div>
-        {meta && <div className="font-mono text-[9px] text-muted mt-1">{meta}</div>}
+        {meta && <div className="font-mono text-[9px] text-muted-foreground mt-1">{meta}</div>}
       </div>
     </Link>
   );

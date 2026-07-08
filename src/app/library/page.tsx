@@ -24,7 +24,7 @@ export default function LibraryPage() {
           <Link key={href} href={href} className="group rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/70">
             <Icon className="mb-5 h-6 w-6 text-primary" aria-hidden="true" />
             <div className="font-serif text-xl font-semibold text-foreground group-hover:text-primary">{label}</div>
-            <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+            <p className="mt-2 text-sm text-muted-foreground-foreground">{description}</p>
           </Link>
         ))}
       </div>

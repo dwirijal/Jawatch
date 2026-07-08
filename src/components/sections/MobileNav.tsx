@@ -21,7 +21,7 @@ export function MobileNav() {
             <Link
               key={l.href}
               href={l.href}
-              className="flex min-h-[48px] items-center font-mono text-micro uppercase tracking-tag text-muted-foreground transition-colors hover:text-primary"
+              className="flex min-h-[48px] items-center font-mono text-micro uppercase tracking-tag text-muted-foreground-foreground transition-colors hover:text-primary"
             >
               {l.label}
             </Link>

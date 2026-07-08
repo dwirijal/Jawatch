@@ -10,7 +10,7 @@ export function buttonClasses(variant: ButtonVariant = 'default', className?: st
   };
 
   return cn(
-    'inline-flex cursor-pointer items-center justify-center border px-[26px] py-[13px] font-mono text-xs uppercase tracking-[.06em] transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40',
+    'inline-flex cursor-pointer items-center justify-center border px-[26px] py-[13px] font-mono text-xs uppercase tracking-xs transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40',
     variants[variant],
     className,
   );

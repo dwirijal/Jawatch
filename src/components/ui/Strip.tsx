@@ -12,7 +12,7 @@ export function Strip({
           <div className={`flex justify-between items-center px-5 py-4 ${i < items.length - 1 ? 'border-b border-border' : ''} hover:bg-card transition-colors cursor-pointer`}>
             <span className="font-mono text-primary text-xs w-[60px] shrink-0">{item.number}</span>
             <span className="font-serif text-base flex-1 text-foreground">{item.name}</span>
-            {item.date && <span className="font-mono text-[11px] text-muted">{item.date}</span>}
+            {item.date && <span className="font-mono text-[11px] text-muted-foreground">{item.date}</span>}
           </div>
         );
         return item.href ? (
