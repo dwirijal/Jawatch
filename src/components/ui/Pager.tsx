@@ -1,3 +1,5 @@
+import { size } from '@/components/ui/tokens';
+
 export function Pager({
   current,
   total,
@@ -8,13 +10,15 @@ export function Pager({
   onChange?: (page: number) => void;
 }) {
   const pages = Array.from({ length: Math.min(total, 5) }, (_, i) => i + 1);
+  const control = { width: size.control, height: size.control };
 
   return (
     <div className="flex gap-1.5 items-center">
       <button
         onClick={() => onChange?.(current - 1)}
         disabled={current <= 1}
-        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
+        style={control}
+        className="font-mono text-xs flex items-center justify-center text-muted-foreground border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
       >
         ‹
       </button>
@@ -22,10 +26,11 @@ export function Pager({
         <button
           key={p}
           onClick={() => onChange?.(p)}
-          className={`font-mono text-xs w-[30px] h-[30px] flex items-center justify-center border cursor-pointer ${
+          style={control}
+          className={`font-mono text-xs flex items-center justify-center border cursor-pointer ${
             p === current
               ? 'text-void bg-primary border-amber'
-              : 'text-muted border-border hover:text-foreground'
+              : 'text-muted-foreground border-border hover:text-foreground'
           }`}
         >
           {p}
@@ -34,7 +39,8 @@ export function Pager({
       <button
         onClick={() => onChange?.(current + 1)}
         disabled={current >= total}
-        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
+        style={control}
+        className="font-mono text-xs flex items-center justify-center text-muted-foreground border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
       >
         ›
       </button>

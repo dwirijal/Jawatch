@@ -26,7 +26,7 @@ export default async function DiscoverPage() {
       />
       <div className="mb-8 flex flex-wrap gap-2">
         {types.map((type) => (
-          <Link key={type} href={`/discover/${type}`} className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-[.08em] text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+          <Link key={type} href={`/discover/${type}`} className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-tag text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary">
             {type}
           </Link>
         ))}

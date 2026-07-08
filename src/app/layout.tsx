@@ -60,25 +60,25 @@ export default function RootLayout({
                 name="q"
                 type="search"
                 placeholder="Search titles..."
-                className="w-full bg-card border border-border rounded-[4px] px-3.5 py-2 text-[13px] font-mono text-foreground placeholder:text-muted/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
+                className="w-full bg-card border border-border rounded-page px-3.5 py-2 text-[13px] font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
               />
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </form>
 
             {/* Nav links */}
-            <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-[.08em]">
-              <Link href="/discover" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Discover</Link>
-              <Link href="/trending" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Trending</Link>
-              <Link href="/popular" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Popular</Link>
-              <Link href="/latest" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Latest</Link>
-              <Link href="/random" className="p-2 min-h-[44px] flex items-center text-muted hover:text-primary transition-colors">🎲</Link>
+            <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-tag">
+              <Link href="/discover" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Discover</Link>
+              <Link href="/trending" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Trending</Link>
+              <Link href="/popular" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Popular</Link>
+              <Link href="/latest" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Latest</Link>
+              <Link href="/random" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-primary transition-colors">🎲</Link>
             </nav>
 
             {/* Mobile hamburger placeholder */}
             <div className="md:hidden">
-              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-[.08em] text-accent-bright hover:text-primary transition-colors">
+              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-tag text-accent-bright hover:text-primary transition-colors">
                 Browse
               </Link>
             </div>
@@ -91,13 +91,13 @@ export default function RootLayout({
         {/* Footer */}
         <footer className="border-t border-border mt-20">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="font-mono text-[11px] text-muted">
+            <div className="font-mono text-[11px] text-muted-foreground">
               jawatch &copy; {new Date().getFullYear()}
             </div>
             <div className="flex gap-6 font-mono text-[11px]">
-              <Link href="/sitemap.xml" className="text-muted hover:text-foreground transition-colors">Sitemap</Link>
-              <Link href="/discover" className="text-muted hover:text-foreground transition-colors">Browse</Link>
-              <Link href="/library" className="text-muted hover:text-foreground transition-colors">Library</Link>
+              <Link href="/sitemap.xml" className="text-muted-foreground hover:text-foreground transition-colors">Sitemap</Link>
+              <Link href="/discover" className="text-muted-foreground hover:text-foreground transition-colors">Browse</Link>
+              <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>
             </div>
           </div>
         </footer>

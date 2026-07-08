@@ -27,7 +27,7 @@ export function Gauge({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <b className="font-serif text-[26px] italic">{value}</b>
-        {votes && <span className="font-mono text-[9px] text-muted tracking-[.08em]">{votes} VOTES</span>}
+        {votes && <span className="font-mono text-[9px] text-muted-foreground tracking-tag">{votes} VOTES</span>}
       </div>
     </div>
   );

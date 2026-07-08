@@ -71,7 +71,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
               className={`px-2 py-1.5 text-xs font-mono transition-colors ${
                 i === chIndex
                   ? 'bg-primary text-void font-bold'
-                  : 'text-muted hover:bg-card/80 hover:text-foreground'
+                  : 'text-muted-foreground hover:bg-card/80 hover:text-foreground'
               }`}
             >
               Ch {ch.chapterNumber || i + 1}
@@ -104,7 +104,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
         </div>
       ) : (
         <div className="flex justify-center py-20 border border-border bg-card/30 grain">
-          <p className="text-sm font-mono text-muted uppercase">Halaman belum tersedia.</p>
+          <p className="text-sm font-mono text-muted-foreground uppercase">Halaman belum tersedia.</p>
         </div>
       )}
 

@@ -70,29 +70,29 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
         <div className="absolute inset-0 scanlines pointer-events-none" />
 
         <div className="relative mx-auto grid min-h-[520px] max-w-[1160px] items-end gap-8 px-4 pb-12 pt-28 sm:px-8 md:grid-cols-[220px_1fr] md:pb-16">
-          <div className="relative aspect-[2/3] w-44 overflow-hidden rounded-[4px] border border-amber/20 bg-card shadow-2xl shadow-amber/5 md:w-full">
+          <div className="relative aspect-[2/3] w-44 overflow-hidden rounded-page border border-amber/20 bg-card shadow-2xl shadow-amber/5 md:w-full">
             {content.coverImage && <Image src={content.coverImage} alt={content.title} fill priority sizes="220px" className="object-cover" />}
           </div>
 
           <div className="max-w-3xl pb-2">
             <div className="mb-4 flex flex-wrap gap-2">
-              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-primary">{content.type}</span>
-              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-muted">{content.status}</span>}
+              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-primary">{content.type}</span>
+              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground">{content.status}</span>}
             </div>
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground text-shadow-lg md:text-5.5xl">{content.title}</h1>
-            <div className="mt-5 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[.08em] text-muted">
+            <div className="mt-5 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-tag text-muted-foreground">
               {content.rating?.average ? <span className="inline-flex items-center gap-1"><Star className="h-4 w-4 text-primary fill-amber" aria-hidden="true" />{content.rating.average.toFixed(1)}</span> : null}
               {year && <span className="inline-flex items-center gap-1"><Calendar className="h-4 w-4 text-accent-bright" aria-hidden="true" />{year}</span>}
               <span>{items.length} {isVideo ? 'episodes' : 'chapters'}</span>
             </div>
-            {content.synopsis && <p className="mt-6 max-w-2xl text-sm leading-7 text-muted line-clamp-4">{content.synopsis}</p>}
+            {content.synopsis && <p className="mt-6 max-w-2xl text-sm leading-7 text-muted-foreground line-clamp-4">{content.synopsis}</p>}
             {content.genres && content.genres.length > 0 && (
               <div className="mt-5 flex flex-wrap gap-2">
                 {content.genres.map((genre) => (
                   <Link
                     key={genre.slug}
                     href={`/genres/${genre.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {genre.name}
                   </Link>
@@ -101,12 +101,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             )}
             {content.studios && content.studios.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] uppercase tracking-[.14em] text-muted-foreground/70">Studio</span>
+                <span className="font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground/70">Studio</span>
                 {content.studios.map((studio) => (
                   <Link
                     key={studio.slug}
                     href={`/studios/${studio.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[.14em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {studio.name}
                   </Link>
@@ -114,7 +114,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
               </div>
             )}
             {startHref && (
-              <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-[4px] bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-void transition-colors hover:bg-primary/90">
+              <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
                 {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
                 {isVideo ? 'Start watching' : 'Start reading'}
               </Link>
@@ -145,20 +145,20 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   if (!ref) return null;
                   const path = buildCanonicalPath(ref);
                   return (
-                    <a key={item.slug} href={path} className="group rounded-[4px] border border-border bg-card/40 p-3">
-                      <div className="aspect-[2/3] overflow-hidden rounded-[3px] bg-background">
+                    <a key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3">
+                      <div className="aspect-[2/3] overflow-hidden rounded-sm bg-background">
                         {item.coverImage ? <img src={item.coverImage} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
                       </div>
                       <div className="mt-3">
                         <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>
-                        <div className="mt-1 text-[10px] uppercase tracking-[.14em] text-muted">{item.type}</div>
+                        <div className="mt-1 text-[10px] uppercase tracking-wide2 text-muted-foreground">{item.type}</div>
                       </div>
                     </a>
                   );
                 })}
             </div>
           ) : (
-            <div className="rounded-[4px] border border-border bg-card/30 p-6 text-sm text-muted">No related items.</div>
+            <div className="rounded-page border border-border bg-card/30 p-6 text-sm text-muted-foreground">No related items.</div>
           )}
         </section>
         </section>

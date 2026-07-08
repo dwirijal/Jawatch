@@ -17,10 +17,10 @@ export function Tabs({
         <button
           key={tab}
           onClick={() => setActive(tab)}
-          className={`font-mono text-xs uppercase tracking-[.06em] pb-3 cursor-pointer border-b-2 transition-colors ${
+          className={`font-mono text-xs uppercase tracking-xs pb-3 cursor-pointer border-b-2 transition-colors ${
             active === tab
               ? 'text-primary border-primary'
-              : 'text-muted-foreground border-transparent hover:text-foreground'
+              : 'text-muted-foreground-foreground border-transparent hover:text-foreground'
           }`}
         >
           {tab}

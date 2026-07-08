@@ -9,9 +9,9 @@ export default async function StudioSlugPage({ params }: { params: Promise<{ slu
   return (
     <Container y="48px">
       <div className="mb-8">
-        <div className="font-mono text-xs text-primary uppercase tracking-[.1em]">Studio</div>
+        <div className="font-mono text-xs text-primary uppercase tracking-label">Studio</div>
         <h1 className="font-serif text-3xl font-semibold text-foreground capitalize mt-2">{slug.replace('-', ' ')}</h1>
-        <p className="mt-2 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
+        <p className="mt-2 font-mono text-xs text-muted-foreground-foreground">{contents.length} titles</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-[2px] bg-hairline border border-border overflow-hidden">
         {contents.map((item) => (

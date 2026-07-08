@@ -19,9 +19,9 @@ export function EmptyState({ icon, eyebrow, title, description, href, actionLabe
       <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-background/60 text-primary">
         {icon ?? <Compass className="h-6 w-6" aria-hidden="true" />}
       </div>
-      {eyebrow && <div className="font-mono text-xs uppercase tracking-[.14em] text-accent">{eyebrow}</div>}
+      {eyebrow && <div className="font-mono text-xs uppercase tracking-wide2 text-accent">{eyebrow}</div>}
       <h2 className="mt-2 font-serif text-3xl font-semibold text-foreground">{title}</h2>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground-foreground">{description}</p>
       {href && (
         <Link href={href} className={buttonClasses('default', 'mt-7')}>
           {actionLabel}

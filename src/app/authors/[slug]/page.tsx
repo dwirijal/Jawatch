@@ -8,7 +8,7 @@ export default async function AuthorSlugPage({ params }: { params: Promise<{ slu
   return (
     <div className="max-w-[1160px] mx-auto px-8 py-12">
       <div className="mb-8">
-        <div className="font-mono text-xs text-primary uppercase tracking-[.1em]">Author</div>
+        <div className="font-mono text-xs text-primary uppercase tracking-label">Author</div>
         <h1 className="font-serif text-3xl font-semibold text-foreground capitalize mt-2">{slug.replace('-', ' ')}</h1>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-[2px] bg-hairline border border-border overflow-hidden">
