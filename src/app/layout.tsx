@@ -4,6 +4,7 @@ import './globals.css';
 import Link from 'next/link';
 import { siteUrl } from '@/lib/site-url';
 import { SearchBar } from '@/components/sections/SearchBar';
+import { MobileNav } from '@/components/sections/MobileNav';
 import { BackToTop } from '@/components/sections/BackToTop';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -33,6 +34,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export const viewport: Viewport = {
@@ -60,7 +64,7 @@ export default function RootLayout({
             <SearchBar />
 
             {/* Nav links */}
-            <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-tag">
+            <nav className="hidden md:flex items-center gap-5 font-mono text-micro uppercase">
               <Link href="/discover" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Discover</Link>
               <Link href="/trending" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Trending</Link>
               <Link href="/popular" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Popular</Link>
@@ -70,11 +74,12 @@ export default function RootLayout({
 
             {/* Mobile hamburger placeholder */}
             <div className="md:hidden">
-              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-tag text-accent-bright hover:text-primary transition-colors">
+              <Link href="/discover" className="font-mono text-tag uppercase text-accent-bright hover:text-primary transition-colors">
                 Browse
               </Link>
             </div>
           </div>
+          <MobileNav />
         </header>
 
         {/* Main */}
@@ -86,10 +91,10 @@ export default function RootLayout({
         {/* Footer */}
         <footer className="border-t border-border mt-20">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="font-mono text-[11px] text-muted-foreground">
+            <div className="font-mono text-micro text-muted-foreground">
               jawatch &copy; {new Date().getFullYear()}
             </div>
-            <div className="flex gap-6 font-mono text-[11px]">
+            <div className="flex gap-6 font-mono text-micro">
               <Link href="/sitemap.xml" className="text-muted-foreground hover:text-foreground transition-colors">Sitemap</Link>
               <Link href="/discover" className="text-muted-foreground hover:text-foreground transition-colors">Browse</Link>
               <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>

@@ -55,7 +55,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
         </h2>
         <button
           onClick={() => setShowList(!showList)}
-          className="px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider border border-border hover:border-amber/60 text-foreground transition-all"
+          className="px-3 py-1.5 font-mono text-tag uppercase border border-border hover:border-amber/60 text-foreground transition-all"
         >
           {chapters.length} chapters
         </button>
@@ -113,7 +113,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
         <button
           onClick={() => switchChapter(Math.max(0, chIndex - 1))}
           disabled={chIndex === 0}
-          className="flex-1 px-3 py-2 font-mono text-[10px] uppercase tracking-wider border border-border text-foreground disabled:opacity-30 hover:border-amber/60 hover:text-primary transition-colors"
+          className="flex-1 px-3 py-2 font-mono text-tag uppercase border border-border text-foreground disabled:opacity-30 hover:border-amber/60 hover:text-primary transition-colors"
         >
           ← Prev
         </button>

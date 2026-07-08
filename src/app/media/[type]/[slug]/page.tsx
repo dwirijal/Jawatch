@@ -76,8 +76,8 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
 
           <div className="max-w-3xl pb-2">
             <div className="mb-4 flex flex-wrap gap-2">
-              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-primary">{content.type}</span>
-              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground">{content.status}</span>}
+              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-eyebrow uppercase text-primary">{content.type}</span>
+              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground">{content.status}</span>}
             </div>
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground text-shadow-lg md:text-5.5xl">{content.title}</h1>
             <div className="mt-5 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-tag text-muted-foreground">
@@ -92,7 +92,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   <Link
                     key={genre.slug}
                     href={`/genres/${genre.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {genre.name}
                   </Link>
@@ -101,12 +101,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             )}
             {content.studios && content.studios.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground/70">Studio</span>
+                <span className="font-mono text-eyebrow uppercase text-muted-foreground/70">Studio</span>
                 {content.studios.map((studio) => (
                   <Link
                     key={studio.slug}
                     href={`/studios/${studio.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {studio.name}
                   </Link>
@@ -151,7 +151,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                       </div>
                       <div className="mt-3">
                         <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>
-                        <div className="mt-1 text-[10px] uppercase tracking-wide2 text-muted-foreground">{item.type}</div>
+                        <div className="mt-1 text-tag uppercase text-muted-foreground">{item.type}</div>
                       </div>
                     </a>
                   );

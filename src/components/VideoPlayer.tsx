@@ -19,6 +19,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
   const [error, setError] = useState('');
   const [showList, setShowList] = useState(false);
   const [activeSource, setActiveSource] = useState(0);
+  const [theater, setTheater] = useState(false);
 
   const videoUrl = sources[activeSource]?.url;
   const currentEp = episodes[epIndex];
@@ -64,9 +65,9 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
 
   return (
     <section className="space-y-6" aria-label="Watch room">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className={`grid gap-5 ${theater ? 'grid-cols-1' : 'lg:grid-cols-[minmax(0,1fr)_320px]'}`}>
         <div className="space-y-4">
-          <div className="relative aspect-video overflow-hidden rounded-none bg-background shadow-2xl ring-1 ring-hairline">
+          <div className={`relative aspect-video overflow-hidden rounded-none bg-background shadow-2xl ring-1 ring-hairline ${theater ? 'theater-breakout' : ''}`}>
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
                 <div className="h-10 w-10 rounded-none border-2 border-amber border-t-transparent animate-spin" />
@@ -81,6 +82,29 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
               allow="autoplay; fullscreen; encrypted-media"
               sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
             />
+            <button
+              type="button"
+              onClick={() => setTheater(!theater)}
+              aria-label={theater ? 'Exit theater mode' : 'Enter theater mode'}
+              aria-pressed={theater}
+              className="hidden lg:flex absolute bottom-3 right-3 z-10 items-center gap-1.5 border border-white/15 bg-background/70 backdrop-blur-sm px-2.5 py-1.5 font-mono text-eyebrow uppercase text-white/70 transition-colors hover:text-white hover:border-white/30 hover:bg-background/90 rounded-none"
+            >
+              {theater ? (
+                <>
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3 w-3">
+                    <path d="M5 2L2 2L2 5M11 2L14 2L14 5M2 11L2 14L5 14M14 11L14 14L11 14" />
+                  </svg>
+                  Exit
+                </>
+              ) : (
+                <>
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3 w-3">
+                    <path d="M2 5L2 2L5 2M14 5L14 2L11 2M5 14L2 14L2 11M11 14L14 14L14 11" />
+                  </svg>
+                  Theater
+                </>
+              )}
+            </button>
           </div>
 
           {error && (
@@ -89,14 +113,14 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
 
           {sources.length > 1 && (
             <div className="flex flex-wrap items-center gap-2" aria-label="Server & quality">
-              <span className="font-mono text-[9px] uppercase tracking-wide3 text-accent-bright">Server</span>
+              <span className="font-mono text-eyebrow uppercase text-accent-bright">Server</span>
               {sources.map((s, i) => (
                 <button
                   key={s.url}
                   type="button"
                   onClick={() => setActiveSource(i)}
                   aria-pressed={i === activeSource}
-                  className={`border px-3 py-1.5 font-mono text-[10px] uppercase tracking-tag transition-colors rounded-none ${i === activeSource ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
+                  className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none ${i === activeSource ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
                 >
                   {s.label || s.quality || `S${i + 1}`}
                 </button>
@@ -106,7 +130,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
 
           <div className="flex flex-col gap-3 border border-border bg-card/30 p-5 sm:flex-row sm:items-center sm:justify-between grain">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-wide3 text-accent-bright">Now playing</p>
+              <p className="font-mono text-eyebrow uppercase text-accent-bright">Now playing</p>
               <h1 className="mt-1.5 font-serif text-2xl font-bold text-foreground">Episode {currentNumber}</h1>
               <p className="mt-1 text-xs text-muted-foreground">{currentTitle}</p>
             </div>
@@ -116,7 +140,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                 onClick={() => switchEpisode(Math.max(0, epIndex - 1))}
                 disabled={epIndex === 0 || loading}
                 aria-label="Previous episode"
-                className="border border-border px-4 py-2 font-mono text-[10px] uppercase tracking-tag text-foreground transition-colors hover:border-amber/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
+                className="border border-border px-4 py-2 font-mono text-tag uppercase text-foreground transition-colors hover:border-amber/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
               >
                 ← Prev
               </button>
@@ -125,7 +149,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                 onClick={() => switchEpisode(Math.min(episodes.length - 1, epIndex + 1))}
                 disabled={!nextEp || loading}
                 aria-label="Next episode"
-                className="border border-amber px-4 py-2 font-mono text-[10px] uppercase tracking-tag text-primary transition-colors hover:bg-primary hover:text-void disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
+                className="border border-amber px-4 py-2 font-mono text-tag uppercase text-primary transition-colors hover:bg-primary hover:text-void disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
               >
                 Next →
               </button>
@@ -158,7 +182,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
           )}
         </div>
 
-        <aside className="space-y-3">
+        <aside className={`space-y-3 ${theater ? 'hidden' : ''}`}>
           {nextEp && (
             <button
               type="button"
@@ -166,7 +190,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
               disabled={loading}
               className="w-full border border-border bg-card p-4 text-left transition-colors hover:border-amber"
             >
-              <span className="font-mono text-[10px] uppercase tracking-wide2 text-primary">Up next</span>
+              <span className="font-mono text-tag uppercase text-primary">Up next</span>
               <span className="mt-2 block font-serif text-lg text-foreground">Episode {nextEp.episodeNumber || epIndex + 2}</span>
               <span className="mt-1 block text-sm text-muted-foreground">{nextEp.title || 'Untitled'}</span>
             </button>

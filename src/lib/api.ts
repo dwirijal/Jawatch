@@ -360,7 +360,7 @@ function mapAlqanimeListItem(item: any): Media {
 
 function mapDonghuaListItem(item: any): Media {
   return {
-    ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), item.title, item.poster),
+    ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), dedupeTitle(item.title), item.poster),
     status: item.status,
   };
 }
@@ -480,12 +480,20 @@ function collectSuggestions(recommendations: any, related: any): { slug: string;
 function mapDonghuaDetail(ref: MediaRef, payload: any): Media {
   const data = unwrapUpstreamEnvelope(`/anime/donghub/detail/${ref.slug}`, payload).data;
   return {
-    ...baseMedia('donghua', encodeMediaRef('donghua', ref.provider, ref.slug), data.title, data.poster),
+    ...baseMedia('donghua', encodeMediaRef('donghua', ref.provider, ref.slug), dedupeTitle(data.title), data.poster),
     synopsis: data.synopsis,
     status: data.info?.status,
     genres: mapGenres(data.genres, 'name'),
     studios: data.info?.studio ? [{ slug: String(data.info.studio).toLowerCase().replace(/\s+/g, '-'), name: data.info.studio }] : null,
   };
+}
+
+// ponytail: upstream Donghub sometimes returns "Title Title" — detect and halve.
+function dedupeTitle(title: string): string {
+  const t = title.trim();
+  const half = Math.floor(t.length / 2);
+  if (t.length >= 4 && half >= 2 && t.slice(0, half) === t.slice(half).trim()) return t.slice(0, half).trim();
+  return t;
 }
 
 function isNsfwGenre(genre: { slug?: string; name?: string } | undefined): boolean {
@@ -1126,18 +1134,20 @@ export async function searchMedia(query: string, limit?: number, type?: string):
 
 export async function getHomeRails(): Promise<Array<{ title: string; href: string; items: Media[] }>> {
   const [featured, latestDonghua, recommendations, topWeekly, popular] = await Promise.all([
-    getMedia('anime', 1, 15).then((result) => result.data),
-    getLatest('donghua', 15),
-    getComicRecommendations(15).catch(emptyMediaListOnSourceError),
-    getTopWeeklyComics(15).catch(emptyMediaListOnSourceError),
-    getPopular(15),
+    getMedia('anime', 1, 10).then((result) => result.data),
+    getLatest('donghua', 10),
+    getComicRecommendations(10).catch(emptyMediaListOnSourceError),
+    getTopWeeklyComics(10).catch(emptyMediaListOnSourceError),
+    getPopular(10),
   ]);
 
+  const safe = (items: Media[]) => items.filter((item) => !item.nsfw);
+
   return [
-    { title: 'Featured Anime', href: '/discover/anime', items: featured },
-    { title: 'Latest Donghua', href: '/discover/donghua', items: latestDonghua },
-    { title: 'Comic Recommendations', href: '/discover/comic', items: recommendations },
-    { title: 'Top Weekly Comics', href: '/trending', items: topWeekly },
-    { title: 'Popular Comics', href: '/popular', items: popular },
+    { title: 'Featured Anime', href: '/discover/anime', items: safe(featured) },
+    { title: 'Latest Donghua', href: '/discover/donghua', items: safe(latestDonghua) },
+    { title: 'Comic Recommendations', href: '/discover/comic', items: safe(recommendations) },
+    { title: 'Top Weekly Comics', href: '/trending', items: safe(topWeekly) },
+    { title: 'Popular Comics', href: '/popular', items: safe(popular) },
   ].filter((rail) => rail.items.length > 0);
 }
