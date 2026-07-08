@@ -73,9 +73,14 @@ export default async function HomePage() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber/30 to-transparent" />
           <h2 className="font-serif text-3.5xl font-semibold text-foreground">Explore the full catalog</h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted">Find something to watch, read, queue, or revisit.</p>
-          <Link href="/discover" className="mt-8 inline-flex rounded-[4px] bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-void transition-colors hover:bg-primary/90">
-            Browse all
-          </Link>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/discover" className="inline-flex rounded-[4px] bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-void transition-colors hover:bg-primary/90">
+              Browse all
+            </Link>
+            <Link href="/random" className="inline-flex rounded-[4px] border border-border px-6 py-3 font-mono text-xs font-semibold uppercase tracking-[.08em] text-foreground transition-colors hover:border-primary hover:text-primary" aria-label="Surprise me with a random title">
+              🎲 Surprise me
+            </Link>
+          </div>
         </section>
       </main>
     </>
