@@ -7,14 +7,18 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-vi.mock('@/lib/api', () => ({
-  getMedia: vi.fn(),
-  getGenres: vi.fn(),
-  getMediaBySlug: vi.fn(),
-  getChapters: vi.fn(),
-  getEpisodes: vi.fn(),
-  getMediaRelated: vi.fn(),
-}));
+vi.mock('@/lib/api', async () => {
+  const api = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
+  return {
+    ...api,
+    getMedia: vi.fn(),
+    getGenres: vi.fn(),
+    getMediaBySlug: vi.fn(),
+    getChapters: vi.fn(),
+    getEpisodes: vi.fn(),
+    getMediaRelated: vi.fn(),
+  };
+});
 
 const api = await import('@/lib/api');
 
@@ -49,7 +53,7 @@ describe('SEO routes', () => {
     expect(urls).toContain('https://jawatch.test/popular');
     expect(urls).toContain('https://jawatch.test/latest');
     expect(urls).toContain('https://jawatch.test/genres');
-    expect(urls).toContain('https://jawatch.test/media/anime~anime~night-signal');
+    expect(urls).toContain('https://jawatch.test/media/anime/night-signal;anime');
 
     expect(urls).not.toContain('https://jawatch.test/discover/manga');
     expect(urls).not.toContain('https://jawatch.test/discover/movie');
@@ -85,10 +89,10 @@ describe('SEO routes', () => {
 
     const entries = await sitemap();
     const urls = entries.map((entry) => entry.url);
-    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime~anime~empty-date');
+    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date;anime');
 
     expect(urls).toContain('https://jawatch.test/genres/action');
-    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime~anime~night-signal')).toHaveLength(1);
+    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal;anime')).toHaveLength(1);
     expect(fallbackEntry?.lastModified).not.toEqual(new Date('1970-01-01T00:00:00.000Z'));
     expect(api.getMedia).toHaveBeenCalledTimes(1);
   });

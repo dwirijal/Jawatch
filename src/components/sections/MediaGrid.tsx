@@ -1,8 +1,11 @@
 import { Card } from '@/components/ui';
 import type { Media } from '@/lib/api';
+import { decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 
 export function mediaHref(item: Pick<Media, 'slug'>): string {
-  return `/media/${item.slug}`;
+  const ref = decodeMediaRef(item.slug);
+  if (!ref) return `/media/${item.slug}`;
+  return buildCanonicalPath(ref);
 }
 
 type MediaGridProps = {
@@ -14,7 +17,7 @@ export function MediaGrid({ items, limit }: MediaGridProps) {
   const visibleItems = typeof limit === 'number' ? items.slice(0, limit) : items;
 
   return (
-    <div className="grid grid-cols-2 gap-px overflow-hidden border border-hairline bg-hairline sm:grid-cols-3 md:grid-cols-5 rounded-[4px] shadow-lg shadow-black/50">
+    <div className="grid grid-cols-2 gap-px overflow-hidden border border-border bg-hairline sm:grid-cols-3 md:grid-cols-5 rounded-[4px] shadow-lg shadow-black/50">
       {visibleItems.map((item) => (
         <Card
           key={item.slug}

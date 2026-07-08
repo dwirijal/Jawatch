@@ -13,7 +13,7 @@ export function Chip({
       className={`font-sans text-[12.5px] px-[13px] py-[6px] border rounded-[20px] cursor-pointer transition-colors ${
         active
           ? 'bg-paper text-void border-paper'
-          : 'border-hairline text-paper hover:border-paper'
+          : 'border-border text-foreground hover:border-paper'
       }`}
     >
       {children}

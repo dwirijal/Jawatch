@@ -4,6 +4,8 @@ import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import Link from 'next/link';
 
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: 'Discover',
   description: 'Jelajahi katalog anime, manga, donghua, movie, comic, dan novel di jawatch.',

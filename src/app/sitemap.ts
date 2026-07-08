@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getGenres, getMedia } from '@/lib/api';
+import { getGenres, getMedia, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { siteUrl } from '@/lib/site-url';
 
 export const revalidate = 300;
@@ -49,11 +49,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.5,
     })),
-    ...mediaItems.map((item) => ({
-      url: `${baseUrl}/media/${item.slug}`,
-      lastModified: safeDate(item.updatedAt || item.createdAt, now),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    })),
+    ...mediaItems.map((item) => {
+      const ref = decodeMediaRef(item.slug);
+      if (!ref) return null;
+      return {
+        url: `${baseUrl}${buildCanonicalPath(ref)}`,
+        lastModified: safeDate(item.updatedAt || item.createdAt, now),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      };
+    }).filter(Boolean) as MetadataRoute.Sitemap,
   ];
 }

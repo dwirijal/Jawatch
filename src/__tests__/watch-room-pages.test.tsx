@@ -14,17 +14,21 @@ vi.mock('@/components/VideoPlayer', () => ({
   ),
 }));
 
-vi.mock('@/lib/api', () => ({
-  getMediaBySlug: vi.fn(),
-  getEpisodeSources: vi.fn(),
-  getEpisodes: vi.fn(),
-  getChapters: vi.fn(),
-  getMediaRelated: vi.fn(),
-}));
+vi.mock('@/lib/api', async () => {
+  const api = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
+  return {
+    ...api,
+    getMediaBySlug: vi.fn(),
+    getEpisodeSources: vi.fn(),
+    getEpisodes: vi.fn(),
+    getChapters: vi.fn(),
+    getMediaRelated: vi.fn(),
+  };
+});
 
 const api = await import('@/lib/api');
 const media = {
-  slug: 'anime-slug',
+  slug: 'anime~anime~night-signal',
   type: 'anime' as const,
   title: 'Night Signal',
   synopsis: 'A signal in the dark.',
@@ -45,7 +49,7 @@ describe('watch-room pages', () => {
     vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
     const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
 
-    render(await EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'episode-2' }) }));
+    render(await EpisodePage({ params: Promise.resolve({ slug: media.slug, episodeSlug: 'episode-2' }) }));
 
     expect(screen.getByTestId('video-player-props')).toHaveTextContent('1:episode-1,episode-2');
   });
@@ -56,7 +60,7 @@ describe('watch-room pages', () => {
     vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
     const { default: EpisodePage } = await import('@/app/media/[slug]/episodes/[episodeSlug]/page');
 
-    render(await EpisodePage({ params: Promise.resolve({ slug: 'anime-slug', episodeSlug: 'episode-2' }) }));
+    render(await EpisodePage({ params: Promise.resolve({ slug: media.slug, episodeSlug: 'episode-2' }) }));
 
     expect(screen.getByTestId('video-player-props')).toHaveTextContent('0:episode-2');
   });
@@ -76,8 +80,8 @@ describe('watch-room pages', () => {
     vi.mocked(api.getMediaRelated).mockResolvedValue([]);
     const { default: MediaPage } = await import('@/app/media/[slug]/page');
 
-    render(await MediaPage({ params: Promise.resolve({ slug: 'anime-slug' }) }));
+    render(await MediaPage({ params: Promise.resolve({ slug: media.slug }) }));
 
-    expect(screen.getByRole('link', { name: /start watching/i })).toHaveAttribute('href', '/media/anime-slug/episodes/episode-1');
+    expect(screen.getByRole('link', { name: /start watching/i })).toHaveAttribute('href', '/media/anime/night-signal;anime/episodes/episode-1');
   });
 });

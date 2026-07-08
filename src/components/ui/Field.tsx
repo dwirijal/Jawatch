@@ -13,7 +13,7 @@ export function Field({
       )}
       <input
         placeholder={placeholder}
-        className="w-full bg-surface border border-hairline text-paper font-sans text-sm px-[14px] py-[11px] mt-1.5 placeholder:text-muted focus:outline-none focus:border-amber transition-colors"
+        className="w-full bg-card border border-border text-foreground font-sans text-sm px-[14px] py-[11px] mt-1.5 placeholder:text-muted focus:outline-none focus:border-amber transition-colors"
         {...props}
       />
     </div>

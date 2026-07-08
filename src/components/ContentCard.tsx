@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Media } from '@/lib/api';
+import { Media, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 
 export function ContentCard({ content }: { content: Media }) {
   const isNew = new Date(content.createdAt).getTime() > Date.now() - 7 * 86400000;
   const [imgError, setImgError] = useState(false);
-  const href = `/media/${content.slug}`;
+  const ref = decodeMediaRef(content.slug);
+  const href = ref ? buildCanonicalPath(ref) : `/media/${content.slug}`;
 
   return (
     <Link href={href} className="group block">

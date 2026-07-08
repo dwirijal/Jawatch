@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/latest' },
 };
 
+export const revalidate = 300;
+
 export default async function LatestPage() {
   const contents = await getLatest(undefined, 60);
 

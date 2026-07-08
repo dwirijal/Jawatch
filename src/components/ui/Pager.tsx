@@ -14,7 +14,7 @@ export function Pager({
       <button
         onClick={() => onChange?.(current - 1)}
         disabled={current <= 1}
-        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-hairline cursor-pointer hover:text-paper disabled:opacity-40"
+        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
       >
         ‹
       </button>
@@ -24,8 +24,8 @@ export function Pager({
           onClick={() => onChange?.(p)}
           className={`font-mono text-xs w-[30px] h-[30px] flex items-center justify-center border cursor-pointer ${
             p === current
-              ? 'text-void bg-amber border-amber'
-              : 'text-muted border-hairline hover:text-paper'
+              ? 'text-void bg-primary border-amber'
+              : 'text-muted border-border hover:text-foreground'
           }`}
         >
           {p}
@@ -34,7 +34,7 @@ export function Pager({
       <button
         onClick={() => onChange?.(current + 1)}
         disabled={current >= total}
-        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-hairline cursor-pointer hover:text-paper disabled:opacity-40"
+        className="font-mono text-xs w-[30px] h-[30px] flex items-center justify-center text-muted border border-border cursor-pointer hover:text-foreground disabled:opacity-40"
       >
         ›
       </button>

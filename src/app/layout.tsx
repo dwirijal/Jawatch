@@ -44,12 +44,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={`${inter.variable}`}>
-      <body className="bg-void text-paper font-sans antialiased min-h-screen flex flex-col">
+      <body className="bg-background text-foreground font-sans antialiased min-h-screen flex flex-col">
         {/* Sticky Nav */}
-        <header className="sticky top-0 z-50 border-b border-hairline bg-void/85 backdrop-blur-md">
+        <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="font-serif text-xl font-bold tracking-tight text-amber hover:opacity-80 transition-opacity shrink-0">
+            <Link href="/" className="font-serif text-xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity shrink-0">
               <span className="hidden sm:inline">jawatch</span>
               <span className="sm:hidden text-base">jw</span>
             </Link>
@@ -60,7 +60,7 @@ export default function RootLayout({
                 name="q"
                 type="search"
                 placeholder="Search titles..."
-                className="w-full bg-surface border border-hairline rounded-[4px] px-3.5 py-2 text-[13px] font-mono text-paper placeholder:text-muted/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
+                className="w-full bg-card border border-border rounded-[4px] px-3.5 py-2 text-[13px] font-mono text-foreground placeholder:text-muted/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
               />
               <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -69,16 +69,16 @@ export default function RootLayout({
 
             {/* Nav links */}
             <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-[.08em]">
-              <Link href="/discover" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Discover</Link>
-              <Link href="/trending" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Trending</Link>
-              <Link href="/popular" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Popular</Link>
-              <Link href="/latest" className="p-2 min-h-[44px] flex items-center text-muted hover:text-paper transition-colors">Latest</Link>
-              <Link href="/random" className="p-2 min-h-[44px] flex items-center text-muted hover:text-amber transition-colors">🎲</Link>
+              <Link href="/discover" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Discover</Link>
+              <Link href="/trending" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Trending</Link>
+              <Link href="/popular" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Popular</Link>
+              <Link href="/latest" className="p-2 min-h-[44px] flex items-center text-muted hover:text-foreground transition-colors">Latest</Link>
+              <Link href="/random" className="p-2 min-h-[44px] flex items-center text-muted hover:text-primary transition-colors">🎲</Link>
             </nav>
 
             {/* Mobile hamburger placeholder */}
             <div className="md:hidden">
-              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-[.08em] text-teal-bright hover:text-amber transition-colors">
+              <Link href="/discover" className="font-mono text-[10px] uppercase tracking-[.08em] text-accent-bright hover:text-primary transition-colors">
                 Browse
               </Link>
             </div>
@@ -89,15 +89,15 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
 
         {/* Footer */}
-        <footer className="border-t border-hairline mt-20">
+        <footer className="border-t border-border mt-20">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="font-mono text-[11px] text-muted">
               jawatch &copy; {new Date().getFullYear()}
             </div>
             <div className="flex gap-6 font-mono text-[11px]">
-              <Link href="/sitemap.xml" className="text-muted hover:text-paper transition-colors">Sitemap</Link>
-              <Link href="/discover" className="text-muted hover:text-paper transition-colors">Browse</Link>
-              <Link href="/library" className="text-muted hover:text-paper transition-colors">Library</Link>
+              <Link href="/sitemap.xml" className="text-muted hover:text-foreground transition-colors">Sitemap</Link>
+              <Link href="/discover" className="text-muted hover:text-foreground transition-colors">Browse</Link>
+              <Link href="/library" className="text-muted hover:text-foreground transition-colors">Library</Link>
             </div>
           </div>
         </footer>

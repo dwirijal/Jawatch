@@ -56,7 +56,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
 
   if (!videoUrl) {
     return (
-      <div className="aspect-video bg-void rounded-none border border-hairline flex items-center justify-center grain">
+      <div className="aspect-video bg-background rounded-none border border-border flex items-center justify-center grain">
         <p className="text-muted text-sm font-mono uppercase tracking-wider">Stream belum tersedia untuk episode ini.</p>
       </div>
     );
@@ -66,9 +66,9 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
     <section className="space-y-6" aria-label="Watch room">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-4">
-          <div className="relative aspect-video overflow-hidden rounded-none bg-void shadow-2xl ring-1 ring-hairline">
+          <div className="relative aspect-video overflow-hidden rounded-none bg-background shadow-2xl ring-1 ring-hairline">
             {loading && (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-void/80 backdrop-blur-sm">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
                 <div className="h-10 w-10 rounded-none border-2 border-amber border-t-transparent animate-spin" />
               </div>
             )}
@@ -89,14 +89,14 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
 
           {sources.length > 1 && (
             <div className="flex flex-wrap items-center gap-2" aria-label="Server & quality">
-              <span className="font-mono text-[9px] uppercase tracking-[.18em] text-teal-bright">Server</span>
+              <span className="font-mono text-[9px] uppercase tracking-[.18em] text-accent-bright">Server</span>
               {sources.map((s, i) => (
                 <button
                   key={s.url}
                   type="button"
                   onClick={() => setActiveSource(i)}
                   aria-pressed={i === activeSource}
-                  className={`border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.08em] transition-colors rounded-none ${i === activeSource ? 'border-amber bg-amber text-void' : 'border-hairline text-muted hover:border-paper hover:text-paper'}`}
+                  className={`border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.08em] transition-colors rounded-none ${i === activeSource ? 'border-amber bg-primary text-void' : 'border-border text-muted hover:border-paper hover:text-foreground'}`}
                 >
                   {s.label || s.quality || `S${i + 1}`}
                 </button>
@@ -104,10 +104,10 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
             </div>
           )}
 
-          <div className="flex flex-col gap-3 border border-hairline bg-surface/30 p-5 sm:flex-row sm:items-center sm:justify-between grain">
+          <div className="flex flex-col gap-3 border border-border bg-card/30 p-5 sm:flex-row sm:items-center sm:justify-between grain">
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[.18em] text-teal-bright">Now playing</p>
-              <h1 className="mt-1.5 font-serif text-2xl font-bold text-paper">Episode {currentNumber}</h1>
+              <p className="font-mono text-[9px] uppercase tracking-[.18em] text-accent-bright">Now playing</p>
+              <h1 className="mt-1.5 font-serif text-2xl font-bold text-foreground">Episode {currentNumber}</h1>
               <p className="mt-1 text-xs text-muted">{currentTitle}</p>
             </div>
             <div className="flex gap-2">
@@ -116,7 +116,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                 onClick={() => switchEpisode(Math.max(0, epIndex - 1))}
                 disabled={epIndex === 0 || loading}
                 aria-label="Previous episode"
-                className="border border-hairline px-4 py-2 font-mono text-[10px] uppercase tracking-[.08em] text-paper transition-colors hover:border-amber/60 hover:text-amber disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
+                className="border border-border px-4 py-2 font-mono text-[10px] uppercase tracking-[.08em] text-foreground transition-colors hover:border-amber/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
               >
                 ← Prev
               </button>
@@ -125,7 +125,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                 onClick={() => switchEpisode(Math.min(episodes.length - 1, epIndex + 1))}
                 disabled={!nextEp || loading}
                 aria-label="Next episode"
-                className="border border-amber px-4 py-2 font-mono text-[10px] uppercase tracking-[.08em] text-amber transition-colors hover:bg-amber hover:text-void disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
+                className="border border-amber px-4 py-2 font-mono text-[10px] uppercase tracking-[.08em] text-primary transition-colors hover:bg-primary hover:text-void disabled:cursor-not-allowed disabled:opacity-30 rounded-none"
               >
                 Next →
               </button>
@@ -133,7 +133,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
           </div>
 
           {episodeListError && (
-            <p className="text-xs text-amber" role="status">Daftar episode gagal dimuat. Episode saat ini tetap bisa diputar.</p>
+            <p className="text-xs text-primary" role="status">Daftar episode gagal dimuat. Episode saat ini tetap bisa diputar.</p>
           )}
 
           {nearbyEpisodes.length > 1 && (
@@ -148,7 +148,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                     onClick={() => switchEpisode(idx)}
                     disabled={loading}
                     aria-label={`Play nearby episode ${number} ${ep.title || ''}`.trim()}
-                    className={`min-w-14 border px-3 py-2 font-mono text-xs transition-colors ${idx === epIndex ? 'border-amber bg-amber text-void' : 'border-hairline text-muted hover:border-paper hover:text-paper'}`}
+                    className={`min-w-14 border px-3 py-2 font-mono text-xs transition-colors ${idx === epIndex ? 'border-amber bg-primary text-void' : 'border-border text-muted hover:border-paper hover:text-foreground'}`}
                   >
                     EP {number}
                   </button>
@@ -164,29 +164,29 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
               type="button"
               onClick={() => switchEpisode(epIndex + 1)}
               disabled={loading}
-              className="w-full border border-hairline bg-surface p-4 text-left transition-colors hover:border-amber"
+              className="w-full border border-border bg-card p-4 text-left transition-colors hover:border-amber"
             >
-              <span className="font-mono text-[10px] uppercase tracking-[.14em] text-amber">Up next</span>
-              <span className="mt-2 block font-serif text-lg text-paper">Episode {nextEp.episodeNumber || epIndex + 2}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[.14em] text-primary">Up next</span>
+              <span className="mt-2 block font-serif text-lg text-foreground">Episode {nextEp.episodeNumber || epIndex + 2}</span>
               <span className="mt-1 block text-sm text-muted">{nextEp.title || 'Untitled'}</span>
             </button>
           )}
 
           {episodes.length > 1 && (
-            <div className="border border-hairline bg-surface/70">
+            <div className="border border-border bg-card/70">
               <button
                 type="button"
                 onClick={() => setShowList(!showList)}
                 aria-expanded={showList}
                 aria-controls="episode-queue"
                 aria-label="Open episode queue"
-                className="flex w-full items-center justify-between px-4 py-3 font-mono text-xs uppercase tracking-[.08em] text-paper transition-colors hover:text-amber"
+                className="flex w-full items-center justify-between px-4 py-3 font-mono text-xs uppercase tracking-[.08em] text-foreground transition-colors hover:text-primary"
               >
                 Episodes
                 <span className="text-muted">{episodes.length}</span>
               </button>
               {showList && (
-                <div id="episode-queue" role="region" aria-label="Episode queue" className="max-h-80 overflow-y-auto border-t border-hairline p-2">
+                <div id="episode-queue" role="region" aria-label="Episode queue" className="max-h-80 overflow-y-auto border-t border-border p-2">
                   {episodes.map((ep, idx) => {
                     const number = ep.episodeNumber || idx + 1;
                     return (
@@ -195,7 +195,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                         type="button"
                         onClick={() => switchEpisode(idx)}
                         disabled={loading}
-                        className={`block w-full px-3 py-2 text-left transition-colors ${idx === epIndex ? 'bg-amber text-void' : 'text-muted hover:bg-void/40 hover:text-paper'}`}
+                        className={`block w-full px-3 py-2 text-left transition-colors ${idx === epIndex ? 'bg-primary text-void' : 'text-muted hover:bg-background/40 hover:text-foreground'}`}
                       >
                         <span className="font-mono text-xs">Episode {number}</span>
                         <span className="ml-2 text-sm">{ep.title || 'Untitled'}</span>

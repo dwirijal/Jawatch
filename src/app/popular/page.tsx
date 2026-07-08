@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/popular' },
 };
 
+export const revalidate = 300;
+
 export default async function PopularPage() {
   const contents = await getPopular(60);
 
