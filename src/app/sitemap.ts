@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getGenres, getMedia, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
+import { getGenres, getMedia, getStudios, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { siteUrl } from '@/lib/site-url';
 
 export const revalidate = 300;
@@ -15,6 +15,7 @@ const staticRoutes = [
   { path: '/popular', priority: 0.7, changeFrequency: 'daily' as const },
   { path: '/latest', priority: 0.7, changeFrequency: 'daily' as const },
   { path: '/genres', priority: 0.5, changeFrequency: 'weekly' as const },
+  { path: '/studios', priority: 0.5, changeFrequency: 'weekly' as const },
 ];
 
 function safeDate(value: string | undefined, fallback: Date): Date {
@@ -31,9 +32,10 @@ async function getSitemapMedia() {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteUrl();
   const now = new Date();
-  const [mediaItems, genres] = await Promise.all([
+  const [mediaItems, genres, studios] = await Promise.all([
     getSitemapMedia(),
     getGenres().catch(() => []),
+    getStudios().catch(() => []),
   ]);
 
   return [
@@ -45,6 +47,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...genres.map((genre) => ({
       url: `${baseUrl}/genres/${genre.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    })),
+    ...studios.map((studio) => ({
+      url: `${baseUrl}/studios/${studio.slug}`,
       lastModified: now,
       changeFrequency: 'weekly' as const,
       priority: 0.5,

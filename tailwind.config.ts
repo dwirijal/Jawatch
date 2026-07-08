@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { text, tracking } from "./src/components/ui/tokens";
 
 const config: Config = {
   content: [
@@ -13,6 +14,7 @@ const config: Config = {
         foreground: "rgb(var(--foreground) / <alpha-value>)",
         card: "rgb(var(--card) / <alpha-value>)",
         muted: "rgb(var(--muted) / <alpha-value>)",
+        "muted-foreground": "rgb(var(--muted-foreground) / <alpha-value>)",
         border: "rgb(var(--border) / <alpha-value>)",
         primary: {
           DEFAULT: "rgb(var(--primary) / <alpha-value>)",
@@ -27,6 +29,30 @@ const config: Config = {
         paper: "rgb(var(--foreground))",
         amber: "rgb(var(--primary))",
         teal: "rgb(var(--accent))",
+      },
+      borderRadius: {
+        sm: "2px",
+        chip: "8px",
+        card: "14px",
+        pill: "20px",
+        page: "4px",
+      },
+      fontSize: {
+        eyebrow: [text.eyebrow, { lineHeight: "1.2", letterSpacing: tracking.eyebrow }],
+        tag: [text.tag, { lineHeight: "1.3", letterSpacing: tracking.tag }],
+        micro: [text.micro, { lineHeight: "1.4", letterSpacing: tracking.micro }],
+        chip: [text.chip, { lineHeight: "1.4", letterSpacing: tracking.xs }],
+        body: [text.body, { lineHeight: "1.6" }],
+      },
+      letterSpacing: {
+        eyebrow: tracking.eyebrow,
+        label: tracking.label,
+        tag: tracking.tag,
+        micro: tracking.micro,
+        xs: tracking.xs,
+        wide: tracking.wide,
+        wide2: tracking.wide2,
+        wide3: tracking.wide3,
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
