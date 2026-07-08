@@ -1,0 +1,1520 @@
+$ next dev -H 0.0.0.0 -p "3002"
+   ▲ Next.js 15.3.6
+   - Local:        http://localhost:3002
+   - Network:      http://0.0.0.0:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.8s
+ ○ Compiling / ...
+ ✓ Compiled / in 10.6s (804 modules)
+ GET / 200 in 11369ms
+ ✓ Compiled in 859ms (346 modules)
+ GET / 200 in 134ms
+ ✓ Compiled in 639ms (346 modules)
+ ✓ Compiled in 233ms (332 modules)
+ GET / 200 in 200ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 619ms (785 modules)
+ GET /_next/static/css/app/layout.css?v=1783353459073 404 in 993ms
+ GET /_next/static/css/app/layout.css?v=1783353459073 404 in 73ms
+   Reload env: .env.local
+ ✓ Compiled in 569ms (785 modules)
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/app/page.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.5s (1119 modules)
+ GET / 500 in 4203ms
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/pages/_document.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET / 500 in 262ms
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/pages/_document.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET / 500 in 260ms
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/pages/_document.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET / 500 in 259ms
+ ✓ Compiled in 1065ms (593 modules)
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/pages/_document.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 500 in 107ms
+ ⨯ Error: Cannot find module './51.js'
+Require stack:
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/webpack-runtime.js
+- /home/dwizzy/dwizzyOS/jawatch/.next/server/pages/_document.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/require.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/load-components.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/utils.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/options.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/swc/index.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/parse-module.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/router-server.js
+- /home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/server/lib/start-server.js
+    at __webpack_require__.f.require (.next/server/webpack-runtime.js:198:28)
+    at <unknown> (.next/server/webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (.next/server/webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (.next/server/webpack-runtime.js:162:22)
+    at <unknown> (.next/server/app/page.js:1:8980)
+    at Object.<anonymous> (.next/server/app/page.js:1:9040) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ GET / 500 in 287ms
+ ✓ Compiled in 451ms (593 modules)
+ ✓ Compiled in 262ms (593 modules)
+ ✓ Compiled in 428ms (593 modules)
+ ✓ Compiled in 371ms (593 modules)
+ ✓ Compiled in 1248ms (1129 modules)
+ ✓ Compiled in 773ms (593 modules)
+ ✓ Compiled in 896ms (1115 modules)
+ ✓ Compiled in 397ms (593 modules)
+ ✓ Compiled in 690ms (593 modules)
+ ✓ Compiled in 349ms (593 modules)
+ ✓ Compiled in 335ms (593 modules)
+ ✓ Compiled in 516ms (593 modules)
+ ✓ Compiled in 185ms (593 modules)
+ ✓ Compiled in 229ms (593 modules)
+ ✓ Compiled in 242ms (593 modules)
+ ✓ Compiled in 1379ms (1129 modules)
+ ✓ Compiled in 325ms (593 modules)
+ ✓ Compiled in 1243ms (1129 modules)
+ ✓ Compiled in 256ms (593 modules)
+ ✓ Compiled in 317ms (593 modules)
+ ✓ Compiled in 1507ms (1129 modules)
+ ✓ Compiled in 693ms (593 modules)
+ ✓ Compiled in 275ms (593 modules)
+ ✓ Compiled in 270ms (593 modules)
+ ✓ Compiled in 433ms (593 modules)
+ ✓ Compiled in 362ms (593 modules)
+ ✓ Compiled in 755ms (593 modules)
+ ✓ Compiled in 549ms (593 modules)
+ ✓ Compiled in 1424ms (1129 modules)
+ ✓ Compiled in 1046ms (1128 modules)
+ ✓ Compiled in 1376ms (1129 modules)
+ ✓ Compiled in 890ms (1129 modules)
+ ✓ Compiled in 677ms (1129 modules)
+ ✓ Compiled in 647ms (1129 modules)
+ ✓ Compiled in 722ms (593 modules)
+ ✓ Compiled in 450ms (593 modules)
+ ✓ Compiled in 206ms (593 modules)
+ ✓ Compiled in 330ms (593 modules)
+ ✓ Compiled in 627ms (593 modules)
+ ✓ Compiled in 1120ms (1115 modules)
+ ✓ Compiled in 448ms (593 modules)
+ ✓ Compiled in 347ms (593 modules)
+ ✓ Compiled in 992ms (1129 modules)
+ ✓ Compiled in 427ms (1129 modules)
+ ✓ Compiled in 276ms (593 modules)
+ ✓ Compiled in 1584ms (1129 modules)
+ ✓ Compiled in 265ms (593 modules)
+ ✓ Compiled in 232ms (593 modules)
+ ✓ Compiled in 431ms (593 modules)
+ ✓ Compiled in 341ms (593 modules)
+ ✓ Compiled in 292ms (593 modules)
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⚠ ./src/components/ui/Badge.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Button.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/button.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Button.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Card.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Card.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/card.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Card.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+
+./src/components/ui/Tabs.tsx
+There are multiple modules with names that only differ in casing.
+This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
+Use equal casing. Compare these module identifiers:
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/Tabs.tsx|rsc
+    Used by 2 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+* javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/tabs.tsx|rsc
+    Used by 1 module(s), i. e.
+    javascript/auto|/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/home/dwizzy/dwizzyOS/jawatch/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[15].oneOf[4].use[0]!/home/dwizzy/dwizzyOS/jawatch/src/components/ui/index.ts|rsc
+
+Import trace for requested module:
+./src/components/ui/Tabs.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ⨯ ./src/components/ui/badge.tsx
+Error: Failed to read source code from /home/dwizzy/dwizzyOS/jawatch/src/components/ui/badge.tsx
+
+Caused by:
+    No such file or directory (os error 2)
+
+Import trace for requested module:
+./src/components/ui/badge.tsx
+./src/components/ui/index.ts
+./src/components/sections/MediaGrid.tsx
+./src/app/page.tsx
+ ✓ Compiled in 800ms (1166 modules)
+ ✓ Compiled in 2.5s (1166 modules)
+ ✓ Compiled in 412ms (1152 modules)
+ ✓ Compiled in 1512ms (1166 modules)
+ ✓ Compiled in 660ms (1166 modules)
+ ✓ Compiled in 509ms (1166 modules)
+ ✓ Compiled in 230ms (600 modules)
+ ✓ Compiled in 489ms (600 modules)
+ ✓ Compiled in 388ms (600 modules)
+ ✓ Compiled in 332ms (600 modules)
+ ✓ Compiled in 1581ms (1166 modules)
+ ✓ Compiled in 983ms (1166 modules)
+ ✓ Compiled in 1746ms (1166 modules)
+ ✓ Compiled in 734ms (1166 modules)
+ ✓ Compiled in 1558ms (1166 modules)
+ ✓ Compiled in 1405ms (1166 modules)
+ ✓ Compiled in 667ms (1166 modules)
+ ✓ Compiled in 1325ms (1166 modules)
+ ✓ Compiled in 367ms (600 modules)
+ ✓ Compiled in 220ms (600 modules)
+ ✓ Compiled in 487ms (1166 modules)
+ ✓ Compiled in 721ms (1166 modules)
+ ✓ Compiled in 390ms (600 modules)
+ ✓ Compiled in 1683ms (1166 modules)
+ ✓ Compiled in 698ms (600 modules)
+ ✓ Compiled in 324ms (600 modules)
+ ✓ Compiled in 261ms (600 modules)
+ ✓ Compiled in 268ms (600 modules)
+ ✓ Compiled in 350ms (600 modules)
+ ✓ Compiled in 1195ms (1167 modules)
+ ✓ Compiled in 254ms (600 modules)
+ ✓ Compiled in 478ms (1167 modules)
+ ✓ Compiled in 1150ms (1167 modules)
+ ✓ Compiled in 540ms (1167 modules)
+ ✓ Compiled in 266ms (600 modules)
+ ✓ Compiled in 203ms (600 modules)
+ ✓ Compiled in 395ms (600 modules)
+ ✓ Compiled in 462ms (600 modules)
+ ✓ Compiled in 538ms (600 modules)
+ ✓ Compiled in 621ms (600 modules)
+ ✓ Compiled in 321ms (600 modules)
+ ✓ Compiled in 857ms (600 modules)
+ ✓ Compiled in 523ms (600 modules)
+ ✓ Compiled in 375ms (600 modules)
+ ✓ Compiled in 243ms (600 modules)
+ ✓ Compiled in 846ms (600 modules)
+ ✓ Compiled in 537ms (600 modules)
+ ✓ Compiled in 257ms (600 modules)
+ ✓ Compiled in 215ms (600 modules)
+ ✓ Compiled in 500ms (600 modules)
+ ✓ Compiled in 620ms (600 modules)
+ ✓ Compiled in 242ms (600 modules)
+ ✓ Compiled in 297ms (600 modules)
+ ✓ Compiled in 280ms (600 modules)
+ ✓ Compiled in 1442ms (1167 modules)
+ ✓ Compiled in 392ms (600 modules)
+ ✓ Compiled in 223ms (600 modules)
+ ✓ Compiled in 251ms (600 modules)
+ ✓ Compiled in 698ms (600 modules)
+ ✓ Compiled in 894ms (1167 modules)
+ ✓ Compiled in 323ms (600 modules)
+ ✓ Compiled in 357ms (600 modules)
+ ✓ Compiled in 685ms (600 modules)
+ ✓ Compiled in 440ms (600 modules)
+ ✓ Compiled in 322ms (600 modules)
+ ✓ Compiled in 2.1s (1167 modules)
+ ✓ Compiled in 1236ms (1167 modules)
+ ✓ Compiled in 457ms (1167 modules)
+ ✓ Compiled in 221ms (600 modules)
+ ✓ Compiled in 558ms (1167 modules)
+ ✓ Compiled in 1409ms (1167 modules)
+ ✓ Compiled in 588ms (1167 modules)
+ ⚠ Found a change in next.config.js. Restarting the server to apply the changes...
+   ▲ Next.js 15.3.6
+   - Local:        http://localhost:3002
+   - Network:      http://0.0.0.0:3002
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.8s
+   Reload env: .env.local
+[?25h

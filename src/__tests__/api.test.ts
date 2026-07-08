@@ -1,115 +1,369 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getContents, getTrending, getContent, searchContents, getStreams } from '@/lib/api';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock fetch globally
-global.fetch = vi.fn();
+const originalEnv = {
+  JAWATCH_MEDIA_API_URL: process.env.JAWATCH_MEDIA_API_URL,
+  JAWATCH_MEDIA_API_TIMEOUT_MS: process.env.JAWATCH_MEDIA_API_TIMEOUT_MS,
+};
+
+function setFetchMock(mock: ReturnType<typeof vi.fn>) {
+  Object.defineProperty(globalThis, 'fetch', {
+    value: mock,
+    writable: true,
+    configurable: true,
+  });
+}
+
+async function loadApi() {
+  vi.resetModules();
+  return import('@/lib/api');
+}
 
 describe('API Client', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
+    delete process.env[`NEXT_PUBLIC_${'API'}_URL`];
+    delete process.env[`NEXT_PUBLIC_${'USE'}_MEDIA_API`];
+    process.env.JAWATCH_MEDIA_API_URL = 'https://www.sankavollerei.web.id';
+    process.env.JAWATCH_MEDIA_API_TIMEOUT_MS = '1';
   });
 
-  describe('getContents', () => {
-    it('should fetch paginated contents with default params', async () => {
-      const mockResponse = {
-        data: [{ id: 1, title: 'Test', content_type: 'anime' }],
-        meta: { page: 1, limit: 20, total: 1, has_next: false },
-        error: null,
-      };
-
-      (global.fetch as any).mockResolvedValueOnce({
+  it('normalizes anime search envelope', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValue({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })
+      .mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResponse,
+        text: async () => JSON.stringify({
+          status: 'success',
+          data: {
+            animeList: [
+              {
+                title: 'One Piece Subtitle Indonesia',
+                animeId: '1piece-sub-indo',
+                poster: 'https://img/anime.jpg',
+                score: '8.54',
+                status: 'Ongoing',
+                genreList: [{ title: 'Action', genreId: 'action' }],
+              },
+            ],
+          },
+        }),
       });
+    setFetchMock(fetchMock);
+    const { searchMedia } = await loadApi();
 
-      const result = await getContents();
+    const result = await searchMedia('one piece', 20);
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/contents'),
-        expect.objectContaining({
-          headers: { Accept: 'application/json' },
-        })
-      );
-      expect(result).toEqual(mockResponse);
+    expect(fetchMock.mock.calls[0][0]).toContain('/anime/search/one%20piece');
+    expect(result.data[0]).toMatchObject({ type: 'anime', title: 'One Piece Subtitle Indonesia' });
+    expect(result.data[0]?.slug).toMatch(/^m~/);
+    expect(result.data[0]?.slug).not.toContain('anime~anime');
+    expect(result.total).toBe(1);
+  });
+
+  it('returns empty media page when media source URL is missing', async () => {
+    process.env.JAWATCH_MEDIA_API_URL = '';
+    const fetchMock = vi.fn();
+    setFetchMock(fetchMock);
+    const { getMedia } = await loadApi();
+
+    await expect(getMedia('anime', 1, 10)).resolves.toEqual({ data: [], total: 0, hasMore: false });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('returns empty media page on media source timeout', async () => {
+    const fetchMock = vi.fn().mockRejectedValueOnce(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+    setFetchMock(fetchMock);
+    const { getMedia } = await loadApi();
+
+    const result = await getMedia('anime', 1, 10);
+
+    expect(result).toEqual({ data: [], total: 0, hasMore: false });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('throws a neutral error on non-timeout media source failure', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValue({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })
+      .mockResolvedValueOnce({ ok: false, text: async () => JSON.stringify({ message: 'Query parameter is required' }) });
+    setFetchMock(fetchMock);
+    const { searchMedia } = await loadApi();
+
+    await expect(searchMedia('one piece', 20)).resolves.toEqual({ data: [], total: 0 });
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
+  it('fans out popular rows across verified comic endpoints', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ results: [] }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ results: [] }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', mangaList: [] }) });
+    setFetchMock(fetchMock);
+    const { getPopular } = await loadApi();
+
+    await expect(getPopular(10)).resolves.toEqual([]);
+    expect(fetchMock.mock.calls.map((call) => call[0]).join(' ')).toContain('/comic/komikstation/top-weekly');
+    expect(fetchMock.mock.calls.map((call) => call[0]).join(' ')).toContain('/comic/komikstation/recommendation');
+    expect(fetchMock.mock.calls.map((call) => call[0]).join(' ')).toContain('/comic/mangasusuku/popular');
+  });
+
+  it('uses the donghub latest endpoint and encoded provider consistently', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify({
+        status: 'success',
+        data: [{ slug: 'perfect-world', title: 'Perfect World', poster: 'https://img/donghua.jpg' }],
+      }),
     });
+    setFetchMock(fetchMock);
+    const { getLatest } = await loadApi();
 
-    it('should include query params when provided', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
+    const result = await getLatest('donghua', 10);
+
+    expect(fetchMock.mock.calls[0][0]).toContain('/anime/donghub/latest');
+    expect(result[0]).toMatchObject({ type: 'donghua' });
+    expect(result[0]?.slug).toMatch(/^m~/);
+    expect(result[0]?.slug).not.toContain('donghub');
+  });
+
+  it('maps anime and comic genre items without private extras', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { animeList: [{ animeId: 'a', title: 'Anime A', poster: 'https://img/a.jpg' }] } }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ comics: [{ title: 'Comic A', link: 'https://x/comic-a/', image: 'https://img/c.jpg' }] }) });
+    setFetchMock(fetchMock);
+    const { getMediaByGenre } = await loadApi();
+
+    const result = await getMediaByGenre('action');
+
+    expect(result.map((item: { type: string }) => item.type)).toEqual(['anime', 'comic']);
+    expect(result.map((item: { slug: string }) => item.slug)).toEqual([expect.stringMatching(/^m~/), expect.stringMatching(/^m~/)]);
+    expect(result.map((item: { slug: string }) => item.slug).join(' ')).not.toMatch(/donghub|komikstation|mangasusuku|generic|anime~anime/);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('fetches fewer random candidates in media source mode', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { ongoing: { animeList: [] }, completed: { animeList: [{ animeId: 'a', title: 'Anime A', poster: 'https://img/a.jpg' }] } } }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', results: [] }) });
+    setFetchMock(fetchMock);
+    const { getRandom } = await loadApi();
+
+    const result = await getRandom();
+
+    expect(result?.slug).toMatch(/^m~/);
+    expect(fetchMock.mock.calls[0][0]).toContain('/anime/home');
+  });
+
+  it('maps watcher and reader payloads', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { defaultStreamingUrl: 'https://player.test/embed' } }) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', images: ['https://img/p1.jpg'] }) });
+    setFetchMock(fetchMock);
+    const { getEpisodeSources, getChapterPages } = await loadApi();
+
+    await expect(getEpisodeSources('anime~anime~one-piece', 'one-piece-1')).resolves.toEqual([{ url: 'https://player.test/embed', label: 'Default', quality: 'auto' }]);
+    await expect(getChapterPages('comic~komikstation~one-piece', 'chapter-1')).resolves.toEqual([{ url: 'https://img/p1.jpg', pageNumber: 1 }]);
+  });
+
+  it('returns empty array for episodes on undecodable slug', async () => {
+    const fetchMock = vi.fn();
+    setFetchMock(fetchMock);
+    const { getEpisodes } = await loadApi();
+
+    await expect(getEpisodes('test-slug')).resolves.toEqual([]);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('searches media source only', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValue({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) });
+    setFetchMock(fetchMock);
+    const { searchMedia } = await loadApi();
+
+    await expect(searchMedia('one piece', 20)).resolves.toEqual({ data: [], total: 0 });
+    expect(fetchMock).toHaveBeenCalledTimes(7);
+    expect(fetchMock.mock.calls[0][0]).toContain('/anime/search/one%20piece');
+    expect(fetchMock.mock.calls[1][0]).toContain('/anime/samehadaku/search?q=one%20piece');
+    expect(fetchMock.mock.calls[2][0]).toContain('/anime/animasu/search/one%20piece');
+  });
+
+  it('maps Samehadaku details, episodes, and sources', async () => {
+    const detailResponse = {
+      status: 'success',
+      data: {
+        title: 'Samehadaku Anime',
+        poster: 'https://img/samehadaku.jpg',
+        score: { value: '8.88' },
+        status: 'Ongoing',
+        synopsis: { paragraphs: ['Samehadaku story'] },
+        genreList: [{ title: 'Action', genreId: 'action' }],
+        episodeList: [{ title: '12', episodeId: 'samehadaku-ep-12' }],
+      },
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: [], meta: {}, error: null }),
-      });
-
-      await getContents('anime', 2, 10);
-
-      const call = (global.fetch as any).mock.calls[0][0];
-      expect(call).toContain('type=anime');
-      expect(call).toContain('page=2');
-      expect(call).toContain('limit=10');
-    });
-
-    it('should handle API errors gracefully', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-      });
-
-      const result = await getContents();
-      expect(result).toEqual({});
-    });
-  });
-
-  describe('getTrending', () => {
-    it('should fetch trending contents', async () => {
-      const mockResponse = {
-        data: [{ id: 1, title: 'Trending' }],
-        meta: { limit: 10, total: 1 },
-        error: null,
-      };
-
-      (global.fetch as any).mockResolvedValueOnce({
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResponse,
-      });
-
-      const result = await getTrending('anime', 10);
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/trending'),
-        expect.any(Object)
-      );
-      expect(result).toEqual(mockResponse);
-    });
-  });
-
-  describe('searchContents', () => {
-    it('should include search query in request', async () => {
-      (global.fetch as any).mockResolvedValueOnce({
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: [], meta: { query: 'test', total: 0 }, error: null }),
+        text: async () => JSON.stringify({
+          status: 'success',
+          data: {
+            defaultStreamingUrl: 'https://player.test/samehadaku',
+          },
+        }),
       });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug, getEpisodes, getEpisodeSources } = await loadApi();
 
-      await searchContents('test', 20);
+    const media = await getMediaBySlug('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6InNhbWVoYWRha3UiLCJzbHVnIjoic2FtZWhhZGFrdS1hbiJ9');
+    expect(media).toMatchObject({ title: 'Samehadaku Anime', type: 'anime', rating: { average: 8.88 } });
 
-      const call = (global.fetch as any).mock.calls[0][0];
-      expect(call).toContain('q=test');
-      expect(call).toContain('limit=20');
-    });
+    const eps = await getEpisodes('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6InNhbWVoYWRha3UiLCJzbHVnIjoic2FtZWhhZGFrdS1hbiJ9');
+    expect(eps[0]).toMatchObject({ slug: 'samehadaku-ep-12', episodeNumber: 12 });
+
+    const sources = await getEpisodeSources('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6InNhbWVoYWRha3UiLCJzbHVnIjoic2FtZWhhZGFrdS1hbiJ9', 'samehadaku-ep-12');
+    expect(sources).toEqual([{ url: 'https://player.test/samehadaku', label: 'Default', quality: 'auto' }]);
   });
 
-  describe('fetchApi error handling', () => {
-    it('should return empty object on network error', async () => {
-      (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
+  it('maps Animasu details, episodes, and sources', async () => {
+    const detailResponse = {
+      detail: {
+        title: 'Animasu Anime',
+        poster: 'https://img/animasu.jpg',
+        rating: '7.5',
+        status: 'Ongoing',
+        synopsis: 'Animasu story',
+        genres: [{ name: 'Comedy', slug: 'comedy' }],
+      },
+      episodes: [{ name: 'Episode 5', slug: 'animasu-ep-5' }],
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({
+          streams: [{ name: '720p', url: 'https://player.test/animasu-720p' }],
+        }),
+      });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug, getEpisodes, getEpisodeSources } = await loadApi();
 
-      const result = await getContents();
-      expect(result).toEqual({});
-    });
+    const media = await getMediaBySlug('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6ImFuaW1hc3UiLCJzbHVnIjoiYW5pbWFzdS1hbiJ9');
+    expect(media).toMatchObject({ title: 'Animasu Anime', type: 'anime', rating: { average: 7.5 } });
 
-    it('should return empty array for list endpoints on error', async () => {
-      (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
+    const eps = await getEpisodes('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6ImFuaW1hc3UiLCJzbHVnIjoiYW5pbWFzdS1hbiJ9');
+    expect(eps[0]).toMatchObject({ slug: 'animasu-ep-5', episodeNumber: 5 });
 
-      const result = await getStreams(1);
-      expect(result).toEqual([]);
-    });
+    const sources = await getEpisodeSources('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6ImFuaW1hc3UiLCJzbHVnIjoiYW5pbWFzdS1hbiJ9', 'animasu-ep-5');
+    expect(sources).toEqual([{ url: 'https://player.test/animasu-720p', label: '720p', quality: '720p' }]);
   });
+
+  it('maps Kiryuu details, chapters, and pages', async () => {
+    const detailResponse = {
+      title: 'Kiryuu Comic',
+      imageSrc: 'https://img/kiryuu.jpg',
+      rating: '8.4',
+      status: 'Ongoing',
+      synopsis: 'Kiryuu story',
+      genres: ['Action'],
+      chapters: [{ title: 'Chapter 10', slug: 'kiryuu-ch-10', date: 'Yesterday' }],
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({
+          images: ['https://img/page1.jpg'],
+        }),
+      });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug, getChapters, getChapterPages } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6Imtpcnl1dSIsInNsdWciOiJraXJ5dXUtY28ifQ');
+    expect(media).toMatchObject({ title: 'Kiryuu Comic', type: 'comic', rating: { average: 8.4 } });
+
+    const chs = await getChapters('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6Imtpcnl1dSIsInNsdWciOiJraXJ5dXUtY28ifQ');
+    expect(chs[0]).toMatchObject({ slug: 'kiryuu-ch-10', chapterNumber: 10 });
+
+    const pages = await getChapterPages('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6Imtpcnl1dSIsInNsdWciOiJraXJ5dXUtY28ifQ', 'kiryuu-ch-10');
+    expect(pages).toEqual([{ url: 'https://img/page1.jpg', pageNumber: 1 }]);
+  });
+
+  it('maps Komikindo details, chapters, and pages', async () => {
+    const detailResponse = {
+      data: {
+        title: 'Komikindo Comic',
+        image: 'https://img/komikindo.jpg',
+        rating: '7.9',
+        detail: { status: 'Ongoing' },
+        genres: [{ name: 'Adventure', slug: 'adventure' }],
+        chapters: [{ title: 'Chapter 20', slug: 'komikindo-ch-20', releaseTime: 'Today' }],
+      },
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify(detailResponse),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({
+          data: {
+            images: [{ id: 1, url: 'https://img/page2.jpg' }],
+          },
+        }),
+      });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug, getChapters, getChapterPages } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6ImtvbWlraW5kbyIsInNsdWciOiJrb21pa2luZG8tY28ifQ');
+    expect(media).toMatchObject({ title: 'Komikindo Comic', type: 'comic', rating: { average: 7.9 } });
+
+    const chs = await getChapters('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6ImtvbWlraW5kbyIsInNsdWciOiJrb21pa2luZG8tY28ifQ');
+    expect(chs[0]).toMatchObject({ slug: 'komikindo-ch-20', chapterNumber: 20 });
+
+    const pages = await getChapterPages('m~eyJ0eXBlIjoiY29taWMiLCJwcm92aWRlciI6ImtvbWlraW5kbyIsInNsdWciOiJrb21pa2luZG8tY28ifQ', 'komikindo-ch-20');
+    expect(pages).toEqual([{ url: 'https://img/page2.jpg', pageNumber: 1 }]);
+  });
+});
+
+afterAll(() => {
+  process.env.JAWATCH_MEDIA_API_URL = originalEnv.JAWATCH_MEDIA_API_URL;
+  process.env.JAWATCH_MEDIA_API_TIMEOUT_MS = originalEnv.JAWATCH_MEDIA_API_TIMEOUT_MS;
+  delete process.env[`NEXT_PUBLIC_${'API'}_URL`];
+  delete process.env[`NEXT_PUBLIC_${'USE'}_MEDIA_API`];
+});
+
+
+it('keeps legacy media refs readable', async () => {
+  const fetchMock = vi.fn().mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { title: 'One Piece', poster: 'https://img/a.jpg' } }) });
+  setFetchMock(fetchMock);
+  const { getMediaBySlug } = await loadApi();
+
+  await expect(getMediaBySlug('anime~anime~one-piece')).resolves.toMatchObject({ title: 'One Piece' });
 });
