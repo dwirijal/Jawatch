@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Link from 'next/link';
 import { siteUrl } from '@/lib/site-url';
+import { SearchBar } from '@/components/sections/SearchBar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const siteName = 'jawatch';
@@ -55,17 +56,7 @@ export default function RootLayout({
             </Link>
 
             {/* Search bar */}
-            <form action="/search" className="flex-1 max-w-[420px] relative">
-              <input
-                name="q"
-                type="search"
-                placeholder="Search titles..."
-                className="w-full bg-card border border-border rounded-page px-3.5 py-2 text-[13px] font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-amber/50 focus:ring-1 focus:ring-amber/20 transition-all"
-              />
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </form>
+            <SearchBar />
 
             {/* Nav links */}
             <nav className="hidden md:flex items-center gap-5 font-mono text-[11px] uppercase tracking-tag">
