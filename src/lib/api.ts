@@ -911,7 +911,7 @@ async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
   }
 }
 
-export async function searchMedia(query: string, limit?: number): Promise<{ data: Media[]; total: number }> {
+export async function searchMedia(query: string, limit?: number, type?: string): Promise<{ data: Media[]; total: number }> {
   const encoded = encodeURIComponent(query);
   const [
     otakudesuBody,
@@ -969,7 +969,8 @@ export async function searchMedia(query: string, limit?: number): Promise<{ data
     ...comicKomikindo,
   ].slice(0, limit || 20);
 
-  return { data, total: data.length };
+  const filtered = type ? data.filter((item) => item.type === type) : data;
+  return { data: filtered, total: filtered.length };
 }
 
 
