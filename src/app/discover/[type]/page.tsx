@@ -4,7 +4,7 @@ import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { notFound } from 'next/navigation';
 
-const validTypes = ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'];
+const validTypes = ['anime', 'donghua', 'comic'];
 
 type Props = { params: Promise<{ type: string }> };
 

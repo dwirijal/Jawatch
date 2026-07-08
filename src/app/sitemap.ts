@@ -18,7 +18,7 @@ const staticRoutes = [
 ];
 
 function safeDate(value: string | undefined, fallback: Date): Date {
-  if (!value) return fallback;
+  if (!value || value === '1970-01-01T00:00:00.000Z') return fallback;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? fallback : date;
 }

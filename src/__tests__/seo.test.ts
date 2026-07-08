@@ -1,4 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { notFound } from 'next/navigation';
+
+vi.mock('next/navigation', () => ({
+  notFound: vi.fn(() => {
+    throw new Error('NEXT_HTTP_ERROR_FALLBACK;404');
+  }),
+}));
 
 vi.mock('@/lib/api', () => ({
   getMedia: vi.fn(),
@@ -65,14 +72,38 @@ describe('SEO routes', () => {
 
   it('adds genre URLs and dedupes media URLs in the sitemap', async () => {
     vi.mocked(api.getGenres).mockResolvedValue([{ name: 'Action', slug: 'action' }]);
-    vi.mocked(api.getMedia).mockResolvedValue({ data: [media, media], total: 2, hasMore: false });
+    vi.mocked(api.getMedia).mockResolvedValue({
+      data: [
+        media,
+        media,
+        { ...media, slug: 'anime~anime~empty-date', updatedAt: '1970-01-01T00:00:00.000Z', createdAt: '1970-01-01T00:00:00.000Z' },
+      ],
+      total: 3,
+      hasMore: false,
+    });
     const { default: sitemap } = await import('@/app/sitemap');
 
-    const urls = (await sitemap()).map((entry) => entry.url);
+    const entries = await sitemap();
+    const urls = entries.map((entry) => entry.url);
+    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime~anime~empty-date');
 
     expect(urls).toContain('https://jawatch.test/genres/action');
     expect(urls.filter((url) => url === 'https://jawatch.test/media/anime~anime~night-signal')).toHaveLength(1);
+    expect(fallbackEntry?.lastModified).not.toEqual(new Date('1970-01-01T00:00:00.000Z'));
     expect(api.getMedia).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns not found for unsupported discover types', async () => {
+    const { generateMetadata, default: DiscoverTypePage } = await import('@/app/discover/[type]/page');
+    const { default: DiscoverPage } = await import('@/app/discover/page');
+    const rendered = await DiscoverPage();
+
+    await expect(DiscoverTypePage({ params: Promise.resolve({ type: 'manga' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
+    await expect(generateMetadata({ params: Promise.resolve({ type: 'manga' }) })).resolves.toEqual({ robots: { index: false, follow: false } });
+    expect(notFound).toHaveBeenCalledTimes(1);
+    expect(String(rendered)).not.toContain('/discover/manga');
+    expect(String(rendered)).not.toContain('/discover/movie');
+    expect(String(rendered)).not.toContain('/discover/novel');
   });
 
   it('uses media data for detail metadata', async () => {
