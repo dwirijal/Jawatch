@@ -4,6 +4,7 @@ import './globals.css';
 import Link from 'next/link';
 import { siteUrl } from '@/lib/site-url';
 import { SearchBar } from '@/components/sections/SearchBar';
+import { BackToTop } from '@/components/sections/BackToTop';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const siteName = 'jawatch';
@@ -78,6 +79,9 @@ export default function RootLayout({
 
         {/* Main */}
         <main className="flex-1">{children}</main>
+
+        {/* Back to top */}
+        <BackToTop />
 
         {/* Footer */}
         <footer className="border-t border-border mt-20">
