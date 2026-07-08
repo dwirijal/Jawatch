@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getMediaByGenre } from '@/lib/api';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
+import { Container } from '@/components/layout/Container';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -26,9 +27,10 @@ export default async function GenreSlugPage({ params }: Props) {
   const title = genreTitle(slug);
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container y="48px">
       <SectionHeader eyebrow="Genre" title={title} href="/genres" actionLabel="All genres" />
+      <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
       <MediaGrid items={contents} />
-    </div>
+    </Container>
   );
 }
