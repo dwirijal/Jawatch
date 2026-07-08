@@ -18,7 +18,7 @@ export default async function PopularPage() {
   return (
     <Container y="48px">
       <SectionHeader eyebrow="Browse" title="Popular now" description="Crowd-favorite titles across watch and read modes." />
-      <p className="mb-4 font-mono text-xs text-muted-foreground-foreground">{contents.length} titles</p>
+      <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
       <MediaGrid items={contents} />
     </Container>
   );

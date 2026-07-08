@@ -40,7 +40,7 @@ export default async function DiscoverTypePage({ params }: Props) {
             <Link
               key={genre.slug}
               href={`/genres/${genre.slug}`}
-              className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-tag text-muted-foreground-foreground transition-colors hover:border-primary hover:text-primary"
+              className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-tag text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
               {genre.name}
             </Link>

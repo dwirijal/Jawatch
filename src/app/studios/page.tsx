@@ -19,7 +19,7 @@ export default async function StudiosPage() {
     <Container>
       <SectionHeader eyebrow="Browse" title="Studios" description="Find titles by the studio behind them." />
       {studios.length === 0 ? (
-        <p className="font-mono text-sm text-muted-foreground-foreground">No studios available right now.</p>
+        <p className="font-mono text-sm text-muted-foreground">No studios available right now.</p>
       ) : (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {studios.map((studio) => (
