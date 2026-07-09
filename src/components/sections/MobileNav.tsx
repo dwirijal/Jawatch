@@ -18,7 +18,7 @@ export function MobileNav() {
   return (
     <div className="md:hidden w-full border-t border-border">
       <Disclosure title="Browse">
-        <nav className="flex flex-col py-2">
+        <nav aria-label="Mobile" className="flex flex-col py-2">
           {LINKS.map((l) => (
             <Link
               key={l.href}

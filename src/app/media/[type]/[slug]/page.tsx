@@ -125,7 +125,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
         </div>
       </div>
 
-      <main className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+      <div className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
         <section className="max-w-3xl">
           <div className="mb-6 border-l-2 border-amber pl-4">
             <h2 className="font-serif text-xl font-bold text-foreground">{isVideo ? 'Episodes' : 'Chapters'}</h2>
@@ -164,7 +164,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
           )}
         </section>
         </section>
-      </main>
+      </div>
     </div>
   );
 }

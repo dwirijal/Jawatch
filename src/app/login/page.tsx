@@ -40,7 +40,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-12rem)] w-full max-w-[420px] flex-col justify-center px-4 py-16">
+    <div className="mx-auto flex min-h-[calc(100vh-12rem)] w-full max-w-[420px] flex-col justify-center px-4 py-16">
       <div className="rounded-page border border-border bg-card/40 p-8 grain">
         <div className="mb-6">
           <p className="font-mono text-eyebrow uppercase tracking-eyebrow text-accent-bright">Account</p>
@@ -90,6 +90,6 @@ export default function LoginPage() {
           <Link href="/register" className="text-accent-bright hover:text-primary">Daftar</Link>
         </p>
       </div>
-    </main>
+    </div>
   );
 }

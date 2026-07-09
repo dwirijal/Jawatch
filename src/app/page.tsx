@@ -18,11 +18,11 @@ export default async function HomePage() {
     [rails, genres] = await Promise.all([getHomeRails(), getGenres()]);
   } catch {
     return (
-      <main className="mx-auto max-w-[1160px] px-4 py-24 text-center sm:px-8">
+      <div className="mx-auto max-w-[1160px] px-4 py-24 text-center sm:px-8">
         <h1 className="font-serif text-2xl font-bold text-foreground">Something went wrong</h1>
         <p className="mt-3 text-sm text-muted-foreground">Failed to load content. Please try again.</p>
         <a href="/" className="mt-6 inline-block rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-void">Retry</a>
-      </main>
+      </div>
     );
   }
   const contents = rails.flatMap((rail) => rail.items);
@@ -55,7 +55,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <main className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+      <div className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
         <div className="space-y-20">
           {rails.map((rail) => (
             <section key={rail.title}>
@@ -93,7 +93,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }
