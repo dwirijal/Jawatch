@@ -40,9 +40,11 @@ class MediaApiTimeoutError extends Error {
 }
 
 class MediaApiError extends Error {
-  constructor(message = 'Media source unavailable') {
+  status?: number;
+  constructor(message = 'Media source unavailable', status?: number) {
     super(message);
     this.name = 'MediaApiError';
+    this.status = status;
   }
 }
 
@@ -324,7 +326,7 @@ function chapterNumberFromTitle(title?: string, fallback = 1): number {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-async function fetchUpstreamJson(path: string) {
+async function fetchUpstreamJsonOnce(path: string) {
   if (!MEDIA_API_BASE) throw new MediaApiError();
   if (!path.startsWith('/')) throw new MediaApiError('Invalid request path');
 
@@ -348,7 +350,8 @@ async function fetchUpstreamJson(path: string) {
     }
 
     if (!res.ok) {
-      throw new MediaApiError();
+      // 5xx = transient (retryable); 4xx = definitive (fail fast, don't hammer upstream)
+      throw new MediaApiError(res.status >= 500 ? 'Media source unavailable' : undefined, res.status);
     }
 
     return body;
@@ -359,6 +362,23 @@ async function fetchUpstreamJson(path: string) {
     throw error;
   } finally {
     clearTimeout(timeout);
+  }
+}
+
+// ponytail: 2 retries w/ linear backoff on transient upstream (timeout + 5xx) only.
+// Fixes false "not found" when a cold detail load's provider probe hits a blip (#286).
+// 4xx (404/429) never retried — a miss stays a miss, and we don't amplify rate-limits.
+async function fetchUpstreamJson(path: string, attempts = 3): Promise<any> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fetchUpstreamJsonOnce(path);
+    } catch (error) {
+      const retryable =
+        error instanceof MediaApiTimeoutError ||
+        (error instanceof MediaApiError && (error.status ?? 0) >= 500);
+      if (!retryable || i === attempts - 1) throw error;
+      await new Promise((r) => setTimeout(r, 150 * (i + 1)));
+    }
   }
 }
 

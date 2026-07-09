@@ -79,7 +79,8 @@ describe('API Client', () => {
 
     expect(result).toEqual({ data: [], total: 0, hasMore: false });
     // anime listing fans out to 3 sources (otakudesu home, samehadaku, alqanime), each catching to [].
-    expect(fetchMock).toHaveBeenCalledTimes(3);
+    // The one source that times out (AbortError) is retried once (transient), so 3 sources + 1 retry = 4.
+    expect(fetchMock).toHaveBeenCalledTimes(4);
   });
 
   it('throws a neutral error on non-timeout media source failure', async () => {
