@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
+import { RecentSearches } from '@/components/sections/RecentSearches';
 import { Search } from 'lucide-react';
 import { COPY } from '@/lib/copy';
 
@@ -47,6 +48,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           </Link>
         ))}
       </div>
+
+      <RecentSearches current={query} />
 
       {contents.length > 0 ? (
         <>

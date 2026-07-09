@@ -55,6 +55,8 @@ export const COPY = {
     emptyTitle: 'Tidak ditemukan',
     emptyDesc: (query: string) => `Tidak ada hasil untuk "${query}". Coba kata kunci lain.`,
     count: (n: number) => `${n} hasil`,
+    recent: 'Pencarian terakhir',
+    clearRecent: 'Hapus',
   },
   error: {
     eyebrow: 'Sedang dimuat ulang',
