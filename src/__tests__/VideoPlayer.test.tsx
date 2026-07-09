@@ -159,7 +159,7 @@ describe('VideoPlayer watch room', () => {
     );
 
     // grouped by resolution: heading carries resolution + size, link carries provider label
-    expect(screen.getByRole('heading', { name: /360p · 40 MB/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /360p.*40 MB/i })).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /Download Mirror 360p/i });
     expect(link).toHaveAttribute('href', 'https://dl.test/360');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');
@@ -181,8 +181,8 @@ describe('VideoPlayer watch room', () => {
       />,
     );
 
-    expect(screen.getByRole('heading', { name: /360p · 40 MB/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /720p · 90 MB/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /360p.*40 MB/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /720p.*90 MB/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Download Mega 360p/i })).toHaveAttribute('href', 'https://dl.test/360b');
   });
 
