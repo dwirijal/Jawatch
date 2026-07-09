@@ -5,7 +5,8 @@ import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaR
 import { BookOpen, Calendar, Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { EmptyState } from '@/components/sections/EmptyState';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -51,7 +52,21 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const ref = decodeMediaRef(decodeSlug);
 
   const content = await getMediaBySlug(decodeSlug);
-  if (!content || !ref) notFound();
+  if (!content || !ref) {
+    return (
+      <div className="min-h-screen bg-background grain">
+        <main className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+          <EmptyState
+            eyebrow="Not found"
+            title="Media tidak ditemukan"
+            description="Judul yang kamu cari mungkin sudah dipindah atau tidak tersedia."
+            href="/"
+            actionLabel="Kembali ke beranda"
+          />
+        </main>
+      </div>
+    );
+  }
 
   const canonicalPath = buildCanonicalPath(ref);
   const year = content.createdAt ? new Date(content.createdAt).getUTCFullYear() : null;

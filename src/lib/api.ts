@@ -46,6 +46,58 @@ class MediaApiError extends Error {
   }
 }
 
+// ponytail: fail-soft facade — only upstream-source errors are swallowed; real bugs propagate
+export type SafeResult<T> = { ok: true; data: T } | { ok: false; error: string };
+
+async function safe<T>(p: Promise<T>): Promise<SafeResult<T>> {
+  try {
+    return { ok: true, data: await p };
+  } catch (error) {
+    if (error instanceof MediaApiTimeoutError || error instanceof MediaApiError) {
+      return { ok: false, error: error instanceof Error ? error.message : 'Media source unavailable' };
+    }
+    throw error;
+  }
+}
+
+export async function safeGetMediaBySlug(slug: string): Promise<SafeResult<Media | null>> {
+  return safe(getMediaBySlug(slug));
+}
+
+export async function safeGetMediaRelated(slug: string): Promise<SafeResult<Media[]>> {
+  return safe(getMediaRelated(slug));
+}
+
+export async function safeGetEpisodes(slug: string): Promise<SafeResult<Episode[]>> {
+  return safe(getEpisodes(slug));
+}
+
+export async function safeGetEpisodeSources(slug: string, epSlug: string): Promise<SafeResult<EpisodeSource[]>> {
+  return safe(getEpisodeSources(slug, epSlug));
+}
+
+export async function safeGetChapters(slug: string): Promise<SafeResult<Chapter[]>> {
+  return safe(getChapters(slug));
+}
+
+export async function safeGetChapterPages(slug: string, chSlug: string): Promise<SafeResult<ChapterPage[]>> {
+  return safe(getChapterPages(slug, chSlug));
+}
+
+export async function safeSearchMedia(
+  query: string,
+  limit?: number,
+  type?: string,
+): Promise<SafeResult<{ data: Media[]; total: number }>> {
+  return safe(searchMedia(query, limit, type));
+}
+
+export async function safeGetHomeRails(): Promise<
+  SafeResult<Array<{ title: string; href: string; items: Media[] }>>
+> {
+  return safe(getHomeRails());
+}
+
 export interface Media {
   slug: string;
   type: MediaType;
