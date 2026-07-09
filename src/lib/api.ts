@@ -643,8 +643,9 @@ async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<
       return (await getSakuranovelHome().catch(() => [] as Media[])).slice(0, limit || 20);
     }
     case 'donghua': {
-      const body = unwrapUpstreamEnvelope('/anime/donghua/list', await fetchUpstreamJson('/anime/donghua/list'));
-      return (Array.isArray(body.data) ? body.data : []).map(mapDonghuaListItem).slice(0, limit || 20);
+      // /anime/donghua/list is 403 (not a real endpoint); /latest returns { latest_donghua: [...] }.
+      const body = unwrapUpstreamEnvelope('/anime/donghua/latest', await fetchUpstreamJson('/anime/donghua/latest'));
+      return firstArray(body.latest_donghua, body.data).map(mapDonghuaListItem).slice(0, limit || 20);
     }
     case 'comic': {
       // komikstation is the primary source but its scraper fails intermittently; fall back to mangasusuku so comic discover isn't empty.
@@ -669,14 +670,13 @@ async function getOtakudesuHome(): Promise<Media[]> {
   return [...ongoing, ...completed].map((item: any) => mapAnimeListItem(item, 'anime'));
 }
 
-// Samehadaku home envelope shape isn't probeable locally (base URL is Vercel-only), so read the
-// item array defensively: nested ongoing/completed.animeList like otakudesu, or a flat list.
+// Samehadaku home envelope: data.{recent,batch,movie,top10}, each with .animeList. Items carry
+// animeId (mapAnimeListItem reads animeId||slug). recent is the discover-relevant section.
 async function getSamehadakuLists(): Promise<Media[]> {
   const body = unwrapUpstreamEnvelope('/anime/samehadaku/home', await fetchUpstreamJson('/anime/samehadaku/home'));
-  const ongoing = firstArray(body.data?.ongoing?.animeList, body.data?.ongoing);
-  const completed = firstArray(body.data?.completed?.animeList, body.data?.completed);
-  const flat = ongoing.length || completed.length ? [] : firstArray(body.data?.animeList, body.data, body.animeList);
-  return [...ongoing, ...completed, ...flat].map((item: any) => mapAnimeListItem(item, 'samehadaku'));
+  const recent = firstArray(body.data?.recent?.animeList);
+  const movie = firstArray(body.data?.movie?.animeList);
+  return [...recent, ...movie].map((item: any) => mapAnimeListItem(item, 'samehadaku'));
 }
 
 async function getAlqanimeLists(): Promise<Media[]> {
@@ -792,7 +792,7 @@ export async function getLatest(type?: string, limit?: number): Promise<Media[]>
 
     if (type === 'donghua') {
       const body = unwrapUpstreamEnvelope('/anime/donghua/latest', await fetchUpstreamJson('/anime/donghua/latest'));
-      const list = Array.isArray(body.data) ? body.data : Array.isArray(body.latest_release) ? body.latest_release : [];
+      const list = firstArray(body.latest_donghua, body.data, body.latest_release);
       return list.map((item: any) => ({
         ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), item.title, item.poster),
         status: item.status,
