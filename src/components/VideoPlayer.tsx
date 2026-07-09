@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePlayback } from '@/lib/api';
 import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
 import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
+import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
 
 interface Props {
   slug: string;
@@ -11,9 +12,11 @@ interface Props {
   initialEpIndex: number;
   initialPlayback: EpisodePlayback;
   episodeListError?: boolean;
+  mediaType: string;
+  title?: string;
 }
 
-export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, episodeListError = false }: Props) {
+export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, episodeListError = false, mediaType, title }: Props) {
   const [epIndex, setEpIndex] = useState(initialEpIndex);
   const [sources, setSources] = useState<EpisodeSource[]>(initialPlayback.sources);
   const [mirrors, setMirrors] = useState<EpisodeMirror[]>(initialPlayback.mirrors);
@@ -52,6 +55,8 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
       setActiveMirror('');
       setEpIndex(idx);
       setShowList(false);
+      // fire-and-forget: keep resume point at the episode actually being watched
+      void recordProgressAction({ mediaRef: slug, mediaType, itemSlug: ep.slug, itemNumber: ep.episodeNumber ?? idx + 1, title });
     } catch {
       setError('Gagal memuat episode. Stream lama tetap diputar.');
     } finally {

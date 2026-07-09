@@ -20,6 +20,11 @@ vi.mock('@/lib/client-media', () => ({
   resolveMirrorClient: vi.fn(),
 }));
 
+// server action — no-op in jsdom
+vi.mock('@/app/media/[type]/[slug]/actions', () => ({
+  recordProgressAction: vi.fn(),
+}));
+
 const episodes = [
   { slug: 'episode-1', episodeNumber: 1, title: 'Opening Night', createdAt: '' },
   { slug: 'episode-2', episodeNumber: 2, title: 'Second Signal', createdAt: '' },
@@ -50,6 +55,7 @@ describe('VideoPlayer watch room', () => {
         episodes={episodes}
         initialEpIndex={1}
         initialPlayback={playback('https://player.test/episode-2')}
+        mediaType="anime"
       />,
     );
 
@@ -68,6 +74,7 @@ describe('VideoPlayer watch room', () => {
         episodes={episodes}
         initialEpIndex={1}
         initialPlayback={playback('https://player.test/episode-2')}
+        mediaType="anime"
       />,
     );
 
@@ -87,6 +94,7 @@ describe('VideoPlayer watch room', () => {
         episodes={episodes}
         initialEpIndex={1}
         initialPlayback={playback('https://player.test/episode-2')}
+        mediaType="anime"
       />,
     );
 
@@ -106,6 +114,7 @@ describe('VideoPlayer watch room', () => {
         episodes={episodes}
         initialEpIndex={1}
         initialPlayback={playback('https://player.test/episode-2')}
+        mediaType="anime"
       />,
     );
 
@@ -123,6 +132,7 @@ describe('VideoPlayer watch room', () => {
         episodes={episodes}
         initialEpIndex={0}
         initialPlayback={playback('https://player.test/episode-1')}
+        mediaType="anime"
       />,
     );
 
@@ -139,6 +149,7 @@ describe('VideoPlayer watch room', () => {
         episodes={[episodes[1]]}
         initialEpIndex={0}
         initialPlayback={playback('https://player.test/episode-2')}
+        mediaType="anime"
         episodeListError
       />,
     );
@@ -155,6 +166,7 @@ describe('VideoPlayer watch room', () => {
         initialPlayback={playback('https://player.test/episode-1', {
           downloads: [{ url: 'https://dl.test/360', label: 'Mirror', quality: '360p', size: '40 MB' }],
         })}
+        mediaType="anime"
       />,
     );
 
@@ -178,6 +190,7 @@ describe('VideoPlayer watch room', () => {
             { url: 'https://dl.test/720a', label: 'Filedon', quality: '720p', size: '90 MB' },
           ],
         })}
+        mediaType="anime"
       />,
     );
 
@@ -197,6 +210,7 @@ describe('VideoPlayer watch room', () => {
         initialPlayback={playback('https://player.test/episode-1', {
           mirrors: [{ serverId: 'srv-720', label: 'Mirror', quality: '720p' }],
         })}
+        mediaType="anime"
       />,
     );
 
@@ -223,6 +237,7 @@ describe('VideoPlayer watch room', () => {
             { url: 'https://dl.test/720', label: 'Mega', quality: '720p', size: '90 MB' },
           ],
         })}
+        mediaType="anime"
       />,
     );
 

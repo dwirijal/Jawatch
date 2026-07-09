@@ -52,7 +52,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
 
   return (
     <div className="mx-auto max-w-[1160px] px-4 py-6 sm:px-8">
-      <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} />
+      <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
     </div>
   );
 }

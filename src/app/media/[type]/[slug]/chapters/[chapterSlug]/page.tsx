@@ -44,7 +44,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
 
   return (
     <div className="max-w-4xl mx-auto py-8">
-      <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} />
+      <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
     </div>
   );
 }

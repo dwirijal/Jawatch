@@ -3,15 +3,18 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Chapter, ChapterPage } from '@/lib/api';
 import { getChapterPagesClient } from '@/lib/client-media';
+import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
 
 interface Props {
   slug: string;
   chapters: Chapter[];
   initialPages: ChapterPage[];
   currentChapterSlug: string;
+  mediaType: string;
+  title?: string;
 }
 
-export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }: Props) {
+export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, mediaType, title }: Props) {
   const initialIdx = chapters.findIndex((c) => c.slug === currentChapterSlug);
   const [chIndex, setChIndex] = useState(initialIdx !== -1 ? initialIdx : 0);
   const [pages, setPages] = useState(initialPages);
@@ -32,6 +35,8 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
       setChIndex(idx);
       setShowList(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // fire-and-forget: keep resume point at the chapter actually being read
+      void recordProgressAction({ mediaRef: slug, mediaType, itemSlug: ch.slug, itemNumber: ch.chapterNumber ?? idx + 1, title });
     } catch {
       setError('Gagal memuat chapter. Halaman lama tetap ditampilkan.');
     } finally {
