@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getEpisodeSources, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { getUserId } from '@/lib/session';
+import { upsertProgress, recordHistory } from '@/lib/library';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -34,6 +36,16 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
 
   const episodeIndex = episodeResult.items.findIndex((ep) => ep.slug === episodeSlug);
   const resolvedEpisodes = episodeIndex >= 0 ? episodeResult.items : [{ slug: episodeSlug, episodeNumber: 1, createdAt: '' }];
+
+  // Fire-and-forget: record resume point + history for signed-in users. Never blocks playback.
+  const current = resolvedEpisodes[Math.max(0, episodeIndex)];
+  const userId = await getUserId();
+  if (userId) {
+    await Promise.all([
+      upsertProgress(userId, { mediaRef: decodeSlug, mediaType: content.type, itemSlug: episodeSlug, itemNumber: current.episodeNumber, title: content.title }),
+      recordHistory(userId, decodeSlug, episodeSlug),
+    ]).catch(() => {});
+  }
 
   return (
     <div className="mx-auto max-w-[1160px] px-4 py-6 sm:px-8">
