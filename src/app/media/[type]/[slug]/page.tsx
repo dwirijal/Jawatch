@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
 
   if (!content || !ref) {
     return {
-      title: 'Media tidak ditemukan | jawatch',
+      title: { absolute: 'Media tidak ditemukan | jawatch' },
       robots: { index: false, follow: false },
     };
   }
