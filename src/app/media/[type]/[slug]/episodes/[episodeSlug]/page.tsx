@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getEpisodePlayback, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { SupportCTA } from '@/components/sections/SupportCTA';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
@@ -53,6 +54,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
   return (
     <div className="mx-auto max-w-[1160px] px-4 py-6 sm:px-8">
       <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
+      <div className="mt-10"><SupportCTA /></div>
     </div>
   );
 }

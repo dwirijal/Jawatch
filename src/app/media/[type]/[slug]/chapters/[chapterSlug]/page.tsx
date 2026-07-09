@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getChapterPages, getChapters } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { SupportCTA } from '@/components/sections/SupportCTA';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
@@ -45,6 +46,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
   return (
     <div className="max-w-4xl mx-auto py-8">
       <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
+      <div className="mt-10"><SupportCTA /></div>
     </div>
   );
 }
