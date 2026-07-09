@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 // ponytail: CSP keeps 'unsafe-inline' (no nonce) because Next streaming + per-route nonces aren't wired; ceiling: migrate to nonce once nonces are per-route.
+// 'unsafe-eval' is dev-only (Next HMR needs it); prod drops it — GA/AdSense/Next-prod don't use eval, so it's pure XSS surface in prod.
+const scriptSrc = process.env.NODE_ENV === 'production'
+  ? "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googletagservices.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://va.jawatch.web.id"
+  : "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googletagservices.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://va.jawatch.web.id";
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.googletagservices.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://va.jawatch.web.id; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http: https://www.googletagmanager.com https://www.google-analytics.com https://*.doubleclick.net https://pagead2.googlesyndication.com https://*.gstatic.com; media-src 'self' https: http:; frame-src https: http: https://*.doubleclick.net https://pagead2.googlesyndication.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://pagead2.googlesyndication.com https://va.jawatch.web.id; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    value: `default-src 'self'; ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http: https://www.googletagmanager.com https://www.google-analytics.com https://*.doubleclick.net https://pagead2.googlesyndication.com https://*.gstatic.com; media-src 'self' https: http:; frame-src https: http: https://*.doubleclick.net https://pagead2.googlesyndication.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googlesyndication.com https://pagead2.googlesyndication.com https://va.jawatch.web.id; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`,
   },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
