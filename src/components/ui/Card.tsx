@@ -24,7 +24,7 @@ export function Card({
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link href={href} className="group relative aspect-[2/3] overflow-hidden bg-card block transition-all duration-300 hover:-translate-y-1">
+    <Link href={href} className="group relative aspect-[2/3] overflow-hidden bg-card block transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
       {/* Poster bg */}
       {coverImage && !imgError ? (
         <Image
