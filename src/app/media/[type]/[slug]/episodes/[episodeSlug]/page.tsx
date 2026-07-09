@@ -8,6 +8,7 @@ import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
+import { COPY } from '@/lib/copy';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -29,10 +30,10 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
       <Container y="4rem">
         <EmptyState
           eyebrow="Not found"
-          title="Episode tidak tersedia"
-          description="Episode yang kamu cari mungkin sudah dipindah atau tidak tersedia."
+          title={COPY.empty.itemUnavailable(true)}
+          description={COPY.empty.notAvailableDesc('Episode')}
           href={`/${type}/${slug}`}
-          actionLabel="Kembali ke detail"
+          actionLabel={COPY.empty.backToDetail}
         />
       </Container>
     );

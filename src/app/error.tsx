@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { Container } from '@/components/layout/Container';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { COPY } from '@/lib/copy';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -12,11 +13,11 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <Container y="80px">
       <EmptyState
-        eyebrow="Sedang dimuat ulang"
-        title="Sebagian konten belum tersedia"
-        description="Sumber media sedang tidak dapat dijangkau. Coba muat ulang halaman ini."
+        eyebrow={COPY.error.eyebrow}
+        title={COPY.error.title}
+        description={COPY.error.desc}
         href="/"
-        actionLabel="Muat ulang"
+        actionLabel={COPY.error.reload}
       />
       <div className="mt-6 flex justify-center">
         <button
@@ -24,7 +25,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
           onClick={reset}
           className="font-mono text-micro uppercase text-accent hover:text-primary transition-colors min-h-[48px]"
         >
-          Coba lagi
+          {COPY.error.retry}
         </button>
       </div>
     </Container>

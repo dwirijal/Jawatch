@@ -1,15 +1,16 @@
 import { Container } from '@/components/layout/Container';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { COPY } from '@/lib/copy';
 
 export default function NotFound() {
   return (
     <Container y="80px">
       <EmptyState
         eyebrow="404"
-        title="Halaman tidak ditemukan"
-        description="Judul yang kamu cari mungkin sudah dipindah atau tidak tersedia."
+        title={COPY.empty.pageNotFound}
+        description={COPY.empty.notAvailableDesc('Judul')}
         href="/"
-        actionLabel="Kembali ke beranda"
+        actionLabel={COPY.empty.backToHome}
       />
     </Container>
   );

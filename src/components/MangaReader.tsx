@@ -6,6 +6,7 @@ import { getChapterPagesClient } from '@/lib/client-media';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
 import { Spinner } from '@/components/ui/Spinner';
 import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
+import { COPY } from '@/lib/copy';
 
 interface Props {
   slug: string;
@@ -44,7 +45,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
       // fire-and-forget: keep resume point at the chapter actually being read
       void recordProgressAction({ mediaRef: slug, mediaType, itemSlug: ch.slug, itemNumber: ch.chapterNumber ?? idx + 1, title });
     } catch {
-      setError('Gagal memuat chapter. Halaman lama tetap ditampilkan.');
+      setError(COPY.reader.loadFailed);
     } finally {
       setLoading(false);
     }
@@ -159,7 +160,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
         </div>
       ) : (
         <div className="flex justify-center py-20 border border-border bg-card/30 grain">
-          <p className="text-sm font-mono text-muted-foreground uppercase">Halaman belum tersedia.</p>
+          <p className="text-sm font-mono text-muted-foreground uppercase">{COPY.reader.noPages}</p>
         </div>
       )}
 
@@ -172,13 +173,13 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
       {/* End-of-chapter CTA */}
       {pages.length > 0 && hasNext && (
         <div className="flex flex-col items-center gap-3 rounded-card border border-border bg-card/40 p-5 text-center grain">
-          <p className="font-mono text-tag uppercase text-muted-foreground">Selesai bab ini</p>
+          <p className="font-mono text-tag uppercase text-muted-foreground">{COPY.reader.chapterDone}</p>
           <button
             type="button"
             onClick={() => switchChapter(chIndex + 1)}
             className="inline-flex items-center gap-2 rounded-pill bg-primary px-6 py-3 font-mono text-tag font-semibold uppercase tracking-tag text-void transition-all duration-200 hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Bab berikutnya →
+            {COPY.reader.nextChapter}
           </button>
           <label className="flex cursor-pointer items-center gap-2 font-mono text-micro uppercase text-muted-foreground">
             <input
@@ -187,7 +188,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
               onChange={(e) => setAutoAdvance(e.target.checked)}
               className="h-3.5 w-3.5 accent-primary"
             />
-            Lanjut otomatis
+            {COPY.reader.autoAdvance}
           </label>
         </div>
       )}

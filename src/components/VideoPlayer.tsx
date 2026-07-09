@@ -6,6 +6,7 @@ import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-medi
 import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
 import { Spinner } from '@/components/ui/Spinner';
+import { COPY } from '@/lib/copy';
 
 interface Props {
   slug: string;
@@ -59,7 +60,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
       // fire-and-forget: keep resume point at the episode actually being watched
       void recordProgressAction({ mediaRef: slug, mediaType, itemSlug: ep.slug, itemNumber: ep.episodeNumber ?? idx + 1, title });
     } catch {
-      setError('Gagal memuat episode. Stream lama tetap diputar.');
+      setError(COPY.watch.loadFailed);
     } finally {
       setLoading(false);
     }
@@ -81,7 +82,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
       });
       setActiveMirror(mirror.serverId);
     } catch {
-      setError('Server ini tidak tersedia. Coba server lain.');
+      setError(COPY.watch.serverUnavailable);
     } finally {
       setMirrorLoading('');
     }
@@ -96,7 +97,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
   if (!videoUrl) {
     return (
       <div className="aspect-video bg-background rounded-none border border-border flex items-center justify-center grain">
-        <p className="text-muted-foreground text-sm font-mono uppercase tracking-wider">Stream belum tersedia untuk episode ini.</p>
+        <p className="text-muted-foreground text-sm font-mono uppercase tracking-wider">{COPY.watch.noStream}</p>
       </div>
     );
   }
@@ -177,7 +178,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5">
                   <rect x="2" y="2.5" width="12" height="4" rx="1" /><rect x="2" y="9.5" width="12" height="4" rx="1" /><path d="M4.5 4.5h.01M4.5 11.5h.01" />
                 </svg>
-                Server alternatif
+                {COPY.watch.altServers}
               </h2>
               {mirrorGroups.map((group, gi) => (
                 <div key={group.key} className="flex flex-wrap items-center gap-2 motion-safe:animate-rise-in" style={{ animationDelay: `${gi * 60}ms` }}>
@@ -196,7 +197,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                         disabled={!!mirrorLoading}
                         aria-pressed={active}
                         aria-busy={busy}
-                        aria-label={`Putar ${group.key}${m.quality ? ` ${m.quality}` : ''}`}
+                        aria-label={COPY.watch.playMirror(group.key, m.quality)}
                         className={`group/mirror inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 font-mono text-tag uppercase transition-all duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 ${active ? 'border-amber bg-primary text-void shadow-[0_0_0_3px_rgba(var(--primary),0.15)]' : 'border-border text-muted-foreground hover:border-amber/50 hover:text-foreground hover:bg-card/60 hover:shadow-lift'}`}
                       >
                         {busy ? (
@@ -283,7 +284,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
           </div>
 
           {episodeListError && (
-            <p className="text-xs text-primary" role="status">Daftar episode gagal dimuat. Episode saat ini tetap bisa diputar.</p>
+            <p className="text-xs text-primary" role="status">{COPY.watch.listFailed}</p>
           )}
 
           {nearbyEpisodes.length > 1 && (

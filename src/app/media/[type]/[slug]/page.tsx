@@ -12,6 +12,7 @@ import { redirect, notFound } from 'next/navigation';
 import { BookmarkButton } from '@/components/BookmarkButton';
 import { getUserId } from '@/lib/session';
 import { isBookmarked, listProgress } from '@/lib/library';
+import { COPY } from '@/lib/copy';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -80,7 +81,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const resumeHref = progress ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${progress.itemSlug}` : null;
   const ctaHref = resumeHref ?? startHref;
   const ctaLabel = progress
-    ? `Lanjutkan ${isVideo ? 'EP' : 'CH'} ${progress.itemNumber}`
+    ? COPY.detail.resume(isVideo, progress.itemNumber)
     : isVideo ? 'Start watching' : 'Start reading';
 
   return (

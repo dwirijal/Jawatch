@@ -7,6 +7,7 @@ import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
+import { COPY } from '@/lib/copy';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -24,10 +25,10 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
       <div className="max-w-4xl mx-auto py-16">
         <EmptyState
           eyebrow="Not found"
-          title="Chapter tidak tersedia"
-          description="Chapter yang kamu cari mungkin sudah dipindah atau tidak tersedia."
+          title={COPY.empty.itemUnavailable(false)}
+          description={COPY.empty.notAvailableDesc('Chapter')}
           href={`/${type}/${slug}`}
-          actionLabel="Kembali ke detail"
+          actionLabel={COPY.empty.backToDetail}
         />
       </div>
     );

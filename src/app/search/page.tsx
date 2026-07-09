@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/sections/EmptyState';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { Search } from 'lucide-react';
+import { COPY } from '@/lib/copy';
 
 export const metadata: Metadata = {
   title: 'Search',
@@ -29,7 +30,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         <label className="flex items-center gap-3 rounded-card border border-border bg-card px-4 py-3 focus-within:border-primary/70">
           <Search className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <span className="sr-only">Search query</span>
-          <input name="q" defaultValue={query} placeholder="Cari judul..." className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" autoFocus />
+          <input name="q" defaultValue={query} placeholder={COPY.search.placeholder} className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" autoFocus />
         </label>
         {activeType && <input type="hidden" name="type" value={activeType} />}
       </form>
@@ -49,11 +50,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
       {contents.length > 0 ? (
         <>
-          <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} hasil{activeType ? ` ${activeType}` : ''} untuk &quot;{query}&quot;</p>
+          <p className="mb-4 font-mono text-xs text-muted-foreground">{COPY.search.count(contents.length)}{activeType ? ` ${activeType}` : ''} untuk &quot;{query}&quot;</p>
           <MediaGrid items={contents} />
         </>
       ) : query ? (
-        <EmptyState icon={<Search className="h-6 w-6" aria-hidden="true" />} title="Tidak ditemukan" description={`Tidak ada hasil untuk "${query}". Coba kata kunci lain.`} href="/discover" actionLabel="Browse catalog" />
+        <EmptyState icon={<Search className="h-6 w-6" aria-hidden="true" />} title={COPY.search.emptyTitle} description={COPY.search.emptyDesc(query)} href="/discover" actionLabel="Browse catalog" />
       ) : null}
     </Container>
   );

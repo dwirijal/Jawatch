@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Compass, Search, Library } from 'lucide-react';
+import { COPY } from '@/lib/copy';
 
 const TABS = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/discover', label: 'Jelajah', icon: Compass },
-  { href: '/search', label: 'Cari', icon: Search },
-  { href: '/library', label: 'Library', icon: Library },
+  { href: '/', label: COPY.nav.home, icon: Home },
+  { href: '/discover', label: COPY.nav.discover, icon: Compass },
+  { href: '/search', label: COPY.nav.search, icon: Search },
+  { href: '/library', label: COPY.nav.library, icon: Library },
 ] as const;
 
 // Thumb-zone tab bar for mobile (hidden md+). Active-route highlight, 48px targets,

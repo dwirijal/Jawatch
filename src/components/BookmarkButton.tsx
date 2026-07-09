@@ -5,6 +5,7 @@ import { Bookmark } from 'lucide-react';
 import { toggleBookmarkAction } from '@/app/media/[type]/[slug]/actions';
 import { useToast } from '@/components/ui/ToastProvider';
 import type { BookmarkInput } from '@/lib/library';
+import { COPY } from '@/lib/copy';
 
 // Optimistic bookmark toggle. Signed-out -> action returns null -> redirect to login.
 export function BookmarkButton({ media, initial }: { media: BookmarkInput; initial: boolean }) {
@@ -21,7 +22,7 @@ export function BookmarkButton({ media, initial }: { media: BookmarkInput; initi
         return;
       }
       setSaved(next);
-      toast(next ? 'Tersimpan ke Library' : 'Dihapus dari Library');
+      toast(next ? COPY.library.bookmarkSaved : COPY.library.bookmarkRemoved);
     });
   }
 
