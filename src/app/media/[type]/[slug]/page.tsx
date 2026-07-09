@@ -6,6 +6,9 @@ import { BookOpen, Calendar, Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
+import { BookmarkButton } from '@/components/BookmarkButton';
+import { getUserId } from '@/lib/session';
+import { isBookmarked } from '@/lib/library';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -63,6 +66,10 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const startHref = firstItem ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${firstItem.slug}` : null;
   const related = await getMediaRelated(decodeSlug);
 
+  const userId = await getUserId();
+  const bookmarked = userId ? await isBookmarked(userId, decodeSlug) : false;
+  const bookmarkInput = { mediaRef: decodeSlug, mediaType: content.type, title: content.title, coverImage: content.coverImage ?? null };
+
   return (
     <div className="min-h-screen bg-background grain">
       <div className="relative min-h-[520px] overflow-hidden border-b border-border bg-background">
@@ -115,12 +122,15 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                 ))}
               </div>
             )}
-            {startHref && (
-              <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
-                {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
-                {isVideo ? 'Start watching' : 'Start reading'}
-              </Link>
-            )}
+            <div className="flex flex-wrap items-center gap-3">
+              {startHref && (
+                <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
+                  {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
+                  {isVideo ? 'Start watching' : 'Start reading'}
+                </Link>
+              )}
+              <BookmarkButton media={bookmarkInput} initial={bookmarked} />
+            </div>
           </div>
         </div>
       </div>
