@@ -23,6 +23,10 @@ export const COPY = {
     nextChapter: 'Bab berikutnya →',
     autoAdvance: 'Lanjut otomatis',
     progressLabel: 'Progres baca',
+    displayMode: 'Tampilan',
+    fitWidth: 'Fit lebar',
+    fitScreen: 'Fit layar',
+    fitMedium: 'Sedang',
   },
   watch: {
     loadFailed: 'Gagal memuat episode. Stream lama tetap diputar.',

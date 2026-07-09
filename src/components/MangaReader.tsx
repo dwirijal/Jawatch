@@ -17,6 +17,27 @@ interface Props {
   title?: string;
 }
 
+// ponytail: 3 clear modes, not a matrix. Static class maps only — interpolated
+// class names get purged by Tailwind. Zoom skipped: discrete fit-modes cover the
+// "comfort" win; add stepped +/- only if readers ask.
+type FitMode = 'width' | 'screen' | 'medium';
+const FIT_STORAGE_KEY = 'jawatch:reader-fit';
+const FIT_MODES: { id: FitMode; label: keyof typeof COPY.reader; icon: string }[] = [
+  { id: 'width', label: 'fitWidth', icon: '▭' },
+  { id: 'screen', label: 'fitScreen', icon: '⬛' },
+  { id: 'medium', label: 'fitMedium', icon: '▢' },
+];
+const PAGE_CLASS: Record<FitMode, string> = {
+  width: 'w-full h-auto',
+  screen: 'h-auto max-h-screen w-auto mx-auto',
+  medium: 'w-full h-auto',
+};
+const WRAPPER_CLASS: Record<FitMode, string> = {
+  width: '',
+  screen: 'flex flex-col items-center',
+  medium: 'max-w-3xl mx-auto',
+};
+
 export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, mediaType, title }: Props) {
   const initialIdx = chapters.findIndex((c) => c.slug === currentChapterSlug);
   const [chIndex, setChIndex] = useState(initialIdx !== -1 ? initialIdx : 0);
@@ -26,8 +47,24 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
   const [error, setError] = useState('');
   const [progress, setProgress] = useState(0);
   const [autoAdvance, setAutoAdvance] = useState(true);
+  // ponytail: lazy SSR-safe init — read localStorage once on mount only.
+  const [fitMode, setFitMode] = useState<FitMode>(() => {
+    if (typeof window === 'undefined') return 'width';
+    const saved = localStorage.getItem(FIT_STORAGE_KEY);
+    // validate: reject stale/garbage values so PAGE_CLASS lookup never yields undefined
+    return saved && saved in PAGE_CLASS ? (saved as FitMode) : 'width';
+  });
   const endRef = useRef<HTMLDivElement>(null);
   const hasNext = chIndex < chapters.length - 1;
+
+  // Persist fit mode across visits.
+  useEffect(() => {
+    try {
+      localStorage.setItem(FIT_STORAGE_KEY, fitMode);
+    } catch {
+      // ignore storage failures (private mode / quota) — non-critical pref
+    }
+  }, [fitMode]);
 
   const switchChapter = useCallback(async (idx: number) => {
     if (idx === chIndex) return;
@@ -116,6 +153,36 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
         </button>
       </div>
 
+      {/* Fit-mode control — persisted reader display preference */}
+      <div
+        role="group"
+        aria-label={COPY.reader.displayMode}
+        className="flex items-center gap-1 rounded-pill border border-border bg-card p-1"
+      >
+        {FIT_MODES.map((m) => {
+          const active = fitMode === m.id;
+          return (
+            <button
+              key={m.id}
+              type="button"
+              onClick={() => setFitMode(m.id)}
+              aria-pressed={active}
+              aria-label={COPY.reader[m.label]}
+              title={COPY.reader[m.label]}
+              className={[
+                'flex min-h-[44px] items-center gap-1.5 rounded-pill px-3 font-mono text-tag uppercase tracking-wider motion-safe:transition-colors',
+                active
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              ].join(' ')}
+            >
+              <span aria-hidden="true">{m.icon}</span>
+              {COPY.reader[m.label]}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Chapter dropdown */}
       {showList && (
         <div className="max-h-60 overflow-y-auto bg-card/50 border border-border p-2 grid grid-cols-2 sm:grid-cols-3 gap-1 grain">
@@ -145,14 +212,14 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
           <Spinner size="md" className="text-amber" />
         </div>
       ) : pages.length > 0 ? (
-        <div className="space-y-1 bg-background p-1 border border-border">
+        <div className={`space-y-1 bg-background p-1 border border-border ${WRAPPER_CLASS[fitMode]}`}>
           {/* ponytail: raw <img> intentional — manga pages are many hotlinked images of unknown dimension; next/image would route each through Vercel's optimizer (more compute, opposite of goal). Keep raw. */}
           {pages.map((page, i) => (
             <img
               key={i}
               src={page.url}
               alt={`Page ${i + 1}`}
-              className="w-full h-auto"
+              className={PAGE_CLASS[fitMode]}
               loading={i < 3 ? 'eager' : 'lazy'}
               referrerPolicy="no-referrer"
             />
