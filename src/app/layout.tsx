@@ -73,6 +73,8 @@ export default function RootLayout({
               <Link href="/popular" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Popular</Link>
               <Link href="/latest" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Latest</Link>
               <Link href="/random" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-primary transition-colors">🎲</Link>
+              <Link href="/login" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Login</Link>
+              <Link href="/register" className="p-2 min-h-[48px] flex items-center text-primary hover:text-primary/80 transition-colors">Register</Link>
             </nav>
 
             {/* Mobile hamburger placeholder */}

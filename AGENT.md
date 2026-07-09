@@ -47,7 +47,10 @@ Unsupported private-only types should render empty states instead of reaching a 
 ## Rules
 
 - Stay inside this repo.
-- Do not add private backend, auth, database, or sibling-repo coupling.
-- Do not expose upstream/provider names in UI, client helpers, docs, or browser-visible errors.
-- No hardcoded secrets.
+- Auth & user data: Better Auth backed by Supabase Postgres, plus Vercel Blob for
+  user uploads. This overrides the historical "no auth/database" rule (lifted in M3).
+  Keep auth self-contained — no sibling-repo coupling, no custom backend beyond
+  Better Auth's own server routes.
+- Do not expose upstream/provider names (the media source) in UI, client helpers, docs, or browser-visible errors.
+- No hardcoded secrets — all via env (Supabase keys, Better Auth secret, Blob token, Google OAuth).
 - Keep async route failures visible or mapped to explicit empty states.

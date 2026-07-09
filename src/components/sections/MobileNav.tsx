@@ -9,6 +9,8 @@ const LINKS = [
   { href: '/popular', label: 'Popular' },
   { href: '/latest', label: 'Latest' },
   { href: '/studios', label: 'Studios' },
+  { href: '/login', label: 'Login' },
+  { href: '/register', label: 'Register' },
 ];
 
 // ponytail: mobile-only expandable nav. Reuses Disclosure atom; hidden on md+.
