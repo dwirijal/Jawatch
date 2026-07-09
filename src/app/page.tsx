@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { HeroSpotlight } from '@/components/sections/HeroSpotlight';
+import { ContinueRail } from '@/components/sections/ContinueRail';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { getHomeRails, getGenres } from '@/lib/api';
@@ -30,6 +32,10 @@ export default async function HomePage() {
   return (
     <>
       <HeroSpotlight item={contents[0]} />
+
+      <Suspense fallback={null}>
+        <ContinueRail />
+      </Suspense>
 
       {contents.length > 0 && (
         <section className="overflow-hidden border-b border-border bg-card/30 py-6 grain">
