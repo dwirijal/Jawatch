@@ -10,6 +10,7 @@ import { VercelAnalytics } from '@/components/analytics/VercelAnalytics';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { GoogleAds } from '@/components/ads/GoogleAds';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import { BottomNav } from '@/components/sections/BottomNav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const siteName = 'jawatch';
@@ -124,6 +125,10 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+
+        {/* Mobile thumb-zone tab bar (hidden md+); spacer keeps footer clear of it */}
+        <div className="h-14 md:hidden" aria-hidden="true" />
+        <BottomNav />
 
         {/* Analytics + ad loader — env-gated, render nothing if IDs unset */}
         <VercelAnalytics />
