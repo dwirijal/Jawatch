@@ -16,6 +16,8 @@ const nextConfig = {
   // Removed output: 'standalone' to fix Vercel missing module errors
   images: {
     formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 2678400, // 31d — cover art is immutable; slashes Vercel image-optimization re-transforms
+
     remotePatterns: [
       {
         protocol: 'https',

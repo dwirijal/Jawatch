@@ -903,7 +903,13 @@ export async function getMediaRelated(slug: string): Promise<Media[]> {
 export async function getMediaReviews(slug: string): Promise<any[]> { return []; }
 export async function getMediaComments(slug: string): Promise<any[]> { return []; }
 
+// Upstream providers return newest-first; readers assume oldest-first (ep1 top, next = index+1). Sort ascending.
 export async function getEpisodes(slug: string): Promise<Episode[]> {
+  const items = await getEpisodesUnsorted(slug);
+  return items.sort((a, b) => a.episodeNumber - b.episodeNumber);
+}
+
+async function getEpisodesUnsorted(slug: string): Promise<Episode[]> {
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
 
@@ -1000,6 +1006,11 @@ export async function getEpisodeSources(slug: string, epSlug: string): Promise<E
 }
 
 export async function getChapters(slug: string): Promise<Chapter[]> {
+  const items = await getChaptersUnsorted(slug);
+  return items.sort((a, b) => a.chapterNumber - b.chapterNumber);
+}
+
+async function getChaptersUnsorted(slug: string): Promise<Chapter[]> {
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
   if (ref.type !== 'comic') return [];
