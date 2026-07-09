@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePlayback } from '@/lib/api';
 import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
+import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
 
 interface Props {
   slug: string;
@@ -31,6 +32,8 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
   const nearbyEpisodes = episodes.slice(Math.max(0, epIndex - 3), epIndex + 4);
   const currentNumber = currentEp?.episodeNumber || epIndex + 1;
   const currentTitle = currentEp?.title || `Episode ${currentNumber}`;
+  const mirrorGroups = groupMirrorsByProvider(mirrors);
+  const downloadGroups = groupDownloadsByResolution(downloads);
 
   const switchEpisode = useCallback(async (idx: number) => {
     if (idx === epIndex) return;
@@ -157,44 +160,61 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
             </div>
           )}
 
-          {mirrors.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2" aria-label="Server alternatif">
-              <span className="font-mono text-eyebrow uppercase text-accent-bright">Server alternatif</span>
-              {mirrors.map((m) => {
-                const busy = mirrorLoading === m.serverId;
-                return (
-                  <button
-                    key={m.serverId}
-                    type="button"
-                    onClick={() => playMirror(m)}
-                    disabled={!!mirrorLoading}
-                    aria-pressed={activeMirror === m.serverId}
-                    aria-busy={busy}
-                    className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 ${activeMirror === m.serverId ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
-                  >
-                    {busy ? '…' : `${m.label}${m.quality ? ` ${m.quality}` : ''}`}
-                  </button>
-                );
-              })}
-            </div>
+          {mirrorGroups.length > 0 && (
+            <section aria-labelledby="alt-server-heading" className="space-y-3">
+              <h2 id="alt-server-heading" className="font-mono text-eyebrow uppercase text-accent-bright">Server alternatif</h2>
+              {mirrorGroups.map((group) => (
+                <div key={group.key} className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-tag uppercase text-muted-foreground min-w-20">{group.key}</span>
+                  {group.items.map((m) => {
+                    const busy = mirrorLoading === m.serverId;
+                    return (
+                      <button
+                        key={m.serverId}
+                        type="button"
+                        onClick={() => playMirror(m)}
+                        disabled={!!mirrorLoading}
+                        aria-pressed={activeMirror === m.serverId}
+                        aria-busy={busy}
+                        aria-label={`Putar ${group.key}${m.quality ? ` ${m.quality}` : ''}`}
+                        className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 ${activeMirror === m.serverId ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
+                      >
+                        {busy ? '…' : m.quality || 'Stream'}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </section>
           )}
 
-          {downloads.length > 0 && (
+          {downloadGroups.length > 0 && (
             <details className="border border-border bg-card/30 grain">
               <summary className="cursor-pointer px-5 py-3 font-mono text-eyebrow uppercase text-accent-bright transition-colors hover:text-primary">
                 Download ({downloads.length})
               </summary>
-              <div className="flex flex-wrap gap-2 border-t border-border p-4">
-                {downloads.map((d, i) => (
-                  <a
-                    key={`${d.url}-${i}`}
-                    href={d.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border border-border px-3 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-colors rounded-none hover:border-amber hover:text-foreground motion-safe:active:scale-95 motion-reduce:active:scale-100"
-                  >
-                    {d.label}{d.quality ? ` · ${d.quality}` : ''}{d.size ? ` · ${d.size}` : ''}
-                  </a>
+              <div className="space-y-4 border-t border-border p-4">
+                {downloadGroups.map((group) => (
+                  <div key={group.key} className="space-y-2">
+                    <h3 className="font-mono text-tag uppercase text-foreground">
+                      {group.key}{group.items[0]?.size ? ` · ${group.items[0].size}` : ''}
+                    </h3>
+                    <ul className="flex flex-wrap gap-2">
+                      {group.items.map((d, i) => (
+                        <li key={`${d.url}-${i}`}>
+                          <a
+                            href={d.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Download ${d.label} ${group.key}`}
+                            className="inline-block border border-border px-3 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-colors rounded-none hover:border-amber hover:text-foreground motion-safe:active:scale-95 motion-reduce:active:scale-100"
+                          >
+                            {d.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
               </div>
             </details>
