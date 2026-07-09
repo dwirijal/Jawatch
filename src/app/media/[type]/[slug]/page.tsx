@@ -148,8 +148,8 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   const path = buildCanonicalPath(ref);
                   return (
                     <a key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3">
-                      <div className="aspect-[2/3] overflow-hidden rounded-sm bg-background">
-                        {item.coverImage ? <img src={item.coverImage} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
+                      <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-background">
+                        {item.coverImage ? <Image src={item.coverImage} alt={item.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
                       </div>
                       <div className="mt-3">
                         <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>

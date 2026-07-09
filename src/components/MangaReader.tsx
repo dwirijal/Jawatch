@@ -91,6 +91,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug }
         </div>
       ) : pages.length > 0 ? (
         <div className="space-y-1 bg-background p-1 border border-border">
+          {/* ponytail: raw <img> intentional — manga pages are many hotlinked images of unknown dimension; next/image would route each through Vercel's optimizer (more compute, opposite of goal). Keep raw. */}
           {pages.map((page, i) => (
             <img
               key={i}
