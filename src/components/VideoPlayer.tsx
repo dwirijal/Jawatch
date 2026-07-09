@@ -197,7 +197,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                         aria-pressed={active}
                         aria-busy={busy}
                         aria-label={`Putar ${group.key}${m.quality ? ` ${m.quality}` : ''}`}
-                        className={`group/mirror inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 font-mono text-tag uppercase transition-all duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 ${active ? 'border-amber bg-primary text-void shadow-[0_0_0_3px_rgba(var(--primary),0.15)]' : 'border-border text-muted-foreground hover:border-amber/50 hover:text-foreground hover:bg-card/60 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.4)]'}`}
+                        className={`group/mirror inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 font-mono text-tag uppercase transition-all duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 ${active ? 'border-amber bg-primary text-void shadow-[0_0_0_3px_rgba(var(--primary),0.15)]' : 'border-border text-muted-foreground hover:border-amber/50 hover:text-foreground hover:bg-card/60 hover:shadow-lift'}`}
                       >
                         {busy ? (
                           <span className="h-3 w-3 rounded-full border-2 border-current border-t-transparent motion-safe:animate-spin" aria-hidden="true" />
@@ -240,7 +240,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`Download ${d.label} ${group.key}`}
-                            className="group/dlink inline-flex items-center gap-1.5 rounded-pill border border-border px-3.5 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-all duration-200 hover:border-amber/50 hover:text-foreground hover:bg-card/60 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.4)] motion-safe:active:scale-95 motion-reduce:active:scale-100"
+                            className="group/dlink inline-flex items-center gap-1.5 rounded-pill border border-border px-3.5 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-all duration-200 hover:border-amber/50 hover:text-foreground hover:bg-card/60 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-lift motion-safe:active:scale-95 motion-reduce:active:scale-100"
                           >
                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-2.5 w-2.5 motion-safe:transition-transform motion-safe:group-hover/dlink:translate-y-0.5" aria-hidden="true"><path d="M8 2v7M5 6.5L8 9l3-2.5M3 12h10" /></svg>
                             {d.label}

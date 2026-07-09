@@ -36,7 +36,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               <div
                 key={t.id}
                 role="status"
-                className="motion-safe:animate-toast-in flex items-center gap-2.5 rounded-pill border border-border bg-card/95 px-4 py-3 font-mono text-xs text-foreground shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)] backdrop-blur-sm"
+                className="motion-safe:animate-toast-in flex items-center gap-2.5 rounded-pill border border-border bg-card/95 px-4 py-3 font-mono text-xs text-foreground shadow-toast backdrop-blur-sm"
               >
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 {t.message}

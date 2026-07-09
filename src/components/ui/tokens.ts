@@ -60,3 +60,17 @@ export const container = {
 
 export const radiusPage = "4px";
 export const textEyebrow = "9px";
+
+// ponytail: motion scale. Collapses scattered duration-150/200/300 + inline
+// cubic-bezier copies into named tokens. Wired into tailwind as
+// duration-{fast,base,slow} and ease-{out-expo,press}.
+export const motion = {
+  duration: { fast: "150ms", base: "220ms", slow: "380ms" },
+  ease: { outExpo: "cubic-bezier(0.16, 1, 0.3, 1)", press: "cubic-bezier(0.4, 0, 0.2, 1)" },
+} as const;
+
+// ponytail: shadow scale. Replaces inline shadow-[...] rgba literals.
+export const shadow = {
+  toast: "0 8px 24px -8px rgba(0,0,0,0.6)",
+  lift: "0 4px 12px -4px rgba(0,0,0,0.4)",
+} as const;

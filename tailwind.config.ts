@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import { text, tracking } from "./src/components/ui/tokens";
+import { text, tracking, motion, shadow } from "./src/components/ui/tokens";
 
 const config: Config = {
   content: [
@@ -59,6 +59,19 @@ const config: Config = {
         sans: ["Inter", "sans-serif"],
         serif: ["Fraunces", "serif"],
         mono: ["IBM Plex Mono", "monospace"],
+      },
+      transitionDuration: {
+        fast: motion.duration.fast,
+        base: motion.duration.base,
+        slow: motion.duration.slow,
+      },
+      transitionTimingFunction: {
+        "out-expo": motion.ease.outExpo,
+        press: motion.ease.press,
+      },
+      boxShadow: {
+        toast: shadow.toast,
+        lift: shadow.lift,
       },
       animation: {
         "fade-in-up": "fadeInUp 0.6s ease-out forwards",
