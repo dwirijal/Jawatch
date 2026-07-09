@@ -171,12 +171,25 @@ export function registerMedia(type: MediaType, provider: string, upstreamSlug: s
   }
 }
 
-export async function resolveCanonicalRef(type: MediaType, canonicalSlug: string): Promise<MediaRef | null> {
+export async function resolveCanonicalRef(type: MediaType, canonicalSlug: string, srcHint?: string): Promise<MediaRef | null> {
   const key = `${type}/${canonicalSlug}`;
   const existing = canonicalToRef.get(key);
   if (existing) return existing;
 
   const candidates = PROVIDER_CANDIDATES[type] || [];
+
+  // Fast path (#286): the list payload knows the provider. If a valid hint is passed,
+  // probe that ONE provider first — a hit avoids the 5-6 blind parallel calls entirely.
+  // On miss, fall through to the full probe so a stale/wrong hint never breaks resolution.
+  if (srcHint && candidates.includes(srcHint)) {
+    const ref = { type, provider: srcHint, slug: canonicalSlug };
+    const media = await getMediaBySlugInternal(ref).catch(() => null);
+    if (media) {
+      canonicalToRef.set(key, ref);
+      upstreamToCanonical.set(`${type}/${srcHint}/${canonicalSlug}`, canonicalSlug);
+      return ref;
+    }
+  }
 
   for (const provider of candidates) {
     if (canonicalSlug.endsWith(`--${provider}`)) {
@@ -221,10 +234,10 @@ export async function resolveLegacySlug(slug: string): Promise<MediaRef | null> 
   return null;
 }
 
-async function resolveRefIfNeeded(ref: MediaRef | null): Promise<MediaRef | null> {
+async function resolveRefIfNeeded(ref: MediaRef | null, srcHint?: string): Promise<MediaRef | null> {
   if (!ref) return null;
   if (ref.provider === 'resolve') {
-    return resolveCanonicalRef(ref.type, ref.slug);
+    return resolveCanonicalRef(ref.type, ref.slug, srcHint);
   }
   return ref;
 }
@@ -236,6 +249,16 @@ export function buildCanonicalPath(ref: MediaRef): string {
     canonicalSlug = slugFromTitle(ref.slug);
   }
   return `/media/${ref.type}/${canonicalSlug}`;
+}
+
+// Navigation link = canonical path + ?src= provider hint (#286). Canonical path stays
+// clean for SEO/sitemap; the hint only lets the detail page skip blind provider probing.
+// 'resolve'/'generic' carry no useful hint, so they're omitted.
+export function buildMediaLink(ref: MediaRef): string {
+  const path = buildCanonicalPath(ref);
+  return ref.provider && ref.provider !== 'resolve' && ref.provider !== 'generic'
+    ? `${path}?src=${encodeURIComponent(ref.provider)}`
+    : path;
 }
 
 export function decodeMediaRef(value: string): MediaRef | null {
@@ -867,8 +890,8 @@ export async function getMediaBySlugInternal(ref: MediaRef): Promise<Media | nul
   return null;
 }
 
-export async function getMediaBySlug(slug: string): Promise<Media | null> {
-  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
+export async function getMediaBySlug(slug: string, srcHint?: string): Promise<Media | null> {
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug), srcHint);
   if (!ref) return null;
   return getMediaBySlugInternal(ref);
 }

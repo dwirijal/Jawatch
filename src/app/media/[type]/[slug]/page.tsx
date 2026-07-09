@@ -14,11 +14,12 @@ import { getUserId } from '@/lib/session';
 import { isBookmarked, listProgress } from '@/lib/library';
 import { COPY } from '@/lib/copy';
 
-export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ type: string; slug: string }>; searchParams?: Promise<{ src?: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
+  const { src } = (await searchParams) ?? {};
   const decodeSlug = `${type}/${slug}`;
   const ref = decodeMediaRef(decodeSlug);
-  const content = await getMediaBySlug(decodeSlug);
+  const content = await getMediaBySlug(decodeSlug, src);
 
   if (!content || !ref) {
     return {
@@ -52,12 +53,14 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   };
 }
 
-export default async function MediaPage({ params }: { params: Promise<{ type: string; slug: string }> }) {
+export default async function MediaPage({ params, searchParams }: { params: Promise<{ type: string; slug: string }>; searchParams?: Promise<{ src?: string }> }) {
   const { type, slug } = await params;
+  const { src } = (await searchParams) ?? {};
   const decodeSlug = `${type}/${slug}`;
   const ref = decodeMediaRef(decodeSlug);
 
-  const content = await getMediaBySlug(decodeSlug);
+  // src = provider hint from the list link (#286) — lets resolve skip blind probing.
+  const content = await getMediaBySlug(decodeSlug, src);
   if (!content || !ref) {
     notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
   }

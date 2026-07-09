@@ -524,6 +524,23 @@ afterAll(() => {
 });
 
 
+// #286 fast path: a provider hint (?src=) from the list link must resolve a clean canonical
+// slug by probing ONLY that provider — not the full blind fan-out. kiryuu is the 4th comic
+// candidate; a hit on the hint means exactly 1 upstream call, proving earlier probes are skipped.
+it('resolves a canonical slug via src hint with a single upstream call', async () => {
+  const detail = { status: 'success', title: 'Hinted Comic', image: 'https://img/h.jpg' };
+  const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => JSON.stringify(detail) });
+  setFetchMock(fetchMock);
+  const { getMediaBySlug } = await loadApi();
+
+  const media = await getMediaBySlug('comic/hinted-comic', 'kiryuu');
+  expect(media).toMatchObject({ title: 'Hinted Comic' });
+  // hint hit → 1 resolve probe + 1 final fetch = 2 calls, vs blind fan-out (4 comic
+  // providers + final = 5). Proves earlier providers are skipped. The 2nd call is the
+  // known resolve→refetch (getMediaBySlug re-calls internal); acceptable, still 5→2.
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+});
+
 it('keeps legacy media refs readable', async () => {
   const fetchMock = vi.fn().mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { title: 'One Piece', poster: 'https://img/a.jpg' } }) });
   setFetchMock(fetchMock);

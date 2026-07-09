@@ -1,11 +1,11 @@
 import { Card } from '@/components/ui';
 import type { Media } from '@/lib/api';
-import { decodeMediaRef, buildCanonicalPath } from '@/lib/api';
+import { decodeMediaRef, buildMediaLink } from '@/lib/api';
 
 export function mediaHref(item: Pick<Media, 'slug'>): string {
   const ref = decodeMediaRef(item.slug);
   if (!ref) return `/media/${item.slug}`;
-  return buildCanonicalPath(ref);
+  return buildMediaLink(ref);
 }
 
 type MediaGridProps = {
