@@ -78,7 +78,8 @@ describe('API Client', () => {
     const result = await getMedia('anime', 1, 10);
 
     expect(result).toEqual({ data: [], total: 0, hasMore: false });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // anime listing fans out to 3 sources (otakudesu home, samehadaku, alqanime), each catching to [].
+    expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
   it('throws a neutral error on non-timeout media source failure', async () => {
@@ -106,7 +107,7 @@ describe('API Client', () => {
     expect(fetchMock.mock.calls.map((call) => call[0]).join(' ')).toContain('/comic/mangasusuku/popular');
   });
 
-  it('uses the donghub latest endpoint and encoded provider consistently', async () => {
+  it('uses the donghua latest endpoint and encoded provider consistently', async () => {
     const fetchMock = vi.fn().mockResolvedValueOnce({
       ok: true,
       text: async () => JSON.stringify({
@@ -119,7 +120,7 @@ describe('API Client', () => {
 
     const result = await getLatest('donghua', 10);
 
-    expect(fetchMock.mock.calls[0][0]).toContain('/anime/donghub/latest');
+    expect(fetchMock.mock.calls[0][0]).toContain('/anime/donghua/latest');
     expect(result[0]).toMatchObject({ type: 'donghua' });
     expect(result[0]?.slug).toMatch(/^m~/);
     expect(result[0]?.slug).not.toContain('donghub');

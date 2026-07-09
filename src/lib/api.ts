@@ -530,7 +530,7 @@ function collectSuggestions(recommendations: any, related: any): { slug: string;
 }
 
 function mapDonghuaDetail(ref: MediaRef, payload: any): Media {
-  const data = unwrapUpstreamEnvelope(`/anime/donghub/detail/${ref.slug}`, payload).data;
+  const data = unwrapUpstreamEnvelope(`/anime/donghua/detail/${ref.slug}`, payload).data;
   return {
     ...baseMedia('donghua', encodeMediaRef('donghua', ref.provider, ref.slug), dedupeTitle(data.title), data.poster),
     synopsis: data.synopsis,
@@ -632,25 +632,18 @@ async function getSakuranovelHome(): Promise<Media[]> {
 async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<Media[]> {
   switch (type) {
     case 'anime': {
-      const body = unwrapUpstreamEnvelope('/anime/home', await fetchUpstreamJson('/anime/home'));
-      const ongoing = Array.isArray(body.data?.ongoing?.animeList) ? body.data.ongoing.animeList : [];
-      const completed = Array.isArray(body.data?.completed?.animeList) ? body.data.completed.animeList : [];
-      const [home, alq] = await Promise.all([
-        (async () => {
-          const body = unwrapUpstreamEnvelope('/anime/home', await fetchUpstreamJson('/anime/home'));
-          const ongoing = Array.isArray(body.data?.ongoing?.animeList) ? body.data.ongoing.animeList : [];
-          const completed = Array.isArray(body.data?.completed?.animeList) ? body.data.completed.animeList : [];
-          return [...ongoing, ...completed].map((item: any) => mapAnimeListItem(item, 'anime'));
-        })(),
+      const [home, samehadaku, alq] = await Promise.all([
+        getOtakudesuHome().catch(() => [] as Media[]),
+        getSamehadakuLists().catch(() => [] as Media[]),
         getAlqanimeLists().catch(() => [] as Media[]),
       ]);
-      return [...home, ...alq].slice(0, limit || 20);
+      return [...home, ...samehadaku, ...alq].slice(0, limit || 20);
     }
     case 'novel': {
       return (await getSakuranovelHome().catch(() => [] as Media[])).slice(0, limit || 20);
     }
     case 'donghua': {
-      const body = unwrapUpstreamEnvelope('/anime/donghub/list', await fetchUpstreamJson('/anime/donghub/list'));
+      const body = unwrapUpstreamEnvelope('/anime/donghua/list', await fetchUpstreamJson('/anime/donghua/list'));
       return (Array.isArray(body.data) ? body.data : []).map(mapDonghuaListItem).slice(0, limit || 20);
     }
     case 'comic': {
@@ -667,6 +660,23 @@ async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<
 
 function emptyMediaPage(): { data: Media[]; total: number; hasMore: boolean } {
   return { data: [], total: 0, hasMore: false };
+}
+
+async function getOtakudesuHome(): Promise<Media[]> {
+  const body = unwrapUpstreamEnvelope('/anime/home', await fetchUpstreamJson('/anime/home'));
+  const ongoing = Array.isArray(body.data?.ongoing?.animeList) ? body.data.ongoing.animeList : [];
+  const completed = Array.isArray(body.data?.completed?.animeList) ? body.data.completed.animeList : [];
+  return [...ongoing, ...completed].map((item: any) => mapAnimeListItem(item, 'anime'));
+}
+
+// Samehadaku home envelope shape isn't probeable locally (base URL is Vercel-only), so read the
+// item array defensively: nested ongoing/completed.animeList like otakudesu, or a flat list.
+async function getSamehadakuLists(): Promise<Media[]> {
+  const body = unwrapUpstreamEnvelope('/anime/samehadaku/home', await fetchUpstreamJson('/anime/samehadaku/home'));
+  const ongoing = firstArray(body.data?.ongoing?.animeList, body.data?.ongoing);
+  const completed = firstArray(body.data?.completed?.animeList, body.data?.completed);
+  const flat = ongoing.length || completed.length ? [] : firstArray(body.data?.animeList, body.data, body.animeList);
+  return [...ongoing, ...completed, ...flat].map((item: any) => mapAnimeListItem(item, 'samehadaku'));
 }
 
 async function getAlqanimeLists(): Promise<Media[]> {
@@ -781,7 +791,7 @@ export async function getLatest(type?: string, limit?: number): Promise<Media[]>
     }
 
     if (type === 'donghua') {
-      const body = unwrapUpstreamEnvelope('/anime/donghub/latest', await fetchUpstreamJson('/anime/donghub/latest'));
+      const body = unwrapUpstreamEnvelope('/anime/donghua/latest', await fetchUpstreamJson('/anime/donghua/latest'));
       const list = Array.isArray(body.data) ? body.data : Array.isArray(body.latest_release) ? body.latest_release : [];
       return list.map((item: any) => ({
         ...baseMedia('donghua', encodeMediaRef('donghua', 'donghub', item.slug), item.title, item.poster),
@@ -811,7 +821,7 @@ export async function getMediaBySlugInternal(ref: MediaRef): Promise<Media | nul
       if (ref.provider === 'animasu') return mapAnimeDetail(ref, await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`));
       if (ref.provider === 'alqanime') return mapAlqanimeDetail(ref, await fetchUpstreamJson(`/anime/alqanime/detail/${ref.slug}`));
     }
-    if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
+    if (ref.type === 'donghua') return mapDonghuaDetail(ref, await fetchUpstreamJson(`/anime/donghua/detail/${ref.slug}`));
 
     if (ref.type === 'comic') {
       if (ref.provider === 'komikstation') return mapComicDetail(ref, await fetchUpstreamJson(`/comic/komikstation/manga/${ref.slug}`));
@@ -953,7 +963,7 @@ async function getEpisodesUnsorted(slug: string): Promise<Episode[]> {
   }
 
   if (ref.type === 'donghua') {
-    const body = unwrapUpstreamEnvelope(`/anime/donghub/detail/${ref.slug}`, await fetchUpstreamJson(`/anime/donghub/detail/${ref.slug}`));
+    const body = unwrapUpstreamEnvelope(`/anime/donghua/detail/${ref.slug}`, await fetchUpstreamJson(`/anime/donghua/detail/${ref.slug}`));
     return (Array.isArray(body.data?.episodes) ? body.data.episodes : []).map((item: any, index: number) => ({
       slug: item.slug,
       episodeNumber: Number(item.episode ?? index + 1) || index + 1,
@@ -1001,7 +1011,7 @@ export async function getEpisodeSources(slug: string, epSlug: string): Promise<E
   }
 
   if (ref.type === 'donghua') {
-    const body = unwrapUpstreamEnvelope(`/anime/donghub/episode/${epSlug}`, await fetchUpstreamJson(`/anime/donghub/episode/${epSlug}`));
+    const body = unwrapUpstreamEnvelope(`/anime/donghua/episode/${epSlug}`, await fetchUpstreamJson(`/anime/donghua/episode/${epSlug}`));
     return (Array.isArray(body.data?.streams) ? body.data.streams : [])
       .filter((item: any) => item?.url)
       .map((item: any) => ({
@@ -1151,7 +1161,7 @@ export async function searchMedia(query: string, limit?: number, type?: string):
     safeSearchSource(fetchUpstreamJson(`/anime/search/${encoded}`)),
     safeSearchSource(fetchUpstreamJson(`/anime/samehadaku/search?q=${encoded}`)),
     safeSearchSource(fetchUpstreamJson(`/anime/animasu/search/${encoded}`)),
-    safeSearchSource(fetchUpstreamJson(`/anime/donghub/search/${encoded}`)),
+    safeSearchSource(fetchUpstreamJson(`/anime/donghua/search/${encoded}`)),
     safeSearchSource(fetchUpstreamJson(`/comic/komikstation/search/${encoded}/1`)),
     safeSearchSource(fetchUpstreamJson(`/comic/kiryuu/search/${encoded}/1`)),
     safeSearchSource(fetchUpstreamJson(`/comic/komikindo/search/${encoded}/1`)),
