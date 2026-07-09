@@ -5,6 +5,7 @@ import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePla
 import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
 import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { Spinner } from '@/components/ui/Spinner';
 
 interface Props {
   slug: string;
@@ -107,7 +108,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
           <div className={`relative aspect-video overflow-hidden rounded-card bg-background shadow-2xl ring-1 ring-hairline ${theater ? 'theater-breakout' : ''}`}>
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-                <div className="h-10 w-10 rounded-full border-2 border-amber border-t-transparent animate-spin" />
+                <Spinner size="lg" className="text-amber" />
               </div>
             )}
             <iframe

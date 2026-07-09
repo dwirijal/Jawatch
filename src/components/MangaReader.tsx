@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Chapter, ChapterPage } from '@/lib/api';
 import { getChapterPagesClient } from '@/lib/client-media';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { Spinner } from '@/components/ui/Spinner';
 
 interface Props {
   slug: string;
@@ -139,7 +140,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
       {/* Pages */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="w-8 h-8 border-2 border-amber border-t-transparent rounded-full motion-safe:animate-spin" />
+          <Spinner size="md" className="text-amber" />
         </div>
       ) : pages.length > 0 ? (
         <div className="space-y-1 bg-background p-1 border border-border">
