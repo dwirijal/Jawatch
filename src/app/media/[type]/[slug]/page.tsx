@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { BookmarkButton } from '@/components/BookmarkButton';
 import { getUserId } from '@/lib/session';
-import { isBookmarked } from '@/lib/library';
+import { isBookmarked, listProgress } from '@/lib/library';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -70,6 +70,16 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const bookmarked = userId ? await isBookmarked(userId, decodeSlug) : false;
   const bookmarkInput = { mediaRef: decodeSlug, mediaType: content.type, title: content.title, coverImage: content.coverImage ?? null };
 
+  // Resume-aware CTA: if this title has saved progress, offer "Continue" over "Start".
+  const progress = userId
+    ? (await listProgress(userId, isVideo ? 'watch' : 'read').catch(() => [])).find((p) => p.mediaRef === decodeSlug)
+    : undefined;
+  const resumeHref = progress ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${progress.itemSlug}` : null;
+  const ctaHref = resumeHref ?? startHref;
+  const ctaLabel = progress
+    ? `Lanjutkan ${isVideo ? 'EP' : 'CH'} ${progress.itemNumber}`
+    : isVideo ? 'Start watching' : 'Start reading';
+
   return (
     <div className="min-h-screen bg-background grain">
       <div className="relative min-h-[520px] overflow-hidden border-b border-border bg-background">
@@ -123,10 +133,10 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
               </div>
             )}
             <div className="flex flex-wrap items-center gap-3">
-              {startHref && (
-                <Link href={startHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
+              {ctaHref && (
+                <Link href={ctaHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                   {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
-                  {isVideo ? 'Start watching' : 'Start reading'}
+                  {ctaLabel}
                 </Link>
               )}
               <BookmarkButton media={bookmarkInput} initial={bookmarked} />
@@ -157,7 +167,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   if (!ref) return null;
                   const path = buildCanonicalPath(ref);
                   return (
-                    <a key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3">
+                    <Link key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3 transition-colors hover:border-amber/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                       <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-background">
                         {item.coverImage ? <Image src={item.coverImage} alt={item.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
                       </div>
@@ -165,7 +175,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                         <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>
                         <div className="mt-1 text-tag uppercase text-muted-foreground">{item.type}</div>
                       </div>
-                    </a>
+                    </Link>
                   );
                 })}
             </div>
