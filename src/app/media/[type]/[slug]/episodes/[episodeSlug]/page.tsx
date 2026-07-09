@@ -4,6 +4,7 @@ import { getMediaBySlug, getEpisodePlayback, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { SupportCTA } from '@/components/sections/SupportCTA';
+import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
@@ -54,6 +55,12 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
 
   return (
     <Container y="1.5rem">
+      <BreadcrumbJsonLd crumbs={[
+        { name: 'Home', path: '' },
+        { name: content.type, path: `/discover/${content.type}` },
+        { name: content.title, path: `/${type}/${slug}` },
+        { name: `Episode ${current.episodeNumber}`, path: `/${type}/${slug}/episodes/${episodeSlug}` },
+      ]} />
       <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
       <div className="mt-10"><SupportCTA /></div>
     </Container>

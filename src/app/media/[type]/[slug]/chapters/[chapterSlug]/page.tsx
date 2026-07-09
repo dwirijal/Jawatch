@@ -3,6 +3,7 @@ import { getMediaBySlug, getChapterPages, getChapters } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { SupportCTA } from '@/components/sections/SupportCTA';
+import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
 import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
@@ -45,6 +46,12 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
 
   return (
     <div className="max-w-4xl mx-auto py-8">
+      <BreadcrumbJsonLd crumbs={[
+        { name: 'Home', path: '' },
+        { name: content.type, path: `/discover/${content.type}` },
+        { name: content.title, path: `/${type}/${slug}` },
+        { name: `Chapter ${current?.chapterNumber ?? 1}`, path: `/${type}/${slug}/chapters/${chapterSlug}` },
+      ]} />
       <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
       <div className="mt-10"><SupportCTA /></div>
     </div>
