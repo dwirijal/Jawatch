@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Chapter, ChapterPage } from '@/lib/api';
 import { getChapterPagesClient } from '@/lib/client-media';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
@@ -21,6 +21,10 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
   const [loading, setLoading] = useState(false);
   const [showList, setShowList] = useState(false);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [autoAdvance, setAutoAdvance] = useState(true);
+  const endRef = useRef<HTMLDivElement>(null);
+  const hasNext = chIndex < chapters.length - 1;
 
   const switchChapter = useCallback(async (idx: number) => {
     if (idx === chIndex) return;
@@ -50,9 +54,52 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
     getChapterPagesClient(slug, nextCh.slug).catch(() => {});
   }, [chIndex, chapters, slug]);
 
+  // Reading-progress bar: scroll % of the document, rAF-throttled.
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        setProgress(max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0);
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [chIndex, pages]);
+
+  // Auto-advance: when the end sentinel scrolls into view, load next chapter.
+  useEffect(() => {
+    if (!autoAdvance || !hasNext || loading) return;
+    const el = endRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => { if (entries[0]?.isIntersecting) switchChapter(chIndex + 1); },
+      { rootMargin: '200px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [autoAdvance, hasNext, loading, chIndex, switchChapter]);
 
   return (
     <div className="space-y-4">
+      {/* Reading progress bar — fixed under the sticky header */}
+      <div
+        className="fixed inset-x-0 top-16 z-40 h-0.5 bg-transparent"
+        role="progressbar"
+        aria-label="Progres baca"
+        aria-valuenow={Math.round(progress)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div className="h-full bg-primary transition-[width] duration-150 ease-out" style={{ width: `${progress}%` }} />
+      </div>
+
       {/* Chapter header */}
       <div className="flex items-center justify-between gap-2 border border-border bg-card/30 p-4 grain">
         <h2 className="text-sm font-mono uppercase tracking-wider text-foreground">
@@ -114,19 +161,45 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
         </div>
       )}
 
+      {/* End sentinel — triggers auto-advance when scrolled into view */}
+      {pages.length > 0 && <div ref={endRef} aria-hidden="true" className="h-px w-full" />}
+
+      {/* End-of-chapter CTA */}
+      {pages.length > 0 && hasNext && (
+        <div className="flex flex-col items-center gap-3 rounded-card border border-border bg-card/40 p-5 text-center grain">
+          <p className="font-mono text-tag uppercase text-muted-foreground">Selesai bab ini</p>
+          <button
+            type="button"
+            onClick={() => switchChapter(chIndex + 1)}
+            className="inline-flex items-center gap-2 rounded-pill bg-primary px-6 py-3 font-mono text-tag font-semibold uppercase tracking-tag text-void transition-all duration-200 hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            Bab berikutnya →
+          </button>
+          <label className="flex cursor-pointer items-center gap-2 font-mono text-micro uppercase text-muted-foreground">
+            <input
+              type="checkbox"
+              checked={autoAdvance}
+              onChange={(e) => setAutoAdvance(e.target.checked)}
+              className="h-3.5 w-3.5 accent-primary"
+            />
+            Lanjut otomatis
+          </label>
+        </div>
+      )}
+
       {/* Nav buttons */}
       <div className="flex justify-between gap-2 pt-4">
         <button
           onClick={() => switchChapter(Math.max(0, chIndex - 1))}
           disabled={chIndex === 0}
-          className="flex-1 px-3 py-2 font-mono text-tag uppercase border border-border text-foreground disabled:opacity-30 hover:border-amber/60 hover:text-primary transition-colors"
+          className="flex-1 rounded-pill px-3 py-2 font-mono text-tag uppercase border border-border text-foreground disabled:opacity-30 hover:border-amber/60 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           ← Prev
         </button>
         <button
           onClick={() => switchChapter(Math.min(chapters.length - 1, chIndex + 1))}
           disabled={chIndex === chapters.length - 1}
-          className="flex-1 px-3 py-2 text-xs font-semibold bg-[rgb(var(--color-bg-secondary))] text-[rgb(var(--color-fg-secondary))] rounded-lg disabled:opacity-30 hover:bg-[rgb(var(--color-bg-elevated))] transition-colors"
+          className="flex-1 rounded-pill px-3 py-2 font-mono text-tag uppercase border border-amber text-primary disabled:opacity-30 hover:bg-primary hover:text-void transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Next →
         </button>
