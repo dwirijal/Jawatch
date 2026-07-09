@@ -142,17 +142,17 @@ describe('API Client', () => {
 
   it('fetches fewer random candidates in media source mode', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0);
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: { ongoing: { animeList: [] }, completed: { animeList: [{ animeId: 'a', title: 'Anime A', poster: 'https://img/a.jpg' }] } } }) })
-      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })
-      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ status: 'success', results: [] }) });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => JSON.stringify({ status: 'success', data: { ongoing: { animeList: [] }, completed: { animeList: [{ animeId: 'a', title: 'Anime A', poster: 'https://img/a.jpg' }] } } }),
+    });
     setFetchMock(fetchMock);
     const { getRandom } = await loadApi();
 
     const result = await getRandom();
 
     expect(result?.slug).toMatch(/^m~/);
-    expect(fetchMock.mock.calls[0][0]).toContain('/anime/home');
+    expect(fetchMock.mock.calls.some((call) => call[0].includes('/anime/home'))).toBe(true);
   });
 
   it('maps watcher and reader payloads', async () => {
@@ -182,10 +182,11 @@ describe('API Client', () => {
     const { searchMedia } = await loadApi();
 
     await expect(searchMedia('one piece', 20)).resolves.toEqual({ data: [], total: 0 });
-    expect(fetchMock).toHaveBeenCalledTimes(7);
+    expect(fetchMock).toHaveBeenCalledTimes(8);
     expect(fetchMock.mock.calls[0][0]).toContain('/anime/search/one%20piece');
     expect(fetchMock.mock.calls[1][0]).toContain('/anime/samehadaku/search?q=one%20piece');
     expect(fetchMock.mock.calls[2][0]).toContain('/anime/animasu/search/one%20piece');
+    expect(fetchMock.mock.calls[7][0]).toContain('/anime/alqanime/search/one%20piece');
   });
 
   it('maps Samehadaku details, episodes, and sources', async () => {
@@ -352,6 +353,110 @@ describe('API Client', () => {
   });
 });
 
+
+  it('maps Alqanime details, downloads, and suggestions', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () =>
+        JSON.stringify({
+          status: 'success',
+          data: {
+            title: 'Naruto',
+            poster: 'https://img/n.jpg',
+            rating: 8.5,
+            status: 'Completed',
+            genres: [{ name: 'Action', slug: 'action' }],
+            downloads: [
+              {
+                title: 'Batch 01-28',
+                links: [
+                  {
+                    resolution: '720p',
+                    urls: [{ server: 'MediaFire', url: 'https://mf/naruto-720p.zip' }],
+                  },
+                ],
+              },
+            ],
+            stream_links: [],
+            recommendations: [{ title: 'Naruto Shippuden', slug: 'naruto-shippuuden', type: 'TV' }],
+            related: [],
+          },
+        }),
+    });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjogImFuaW1lIiwgInByb3ZpZGVyIjogImFscWFuaW1lIiwgInNsdWciOiAibmFydXRvIn0');
+    expect(media).toMatchObject({ title: 'Naruto', type: 'anime', nsfw: false });
+    expect(media?.downloadUrls).toEqual([
+      { url: 'https://mf/naruto-720p.zip', label: 'Batch 01-28 720p', resolution: '720p' },
+    ]);
+    expect(media?.suggestions).toEqual([
+      { slug: 'naruto-shippuuden', title: 'Naruto Shippuden', type: 'TV' },
+    ]);
+  });
+
+  it('marks Mangasusuku comics NSFW by provider class', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () =>
+        JSON.stringify({
+          title: 'Adult Comic',
+          image: 'https://img/a.jpg',
+          genres: [],
+        }),
+    });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjogImNvbWljIiwgInByb3ZpZGVyIjogIm1hbmdhc3VzdWt1IiwgInNsdWciOiAieCJ9');
+    expect(media).toMatchObject({ type: 'comic', nsfw: true });
+  });
+
+  it('marks comics NSFW via explicit genre slug 21', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () =>
+        JSON.stringify({
+          status: 'success',
+          title: 'Genre 21 Comic',
+          image: 'https://img/g.jpg',
+          genres: [{ name: 'Adult', slug: '21' }],
+        }),
+    });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjogImNvbWljIiwgInByb3ZpZGVyIjogImtvbWlrc3RhdGlvbiIsInNsdWciOiAieCJ9');
+    expect(media).toMatchObject({ nsfw: true });
+  });
+
+  it('maps Sakuranovel details as novel type', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () =>
+        JSON.stringify({
+          status: 'success',
+          data: {
+            title: 'Noble Lady',
+            alt_title: 'Noble Alt',
+            poster: 'https://img/n.jpg',
+            rating: 4.2,
+            status: 'Completed',
+            synopsis: 'A noble lady...',
+            genres: [{ name: 'Action', slug: 'action' }],
+            chapters: [],
+          },
+        }),
+    });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug } = await loadApi();
+
+    const media = await getMediaBySlug('m~eyJ0eXBlIjogIm5vdmVsIiwgInByb3ZpZGVyIjogInNha3VyYW5vdmVsIiwgInNsdWciOiAieSJ9');
+    expect(media).toMatchObject({ title: 'Noble Lady', type: 'novel', nsfw: false });
+    expect(media?.alternativeTitles).toEqual(['Noble Alt']);
+  });
+
 afterAll(() => {
   process.env.JAWATCH_MEDIA_API_URL = originalEnv.JAWATCH_MEDIA_API_URL;
   process.env.JAWATCH_MEDIA_API_TIMEOUT_MS = originalEnv.JAWATCH_MEDIA_API_TIMEOUT_MS;
@@ -366,4 +471,55 @@ it('keeps legacy media refs readable', async () => {
   const { getMediaBySlug } = await loadApi();
 
   await expect(getMediaBySlug('anime~anime~one-piece')).resolves.toMatchObject({ title: 'One Piece' });
+});
+
+// Owner-reported fix: episodes/chapters must be ascending (ep1 top, last bottom) so next/prev work.
+// Upstream returns newest-first; getEpisodes/getChapters sort ascending. Lock it.
+it('sorts episodes ascending regardless of upstream order', async () => {
+  const fetchMock = vi.fn().mockResolvedValueOnce({
+    ok: true,
+    text: async () => JSON.stringify({ status: 'success', data: { episodeList: [
+      { episodeId: 'ep-3', title: '3' },
+      { episodeId: 'ep-1', title: '1' },
+      { episodeId: 'ep-2', title: '2' },
+    ] } }),
+  });
+  setFetchMock(fetchMock);
+  const { getEpisodes } = await loadApi();
+
+  const eps = await getEpisodes('anime~samehadaku~night-signal');
+  expect(eps.map((e) => e.episodeNumber)).toEqual([1, 2, 3]);
+  expect(eps[0].slug).toBe('ep-1');
+});
+
+it('falls back to mangasusuku when komikstation comic list fails', async () => {
+  // komikstation scraper fails intermittently (success:false); comic discover must still return items.
+  const fetchMock = vi.fn()
+    .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ success: false, message: 'Error scraping' }) })
+    .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ success: true, mangaList: [
+      { title: 'Fallback Comic', slug: 'fallback-comic', image: 'https://img/f.jpg' },
+    ] }) });
+  setFetchMock(fetchMock);
+  const { getMedia } = await loadApi();
+
+  const { data } = await getMedia('comic', 1, 20);
+  expect(data).toHaveLength(1);
+  expect(data[0]).toMatchObject({ title: 'Fallback Comic', type: 'comic' });
+});
+
+it('sorts chapters ascending regardless of upstream order', async () => {
+  const fetchMock = vi.fn().mockResolvedValueOnce({
+    ok: true,
+    text: async () => JSON.stringify({ status: 'success', chapters: [
+      { slug: 'ch-3', title: 'Chapter 3' },
+      { slug: 'ch-1', title: 'Chapter 1' },
+      { slug: 'ch-2', title: 'Chapter 2' },
+    ] }),
+  });
+  setFetchMock(fetchMock);
+  const { getChapters } = await loadApi();
+
+  const chs = await getChapters('comic~komikstation~night-signal');
+  expect(chs.map((c) => c.chapterNumber)).toEqual([1, 2, 3]);
+  expect(chs[0].slug).toBe('ch-1');
 });

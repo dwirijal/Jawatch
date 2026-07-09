@@ -12,9 +12,20 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const rails = await getHomeRails();
+  let rails: Awaited<ReturnType<typeof getHomeRails>> = [];
+  let genres: Awaited<ReturnType<typeof getGenres>> = [];
+  try {
+    [rails, genres] = await Promise.all([getHomeRails(), getGenres()]);
+  } catch {
+    return (
+      <main className="mx-auto max-w-[1160px] px-4 py-24 text-center sm:px-8">
+        <h1 className="font-serif text-2xl font-bold text-foreground">Something went wrong</h1>
+        <p className="mt-3 text-sm text-muted-foreground">Failed to load content. Please try again.</p>
+        <a href="/" className="mt-6 inline-block rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-void">Retry</a>
+      </main>
+    );
+  }
   const contents = rails.flatMap((rail) => rail.items);
-  const genres = await getGenres();
 
   return (
     <>
@@ -23,7 +34,7 @@ export default async function HomePage() {
       {contents.length > 0 && (
         <section className="overflow-hidden border-b border-border bg-card/30 py-6 grain">
           <div className="mx-auto mb-4 max-w-[1160px] px-4 sm:px-8">
-            <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.15em] text-accent-bright">
+            <div className="flex items-center gap-2 font-mono text-eyebrow uppercase text-accent-bright">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               On the shelf now
             </div>
@@ -35,9 +46,9 @@ export default async function HomePage() {
                 href={`/media/${item.slug}`}
                 className="group flex min-w-[260px] shrink-0 items-center gap-3 rounded-page border border-border bg-card/50 px-4 py-2.5 transition-all duration-300 hover:border-amber/40 hover:-translate-y-0.5"
               >
-                <span className="w-5 font-mono text-[10px] tabular-nums text-primary/60">{String((index % 20) + 1).padStart(2, '0')}</span>
+                <span className="w-5 font-mono text-tag tabular-nums text-primary/60">{String((index % 20) + 1).padStart(2, '0')}</span>
                 <span className="truncate font-serif text-sm text-foreground transition-colors group-hover:text-primary">{item.title}</span>
-                <span className="ml-auto shrink-0 font-mono text-[9px] uppercase tracking-tag text-accent-bright/70">{item.type}</span>
+                <span className="ml-auto shrink-0 font-mono text-eyebrow uppercase text-accent-bright/70">{item.type}</span>
               </Link>
             ))}
           </div>
@@ -61,7 +72,7 @@ export default async function HomePage() {
               <Link
                 key={genre.slug}
                 href={`/genres/${genre.slug}`}
-                className="rounded-full border border-border bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-tag text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="rounded-full border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 {genre.name}
               </Link>

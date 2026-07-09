@@ -43,6 +43,7 @@ const config: Config = {
         micro: [text.micro, { lineHeight: "1.4", letterSpacing: tracking.micro }],
         chip: [text.chip, { lineHeight: "1.4", letterSpacing: tracking.xs }],
         body: [text.body, { lineHeight: "1.6" }],
+        title: [text.title, { lineHeight: "1.1", letterSpacing: tracking.wide }],
       },
       letterSpacing: {
         eyebrow: tracking.eyebrow,

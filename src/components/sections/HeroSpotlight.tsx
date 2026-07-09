@@ -20,7 +20,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
   return (
     <section className="relative min-h-[82vh] overflow-hidden border-b border-border bg-background grain">
       {item.coverImage && (
-        <Image src={item.coverImage} alt="" fill className="object-cover opacity-20 blur-[2px] saturate-50" priority />
+        <Image src={item.coverImage} alt="" fill sizes="100vw" className="object-cover opacity-20 blur-[2px] saturate-50" priority />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-void via-void/90 to-void/30" />
       <div className="absolute inset-y-0 left-0 w-2/3 bg-[radial-gradient(circle_at_26%_34%,rgba(232,163,61,.18),transparent_32rem)]" />
@@ -30,14 +30,14 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
       <div className="relative z-10 mx-auto grid min-h-[82vh] w-full max-w-[1160px] items-end gap-10 px-4 pb-16 pt-28 sm:px-8 md:grid-cols-[minmax(0,1fr)_300px] md:pb-24">
         <div className="max-w-3xl">
           <div className="mb-5 flex flex-wrap items-center gap-3">
-            <span className="rounded-sm border border-amber/60 px-2 py-1 font-mono text-[10px] uppercase tracking-wide2 text-primary">{item.type}</span>
+            <span className="rounded-sm border border-amber/60 px-2 py-1 font-mono text-tag uppercase text-primary">{item.type}</span>
             {item.rating?.average ? (
               <span className="inline-flex items-center gap-1 font-mono text-xs text-primary">
                 <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
                 {item.rating.average.toFixed(1)}
               </span>
             ) : null}
-            <span className="font-mono text-[10px] uppercase tracking-wide2 text-muted-foreground">Now on the shelf</span>
+            <span className="font-mono text-tag uppercase text-muted-foreground">Now on the shelf</span>
           </div>
 
           <h1 className="max-w-4xl font-serif text-5xl font-semibold leading-none tracking-tight text-foreground text-shadow-lg sm:text-7xl">{item.title}</h1>
@@ -49,6 +49,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
               {isReadable ? <BookOpen className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4 fill-void" aria-hidden="true" />}
               Start watching
             </Link>
+            {/* ponytail: px-[26px] py-[13px] = pad.button; literal because two-value token can't be single class */}
             <Link href={primaryHref} className="inline-flex items-center gap-2 border border-border bg-card/75 px-[26px] py-[13px] font-mono text-xs uppercase tracking-xs text-foreground transition-colors hover:border-amber/60 hover:text-primary">
               <Info className="h-4 w-4" aria-hidden="true" />
               Details

@@ -16,7 +16,7 @@ export function Gauge({
   return (
     <div className="relative w-24 h-24">
       <svg width="96" height="96" className="-rotate-90">
-        <circle cx="48" cy="48" r="42" fill="none" stroke="#2C2A32" strokeWidth="4" />
+        <circle cx="48" cy="48" r="42" fill="none" stroke="rgb(var(--muted))" strokeWidth="4" />
         <circle
           cx="48" cy="48" r="42" fill="none"
           stroke={color} strokeWidth="4"
@@ -26,8 +26,8 @@ export function Gauge({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <b className="font-serif text-[26px] italic">{value}</b>
-        {votes && <span className="font-mono text-[9px] text-muted-foreground tracking-tag">{votes} VOTES</span>}
+        <b className="font-serif text-title italic">{value}</b>
+        {votes && <span className="font-mono text-eyebrow text-muted-foreground">{votes} VOTES</span>}
       </div>
     </div>
   );

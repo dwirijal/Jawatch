@@ -98,16 +98,12 @@ describe('SEO routes', () => {
   });
 
   it('returns not found for unsupported discover types', async () => {
+    // manga/movie/novel are now valid discover types; only genuinely-unknown types 404.
     const { generateMetadata, default: DiscoverTypePage } = await import('@/app/discover/[type]/page');
-    const { default: DiscoverPage } = await import('@/app/discover/page');
-    const rendered = await DiscoverPage();
 
-    await expect(DiscoverTypePage({ params: Promise.resolve({ type: 'manga' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
-    await expect(generateMetadata({ params: Promise.resolve({ type: 'manga' }) })).resolves.toEqual({ robots: { index: false, follow: false } });
+    await expect(DiscoverTypePage({ params: Promise.resolve({ type: 'not-a-type' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
+    await expect(generateMetadata({ params: Promise.resolve({ type: 'not-a-type' }) })).resolves.toEqual({ robots: { index: false, follow: false } });
     expect(notFound).toHaveBeenCalledTimes(1);
-    expect(String(rendered)).not.toContain('/discover/manga');
-    expect(String(rendered)).not.toContain('/discover/movie');
-    expect(String(rendered)).not.toContain('/discover/novel');
   });
 
   it('uses media data for detail metadata', async () => {

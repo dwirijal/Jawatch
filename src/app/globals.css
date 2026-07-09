@@ -35,8 +35,8 @@
 
   body {
     background:
-      radial-gradient(circle at 20% -10%, rgba(245, 158, 36, 0.16), transparent 34rem),
-      radial-gradient(circle at 80% 0%, rgba(91, 178, 169, 0.12), transparent 30rem),
+      radial-gradient(circle at 20% -10%, rgb(var(--primary) / 0.16), transparent 34rem),
+      radial-gradient(circle at 80% 0%, rgb(var(--accent) / 0.12), transparent 30rem),
       rgb(var(--background));
     color: rgb(var(--foreground));
     -webkit-font-smoothing: antialiased;
@@ -72,7 +72,7 @@
 
   .glow-border { transition: box-shadow 0.3s ease, transform 0.3s ease; }
   .glow-border:hover {
-    box-shadow: 0 0 24px rgba(245, 158, 36, 0.18), inset 0 0 0 1px rgba(245, 158, 36, 0.32);
+    box-shadow: 0 0 24px rgb(var(--primary) / 0.18), inset 0 0 0 1px rgb(var(--primary) / 0.32);
   }
 
   @keyframes marquee {
@@ -89,9 +89,26 @@
   .animate-marquee-reverse { animation: marquee-reverse 40s linear infinite; }
   .animate-marquee-reverse:hover { animation-play-state: paused; }
 
+  @media (prefers-reduced-motion: reduce) {
+    .animate-marquee,
+    .animate-marquee-reverse,
+    .animate-marquee:hover,
+    .animate-marquee-reverse:hover {
+      animation: none;
+    }
+    .hero-parallax {
+      background-attachment: scroll;
+    }
+  }
+
   .hero-parallax {
     background-attachment: fixed;
     background-size: cover;
     background-position: center 30%;
+  }
+
+  .theater-breakout {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 }

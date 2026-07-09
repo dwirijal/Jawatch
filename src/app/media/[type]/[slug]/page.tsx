@@ -5,7 +5,7 @@ import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaR
 import { BookOpen, Calendar, Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -51,7 +51,9 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const ref = decodeMediaRef(decodeSlug);
 
   const content = await getMediaBySlug(decodeSlug);
-  if (!content || !ref) notFound();
+  if (!content || !ref) {
+    notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
+  }
 
   const canonicalPath = buildCanonicalPath(ref);
   const year = content.createdAt ? new Date(content.createdAt).getUTCFullYear() : null;
@@ -76,8 +78,8 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
 
           <div className="max-w-3xl pb-2">
             <div className="mb-4 flex flex-wrap gap-2">
-              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-primary">{content.type}</span>
-              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground">{content.status}</span>}
+              <span className="rounded-sm border border-amber/60 px-2 py-0.5 font-mono text-eyebrow uppercase text-primary">{content.type}</span>
+              {content.status && <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground">{content.status}</span>}
             </div>
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground text-shadow-lg md:text-5.5xl">{content.title}</h1>
             <div className="mt-5 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-tag text-muted-foreground">
@@ -92,7 +94,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   <Link
                     key={genre.slug}
                     href={`/genres/${genre.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {genre.name}
                   </Link>
@@ -101,12 +103,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             )}
             {content.studios && content.studios.length > 0 && (
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground/70">Studio</span>
+                <span className="font-mono text-eyebrow uppercase text-muted-foreground/70">Studio</span>
                 {content.studios.map((studio) => (
                   <Link
                     key={studio.slug}
                     href={`/studios/${studio.slug}`}
-                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    className="rounded-sm border border-border px-2 py-0.5 font-mono text-eyebrow uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                   >
                     {studio.name}
                   </Link>
@@ -146,12 +148,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   const path = buildCanonicalPath(ref);
                   return (
                     <a key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3">
-                      <div className="aspect-[2/3] overflow-hidden rounded-sm bg-background">
-                        {item.coverImage ? <img src={item.coverImage} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
+                      <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-background">
+                        {item.coverImage ? <Image src={item.coverImage} alt={item.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
                       </div>
                       <div className="mt-3">
                         <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>
-                        <div className="mt-1 text-[10px] uppercase tracking-wide2 text-muted-foreground">{item.type}</div>
+                        <div className="mt-1 text-tag uppercase text-muted-foreground">{item.type}</div>
                       </div>
                     </a>
                   );

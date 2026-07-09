@@ -34,12 +34,12 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       </form>
 
       <div className="mb-8 flex flex-wrap gap-2">
-        <Link href={activeType ? `/search?q=${encodeURIComponent(query)}` : '#'} className={`rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-tag transition-colors ${activeType ? 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary' : 'border-primary text-primary'}`}>all</Link>
+        <Link href={activeType ? `/search?q=${encodeURIComponent(query)}` : '#'} className={`rounded-full border px-4 py-2 font-mono text-micro uppercase transition-colors ${activeType ? 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary' : 'border-primary text-primary'}`}>all</Link>
         {types.map((t) => (
           <Link
             key={t}
             href={`/search?q=${encodeURIComponent(query)}&type=${t}`}
-            className={`rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-tag transition-colors ${activeType === t ? 'border-primary text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
+            className={`rounded-full border px-4 py-2 font-mono text-micro uppercase transition-colors ${activeType === t ? 'border-primary text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
           >
             {t}
           </Link>

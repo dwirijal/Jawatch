@@ -5,7 +5,7 @@ export function Badge({
   children: React.ReactNode;
   variant?: 'default' | 'primary' | 'accent' | 'solid';
 }) {
-  const base = 'font-mono text-[10px] tracking-micro uppercase px-[9px] py-1 border rounded-sm';
+  const base = 'font-mono text-tag uppercase px-2.5 py-1 border rounded-sm';
   const styles = {
     default: 'border-border text-muted-foreground',
     primary: 'border-primary/60 text-primary',
