@@ -12,7 +12,8 @@ export function Chip({
   return (
     <button
       onClick={onClick}
-      className={`font-sans cursor-pointer border transition-colors ${
+      aria-pressed={active}
+      className={`font-sans cursor-pointer border transition-[color,background-color,border-color,transform] motion-safe:active:scale-95 motion-reduce:active:scale-100 ${
         active
           ? 'bg-paper text-void border-paper'
           : 'border-border text-foreground hover:border-paper'
