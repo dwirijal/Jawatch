@@ -23,7 +23,7 @@ vi.mock('@/lib/api', async () => {
   return {
     ...api,
     getMediaBySlug: vi.fn(),
-    getEpisodeSources: vi.fn(),
+    getEpisodePlayback: vi.fn(),
     getEpisodes: vi.fn(),
     getChapters: vi.fn(),
     getMediaRelated: vi.fn(),
@@ -50,7 +50,7 @@ describe('watch-room pages', () => {
   it('passes the real episode list and matching index to the episode player', async () => {
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
     vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
-    vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
+    vi.mocked(api.getEpisodePlayback).mockResolvedValue({ sources: [{ url: 'https://player.test/episode-2' }], mirrors: [], downloads: [] });
     const { default: EpisodePage } = await import('@/app/media/[type]/[slug]/episodes/[episodeSlug]/page');
 
     render(await EpisodePage({ params: Promise.resolve({ type: media.type, slug: media.slug, episodeSlug: 'episode-2' }) }));
@@ -61,7 +61,7 @@ describe('watch-room pages', () => {
   it('falls back to the current episode when the queue fails', async () => {
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
     vi.mocked(api.getEpisodes).mockRejectedValue(new Error('queue down'));
-    vi.mocked(api.getEpisodeSources).mockResolvedValue([{ url: 'https://player.test/episode-2' }]);
+    vi.mocked(api.getEpisodePlayback).mockResolvedValue({ sources: [{ url: 'https://player.test/episode-2' }], mirrors: [], downloads: [] });
     const { default: EpisodePage } = await import('@/app/media/[type]/[slug]/episodes/[episodeSlug]/page');
 
     render(await EpisodePage({ params: Promise.resolve({ type: media.type, slug: media.slug, episodeSlug: 'episode-2' }) }));
@@ -73,7 +73,7 @@ describe('watch-room pages', () => {
     // Intended behavior: no sources -> in-page EmptyState (robots noindex), not a hard 404 throw.
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
     vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
-    vi.mocked(api.getEpisodeSources).mockRejectedValue(new Error('Media source unavailable'));
+    vi.mocked(api.getEpisodePlayback).mockRejectedValue(new Error('Media source unavailable'));
     const { default: EpisodePage } = await import('@/app/media/[type]/[slug]/episodes/[episodeSlug]/page');
 
     render(await EpisodePage({ params: Promise.resolve({ type: 'anime', slug: 'anime-slug', episodeSlug: 'not-real' }) }));

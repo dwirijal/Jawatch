@@ -1,24 +1,28 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { Episode, EpisodeSource } from '@/lib/api';
-import { getEpisodeSourcesClient } from '@/lib/client-media';
+import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePlayback } from '@/lib/api';
+import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
 
 interface Props {
   slug: string;
   episodes: Episode[];
   initialEpIndex: number;
-  initialSources: EpisodeSource[];
+  initialPlayback: EpisodePlayback;
   episodeListError?: boolean;
 }
 
-export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, episodeListError = false }: Props) {
+export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, episodeListError = false }: Props) {
   const [epIndex, setEpIndex] = useState(initialEpIndex);
-  const [sources, setSources] = useState(initialSources);
+  const [sources, setSources] = useState<EpisodeSource[]>(initialPlayback.sources);
+  const [mirrors, setMirrors] = useState<EpisodeMirror[]>(initialPlayback.mirrors);
+  const [downloads, setDownloads] = useState<EpisodeDownload[]>(initialPlayback.downloads);
   const [loading, setLoading] = useState(false);
+  const [mirrorLoading, setMirrorLoading] = useState('');
   const [error, setError] = useState('');
   const [showList, setShowList] = useState(false);
   const [activeSource, setActiveSource] = useState(0);
+  const [activeMirror, setActiveMirror] = useState('');
   const [theater, setTheater] = useState(false);
 
   const videoUrl = sources[activeSource]?.url;
@@ -36,10 +40,13 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
     setLoading(true);
     setError('');
     try {
-      const newSources = await getEpisodeSourcesClient(slug, ep.slug);
-      if (newSources.length === 0) throw new Error('No episode sources');
-      setSources(newSources);
+      const playback = await getEpisodePlaybackClient(slug, ep.slug);
+      if (playback.sources.length === 0) throw new Error('No episode sources');
+      setSources(playback.sources);
+      setMirrors(playback.mirrors);
+      setDownloads(playback.downloads);
       setActiveSource(0);
+      setActiveMirror('');
       setEpIndex(idx);
       setShowList(false);
     } catch {
@@ -49,10 +56,32 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
     }
   }, [epIndex, episodes, slug]);
 
+  // Mirrors resolve lazily — one hop per click. On success, swap the iframe to the mirror URL.
+  const playMirror = useCallback(async (mirror: EpisodeMirror) => {
+    if (mirrorLoading) return;
+    setMirrorLoading(mirror.serverId);
+    setError('');
+    try {
+      const url = await resolveMirrorClient(slug, mirror.serverId);
+      const label = mirror.quality ? `${mirror.label} ${mirror.quality}` : mirror.label;
+      setSources((prev) => {
+        const existing = prev.findIndex((s) => s.url === url);
+        if (existing >= 0) { setActiveSource(existing); return prev; }
+        setActiveSource(prev.length);
+        return [...prev, { url, label, quality: mirror.quality }];
+      });
+      setActiveMirror(mirror.serverId);
+    } catch {
+      setError('Server ini tidak tersedia. Coba server lain.');
+    } finally {
+      setMirrorLoading('');
+    }
+  }, [mirrorLoading, slug]);
+
   useEffect(() => {
     if (epIndex >= episodes.length - 1) return;
     const next = episodes[epIndex + 1];
-    getEpisodeSourcesClient(slug, next.slug).catch(() => {});
+    getEpisodePlaybackClient(slug, next.slug).catch(() => {});
   }, [epIndex, episodes, slug]);
 
   if (!videoUrl) {
@@ -120,12 +149,55 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialSources, ep
                   type="button"
                   onClick={() => setActiveSource(i)}
                   aria-pressed={i === activeSource}
-                  className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none ${i === activeSource ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
+                  className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none motion-safe:active:scale-95 motion-reduce:active:scale-100 ${i === activeSource ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
                 >
                   {s.label || s.quality || `S${i + 1}`}
                 </button>
               ))}
             </div>
+          )}
+
+          {mirrors.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2" aria-label="Server alternatif">
+              <span className="font-mono text-eyebrow uppercase text-accent-bright">Server alternatif</span>
+              {mirrors.map((m) => {
+                const busy = mirrorLoading === m.serverId;
+                return (
+                  <button
+                    key={m.serverId}
+                    type="button"
+                    onClick={() => playMirror(m)}
+                    disabled={!!mirrorLoading}
+                    aria-pressed={activeMirror === m.serverId}
+                    aria-busy={busy}
+                    className={`border px-3 py-1.5 font-mono text-tag uppercase transition-colors rounded-none motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 ${activeMirror === m.serverId ? 'border-amber bg-primary text-void' : 'border-border text-muted-foreground hover:border-paper hover:text-foreground'}`}
+                  >
+                    {busy ? '…' : `${m.label}${m.quality ? ` ${m.quality}` : ''}`}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {downloads.length > 0 && (
+            <details className="border border-border bg-card/30 grain">
+              <summary className="cursor-pointer px-5 py-3 font-mono text-eyebrow uppercase text-accent-bright transition-colors hover:text-primary">
+                Download ({downloads.length})
+              </summary>
+              <div className="flex flex-wrap gap-2 border-t border-border p-4">
+                {downloads.map((d, i) => (
+                  <a
+                    key={`${d.url}-${i}`}
+                    href={d.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border border-border px-3 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-colors rounded-none hover:border-amber hover:text-foreground motion-safe:active:scale-95 motion-reduce:active:scale-100"
+                  >
+                    {d.label}{d.quality ? ` · ${d.quality}` : ''}{d.size ? ` · ${d.size}` : ''}
+                  </a>
+                ))}
+              </div>
+            </details>
           )}
 
           <div className="flex flex-col gap-3 border border-border bg-card/30 p-5 sm:flex-row sm:items-center sm:justify-between grain">

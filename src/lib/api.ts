@@ -121,6 +121,13 @@ export interface Media {
 export interface Episode { slug: string; episodeNumber: number; title?: string; createdAt: string; }
 export interface Chapter { slug: string; chapterNumber: number; title?: string; createdAt: string; }
 export interface EpisodeSource { slug?: string; quality?: string; url: string; label?: string; }
+export interface EpisodeMirror { serverId: string; label: string; quality?: string; }
+export interface EpisodeDownload { url: string; label: string; quality?: string; size?: string; }
+export interface EpisodePlayback {
+  sources: EpisodeSource[];   // playable immediately (default + animasu/donghua multi-stream)
+  mirrors: EpisodeMirror[];   // resolve on demand via resolveEpisodeMirror (otakudesu/samehadaku)
+  downloads: EpisodeDownload[];
+}
 export interface ChapterPage { slug?: string; pageNumber?: number; url: string; }
 
 function encodeMediaRef(type: MediaType, provider: string, slug: string): string {
@@ -975,53 +982,91 @@ async function getEpisodesUnsorted(slug: string): Promise<Episode[]> {
   return [];
 }
 
-export async function getEpisodeSources(slug: string, epSlug: string): Promise<EpisodeSource[]> {
+const EMPTY_PLAYBACK: EpisodePlayback = { sources: [], mirrors: [], downloads: [] };
+
+// otakudesu & samehadaku share this episode shape: single defaultStreamingUrl +
+// server.qualities[].serverList[] (mirrors needing on-demand resolve) + downloadUrl.qualities[].
+function playbackFromDefaultShape(data: any): EpisodePlayback {
+  const sources: EpisodeSource[] = data?.defaultStreamingUrl
+    ? [{ url: data.defaultStreamingUrl, label: 'Default', quality: 'auto' }]
+    : [];
+  return { sources, mirrors: flattenMirrors(data?.server), downloads: flattenEpisodeDownloads(data?.downloadUrl) };
+}
+
+function flattenMirrors(server: any): EpisodeMirror[] {
+  const qualities = Array.isArray(server?.qualities) ? server.qualities : [];
+  const out: EpisodeMirror[] = [];
+  for (const q of qualities) {
+    const quality = typeof q?.title === 'string' ? q.title.trim() : undefined;
+    for (const s of Array.isArray(q?.serverList) ? q.serverList : []) {
+      if (s?.serverId) out.push({ serverId: String(s.serverId), label: String(s.title || 'Mirror').trim(), quality });
+    }
+  }
+  return out;
+}
+
+function flattenEpisodeDownloads(downloadUrl: any): EpisodeDownload[] {
+  const qualities = Array.isArray(downloadUrl?.qualities) ? downloadUrl.qualities : [];
+  const out: EpisodeDownload[] = [];
+  for (const q of qualities) {
+    const quality = typeof q?.title === 'string' ? q.title.trim() : undefined;
+    const size = typeof q?.size === 'string' ? q.size.trim() : undefined;
+    for (const u of Array.isArray(q?.urls) ? q.urls : []) {
+      if (u?.url) out.push({ url: u.url, label: String(u.title || 'Download').trim(), quality, size });
+    }
+  }
+  return out;
+}
+
+export async function getEpisodePlayback(slug: string, epSlug: string): Promise<EpisodePlayback> {
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
-  if (!ref) return [];
+  if (!ref) return EMPTY_PLAYBACK;
 
   if (ref.type === 'anime') {
     if (ref.provider === 'anime') {
       const body = unwrapUpstreamEnvelope(`/anime/episode/${epSlug}`, await fetchUpstreamJson(`/anime/episode/${epSlug}`));
-      const sources: EpisodeSource[] = [];
-
-      if (body.data?.defaultStreamingUrl) {
-        sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
-      }
-
-      return sources;
+      return playbackFromDefaultShape(body.data);
     }
     if (ref.provider === 'samehadaku') {
       const body = unwrapUpstreamEnvelope(`/anime/samehadaku/episode/${epSlug}`, await fetchUpstreamJson(`/anime/samehadaku/episode/${epSlug}`));
-      const sources: EpisodeSource[] = [];
-
-      if (body.data?.defaultStreamingUrl) {
-        sources.push({ url: body.data.defaultStreamingUrl, label: 'Default', quality: 'auto' });
-      }
-
-      return sources;
+      return playbackFromDefaultShape(body.data);
     }
     if (ref.provider === 'animasu') {
       const body = await fetchUpstreamJson(`/anime/animasu/episode/${epSlug}`);
-      return (Array.isArray(body.streams) ? body.streams : []).map((item: any) => ({
+      const sources = (Array.isArray(body.streams) ? body.streams : []).map((item: any) => ({
         url: item.url,
         label: item.name,
         quality: String(item.name).split(' ')[0] || 'auto',
       }));
+      return { sources, mirrors: [], downloads: [] };
     }
   }
 
   if (ref.type === 'donghua') {
     const body = unwrapUpstreamEnvelope(`/anime/donghua/episode/${epSlug}`, await fetchUpstreamJson(`/anime/donghua/episode/${epSlug}`));
-    return (Array.isArray(body.data?.streams) ? body.data.streams : [])
+    const sources = (Array.isArray(body.data?.streams) ? body.data.streams : [])
       .filter((item: any) => item?.url)
-      .map((item: any) => ({
-        url: item.url,
-        label: item.server,
-        quality: item.server,
-      }));
+      .map((item: any) => ({ url: item.url, label: item.server, quality: item.server }));
+    return { sources, mirrors: [], downloads: [] };
   }
 
-  return [];
+  return EMPTY_PLAYBACK;
+}
+
+// Mirror stream URLs are lazy — resolved one hop when the user picks a server.
+export async function resolveEpisodeMirror(slug: string, serverId: string): Promise<string> {
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
+  if (!ref) throw new Error('Unknown media ref');
+  const prefix = ref.provider === 'samehadaku' ? '/anime/samehadaku/server' : '/anime/server';
+  const path = `${prefix}/${serverId}`;
+  const body = unwrapUpstreamEnvelope(path, await fetchUpstreamJson(path));
+  const url = body.data?.url;
+  if (!url) throw new Error('Mirror unavailable');
+  return url;
+}
+
+export async function getEpisodeSources(slug: string, epSlug: string): Promise<EpisodeSource[]> {
+  return (await getEpisodePlayback(slug, epSlug)).sources;
 }
 
 export async function getChapters(slug: string): Promise<Chapter[]> {

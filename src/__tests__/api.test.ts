@@ -234,6 +234,63 @@ describe('API Client', () => {
     expect(sources).toEqual([{ url: 'https://player.test/samehadaku', label: 'Default', quality: 'auto' }]);
   });
 
+  it('extracts default stream, resolvable mirrors, and downloads from an otakudesu episode', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify({
+        status: 'success',
+        data: {
+          defaultStreamingUrl: 'https://player.test/embed',
+          server: {
+            qualities: [
+              { title: '480p', serverList: [{ title: 'filedon', serverId: 'SRV-480' }, { title: 'mega', serverId: 'SRV-480b' }] },
+              { title: '720p', serverList: [{ title: 'vidhide ', serverId: 'SRV-720' }] },
+            ],
+          },
+          downloadUrl: {
+            qualities: [
+              { title: 'Mp4_360p', size: '40.9 MB', urls: [{ title: 'Filedon', url: 'https://dl.test/360-filedon' }] },
+            ],
+          },
+        },
+      }),
+    });
+    setFetchMock(fetchMock);
+    const { getEpisodePlayback } = await loadApi();
+
+    const playback = await getEpisodePlayback('anime~anime~one-piece', 'one-piece-1');
+    expect(playback.sources).toEqual([{ url: 'https://player.test/embed', label: 'Default', quality: 'auto' }]);
+    expect(playback.mirrors).toEqual([
+      { serverId: 'SRV-480', label: 'filedon', quality: '480p' },
+      { serverId: 'SRV-480b', label: 'mega', quality: '480p' },
+      { serverId: 'SRV-720', label: 'vidhide', quality: '720p' },
+    ]);
+    expect(playback.downloads).toEqual([
+      { url: 'https://dl.test/360-filedon', label: 'Filedon', quality: 'Mp4_360p', size: '40.9 MB' },
+    ]);
+  });
+
+  it('resolves a mirror URL from the correct provider path', async () => {
+    const otakuMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify({ status: 'success', data: { url: 'https://player.test/mirror' } }),
+    });
+    setFetchMock(otakuMock);
+    const { resolveEpisodeMirror } = await loadApi();
+
+    await expect(resolveEpisodeMirror('anime~anime~one-piece', 'SRV-720')).resolves.toBe('https://player.test/mirror');
+    expect(otakuMock.mock.calls[0][0]).toContain('/anime/server/SRV-720');
+
+    const shMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify({ status: 'success', data: { url: 'https://player.test/sh-mirror' } }),
+    });
+    setFetchMock(shMock);
+    const { resolveEpisodeMirror: resolveSh } = await loadApi();
+    await resolveSh('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6InNhbWVoYWRha3UiLCJzbHVnIjoic2FtZWhhZGFrdS1hbiJ9', 'A678C-6');
+    expect(shMock.mock.calls[0][0]).toContain('/anime/samehadaku/server/A678C-6');
+  });
+
   it('maps Animasu details, episodes, and sources', async () => {
     const detailResponse = {
       detail: {
