@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { Suspense } from 'react';
 import { HeroSpotlight } from '@/components/sections/HeroSpotlight';
 import { ContinueRail } from '@/components/sections/ContinueRail';
@@ -20,11 +21,11 @@ export default async function HomePage() {
     [rails, genres] = await Promise.all([getHomeRails(), getGenres()]);
   } catch {
     return (
-      <div className="mx-auto max-w-[1160px] px-4 py-24 text-center sm:px-8">
+      <Container className="text-center" y="6rem">
         <h1 className="font-serif text-2xl font-bold text-foreground">Something went wrong</h1>
         <p className="mt-3 text-sm text-muted-foreground">Failed to load content. Please try again.</p>
         <a href="/" className="mt-6 inline-block rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-void">Retry</a>
-      </div>
+      </Container>
     );
   }
   const contents = rails.flatMap((rail) => rail.items);
@@ -39,12 +40,12 @@ export default async function HomePage() {
 
       {contents.length > 0 && (
         <section className="overflow-hidden border-b border-border bg-card/30 py-6 grain">
-          <div className="mx-auto mb-4 max-w-[1160px] px-4 sm:px-8">
+          <Container className="mb-4">
             <div className="flex items-center gap-2 font-mono text-eyebrow uppercase text-accent-bright">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               On the shelf now
             </div>
-          </div>
+          </Container>
           <div className="flex gap-2 animate-marquee">
             {[...contents.slice(0, 20), ...contents.slice(0, 20)].map((item, index) => (
               <Link
@@ -61,7 +62,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <div className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+      <Container y="4rem">
         <div className="space-y-20">
           {rails.map((rail) => (
             <section key={rail.title}>
@@ -99,7 +100,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </section>
-      </div>
+      </Container>
     </>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { getMedia } from '@/lib/api';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import Link from 'next/link';
@@ -18,7 +19,7 @@ export default async function DiscoverPage() {
   const { data: contents } = await getMedia(undefined, 1, 60);
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground">Discover</h1>
       <p className="mt-2 text-sm text-muted-foreground">Filter the catalog by format, then jump into the title that fits tonight.</p>
       <div className="mb-8 flex flex-wrap gap-2">
@@ -29,6 +30,6 @@ export default async function DiscoverPage() {
         ))}
       </div>
       <MediaGrid items={contents} />
-    </div>
+    </Container>
   );
 }

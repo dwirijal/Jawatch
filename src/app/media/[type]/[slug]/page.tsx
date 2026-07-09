@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { Badge, Strip } from '@/components/ui';
 import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 import { MediaJsonLd } from '@/components/seo/MediaJsonLd';
@@ -91,7 +92,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
         <div className="absolute inset-y-0 left-0 w-2/3 bg-[radial-gradient(circle_at_25%_32%,rgba(232,163,61,.16),transparent_28rem)]" />
         <div className="absolute inset-0 scanlines pointer-events-none" />
 
-        <div className="relative mx-auto grid min-h-[520px] max-w-[1160px] items-end gap-8 px-4 pb-12 pt-28 sm:px-8 md:grid-cols-[220px_1fr] md:pb-16">
+        <Container className="relative grid min-h-[520px] items-end gap-8 pb-12 pt-28 md:grid-cols-[220px_1fr] md:pb-16">
           <div className="relative aspect-[2/3] w-44 overflow-hidden rounded-page border border-amber/20 bg-card shadow-2xl shadow-amber/5 md:w-full">
             {content.coverImage && <Image src={content.coverImage} alt={content.title} fill priority sizes="220px" className="object-cover" />}
           </div>
@@ -145,10 +146,10 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
               <BookmarkButton media={bookmarkInput} initial={bookmarked} />
             </div>
           </div>
-        </div>
+        </Container>
       </div>
 
-      <div className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+      <Container y="4rem">
         <section className="max-w-3xl">
           <div className="mb-6 border-l-2 border-amber pl-4">
             <h2 className="font-serif text-xl font-bold text-foreground">{isVideo ? 'Episodes' : 'Chapters'}</h2>
@@ -190,7 +191,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
           )}
         </section>
         </section>
-      </div>
+      </Container>
     </div>
   );
 }

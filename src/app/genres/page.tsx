@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { getGenres } from '@/lib/api';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ export default async function GenresPage() {
   const genres = await getGenres();
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <SectionHeader eyebrow="Browse" title="Genres" description="Jump into a mood, trope, or format lane." />
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {genres.map((genre) => (
@@ -24,6 +25,6 @@ export default async function GenresPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </Container>
   );
 }

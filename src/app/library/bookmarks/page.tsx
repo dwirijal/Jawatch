@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import Image from 'next/image';
 import Link from 'next/link';
 import { EmptyState } from '@/components/sections/EmptyState';
@@ -16,9 +17,9 @@ export default async function BookmarksPage() {
 
   if (!userId) {
     return (
-      <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+      <Container>
         <EmptyState icon={<Bookmark className="h-6 w-6" aria-hidden="true" />} eyebrow="Library" title="Sign in to see bookmarks" description="Saved titles are tied to your account. Sign in to start building your shelf." href="/login" actionLabel="Sign in" />
-      </div>
+      </Container>
     );
   }
 
@@ -26,14 +27,14 @@ export default async function BookmarksPage() {
 
   if (bookmarks.length === 0) {
     return (
-      <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+      <Container>
         <EmptyState icon={<Bookmark className="h-6 w-6" aria-hidden="true" />} eyebrow="Library" title="No bookmarks yet" description="Tap the bookmark on any title to save it here." href="/discover" actionLabel="Browse titles" />
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <h1 className="mb-6 border-l-2 border-amber pl-4 font-serif text-xl font-bold text-foreground">Bookmarks</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {bookmarks.map((item) => {
@@ -51,6 +52,6 @@ export default async function BookmarksPage() {
           );
         })}
       </div>
-    </div>
+    </Container>
   );
 }

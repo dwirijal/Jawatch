@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { getMediaBySlug, getEpisodePlayback, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
@@ -24,7 +25,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
 
   if (!content || playback.sources.length === 0) {
     return (
-      <div className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
+      <Container y="4rem">
         <EmptyState
           eyebrow="Not found"
           title="Episode tidak tersedia"
@@ -32,7 +33,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
           href={`/${type}/${slug}`}
           actionLabel="Kembali ke detail"
         />
-      </div>
+      </Container>
     );
   }
 
@@ -52,9 +53,9 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
   }
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-6 sm:px-8">
+    <Container y="1.5rem">
       <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
       <div className="mt-10"><SupportCTA /></div>
-    </div>
+    </Container>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { Bookmark, BookOpen, Clock3, ListPlus, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -17,7 +18,7 @@ const tiles = [
 
 export default function LibraryPage() {
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <SectionHeader eyebrow="Library" title="Your shelf" description="Standalone placeholders for saved titles and progress surfaces." />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map(({ href, label, description, icon: Icon }) => (
@@ -28,6 +29,6 @@ export default function LibraryPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </Container>
   );
 }

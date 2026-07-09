@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { getMedia } from '@/lib/api';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { notFound } from 'next/navigation';
@@ -31,7 +32,7 @@ export default async function DiscoverTypePage({ params }: Props) {
   const { data: contents } = await getMedia(type, 1, 60);
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground capitalize">{type}</h1>
       <p className="mt-2 text-sm text-muted-foreground">Curated {type} picks from the jawatch catalog.</p>
       <div className="mt-6 mb-8 flex flex-wrap gap-2">
@@ -50,6 +51,6 @@ export default async function DiscoverTypePage({ params }: Props) {
         ))}
       </div>
       <MediaGrid items={contents} />
-    </div>
+    </Container>
   );
 }

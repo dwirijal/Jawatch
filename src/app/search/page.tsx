@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Container } from '@/components/layout/Container';
 import { searchMedia } from '@/lib/api';
 import Link from 'next/link';
 import { EmptyState } from '@/components/sections/EmptyState';
@@ -22,7 +23,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const types = ['anime', 'donghua', 'manga', 'comic', 'movie', 'novel'];
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 py-12 sm:px-8">
+    <Container>
       <SectionHeader eyebrow="Search" title="Find your next title" description="Search across watch and read formats without leaving jawatch." />
       <form action="/search" method="GET" className="mb-4">
         <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 focus-within:border-primary/70">
@@ -54,6 +55,6 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       ) : query ? (
         <EmptyState icon={<Search className="h-6 w-6" aria-hidden="true" />} title="Tidak ditemukan" description={`Tidak ada hasil untuk "${query}". Coba kata kunci lain.`} href="/discover" actionLabel="Browse catalog" />
       ) : null}
-    </div>
+    </Container>
   );
 }
