@@ -14,9 +14,9 @@ type EmptyStateProps = {
 
 export function EmptyState({ icon, eyebrow, title, description, href, actionLabel = 'Browse catalog' }: EmptyStateProps) {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-border bg-card/80 px-6 py-14 text-center shadow-2xl shadow-black/20">
+    <section className="relative overflow-hidden rounded-card border border-border bg-card/80 px-6 py-14 text-center shadow-2xl shadow-black/20">
       <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-background/60 text-primary">
+      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-card border border-border bg-background/60 text-primary">
         {icon ?? <Compass className="h-6 w-6" aria-hidden="true" />}
       </div>
       {eyebrow && <div className="font-mono text-xs uppercase tracking-wide2 text-accent">{eyebrow}</div>}

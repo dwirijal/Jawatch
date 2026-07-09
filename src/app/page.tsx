@@ -79,7 +79,7 @@ export default async function HomePage() {
               <Link
                 key={genre.slug}
                 href={`/genres/${genre.slug}`}
-                className="rounded-full border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                className="rounded-pill border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 {genre.name}
               </Link>

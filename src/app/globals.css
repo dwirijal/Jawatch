@@ -17,15 +17,6 @@
     --accent-foreground: 5 18 18;
     --accent-bright: 126 214 203;
     --destructive: 239 68 68;
-    --color-bg-primary: var(--background);
-    --color-bg-secondary: var(--card);
-    --color-bg-elevated: var(--card);
-    --color-fg-primary: var(--foreground);
-    --color-fg-secondary: var(--muted-foreground);
-    --color-fg-muted: var(--muted-foreground);
-    --color-accent: var(--primary);
-    --color-accent-hover: 251 191 36;
-    --color-success: var(--accent);
   }
 
   :focus-visible {

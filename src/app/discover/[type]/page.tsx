@@ -44,7 +44,7 @@ export default async function DiscoverTypePage({ params }: Props) {
             key={t}
             href={`/discover/${t}`}
             aria-current={t === type ? 'page' : undefined}
-            className={`rounded-full border px-4 py-2 font-mono text-micro uppercase transition-colors ${t === type ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
+            className={`rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors ${t === type ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
           >
             {t}
           </Link>

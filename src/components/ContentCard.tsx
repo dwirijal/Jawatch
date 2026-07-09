@@ -13,7 +13,7 @@ export function ContentCard({ content }: { content: Media }) {
 
   return (
     <Link href={href} className="group block motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1">
-      <div className="aspect-[2/3] bg-card rounded-lg overflow-hidden mb-2 relative motion-safe:transition-shadow motion-safe:duration-300 group-hover:shadow-lg group-hover:shadow-background/50">
+      <div className="aspect-[2/3] bg-card rounded-card overflow-hidden mb-2 relative motion-safe:transition-shadow motion-safe:duration-300 group-hover:shadow-lg group-hover:shadow-background/50">
         {content.coverImage && !imgError ? (
           <Image
             src={content.coverImage}

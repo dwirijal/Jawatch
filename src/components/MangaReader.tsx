@@ -134,7 +134,7 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
       )}
 
       {error && (
-        <p className="text-xs text-red-500 font-mono" role="alert">{error}</p>
+        <p className="text-xs text-destructive font-mono" role="alert">{error}</p>
       )}
 
       {/* Pages */}
