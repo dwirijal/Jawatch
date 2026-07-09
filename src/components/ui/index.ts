@@ -9,3 +9,4 @@ export { Skeleton, SkeletonCard } from './Skeleton';
 export { Strip } from './Strip';
 export { Tabs } from './Tabs';
 export { Toast } from './Toast';
+export { ToastProvider, useToast } from './ToastProvider';

@@ -3,6 +3,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark } from 'lucide-react';
 import { toggleBookmarkAction } from '@/app/media/[type]/[slug]/actions';
+import { useToast } from '@/components/ui/ToastProvider';
 import type { BookmarkInput } from '@/lib/library';
 
 // Optimistic bookmark toggle. Signed-out -> action returns null -> redirect to login.
@@ -10,6 +11,7 @@ export function BookmarkButton({ media, initial }: { media: BookmarkInput; initi
   const [saved, setSaved] = useState(initial);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+  const toast = useToast();
 
   function onClick() {
     startTransition(async () => {
@@ -19,6 +21,7 @@ export function BookmarkButton({ media, initial }: { media: BookmarkInput; initi
         return;
       }
       setSaved(next);
+      toast(next ? 'Tersimpan ke Library' : 'Dihapus dari Library');
     });
   }
 

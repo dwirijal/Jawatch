@@ -9,6 +9,7 @@ import { BackToTop } from '@/components/sections/BackToTop';
 import { VercelAnalytics } from '@/components/analytics/VercelAnalytics';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { GoogleAds } from '@/components/ads/GoogleAds';
+import { ToastProvider } from '@/components/ui/ToastProvider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const siteName = 'jawatch';
@@ -90,7 +91,9 @@ export default function RootLayout({
         </header>
 
         {/* Main */}
-        <main id="main" className="flex-1">{children}</main>
+        <ToastProvider>
+          <main id="main" className="flex-1">{children}</main>
+        </ToastProvider>
 
         {/* Back to top */}
         <BackToTop />
