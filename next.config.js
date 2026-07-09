@@ -15,6 +15,7 @@ const securityHeaders = [
 const nextConfig = {
   // Removed output: 'standalone' to fix Vercel missing module errors
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

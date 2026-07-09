@@ -20,7 +20,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
   return (
     <section className="relative min-h-[82vh] overflow-hidden border-b border-border bg-background grain">
       {item.coverImage && (
-        <Image src={item.coverImage} alt="" fill className="object-cover opacity-20 blur-[2px] saturate-50" priority />
+        <Image src={item.coverImage} alt="" fill sizes="100vw" className="object-cover opacity-20 blur-[2px] saturate-50" priority />
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-void via-void/90 to-void/30" />
       <div className="absolute inset-y-0 left-0 w-2/3 bg-[radial-gradient(circle_at_26%_34%,rgba(232,163,61,.18),transparent_32rem)]" />
