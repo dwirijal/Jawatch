@@ -12,15 +12,15 @@ export function ContentCard({ content }: { content: Media }) {
   const href = ref ? buildCanonicalPath(ref) : `/media/${content.slug}`;
 
   return (
-    <Link href={href} className="group block">
-      <div className="aspect-[2/3] bg-card rounded-lg overflow-hidden mb-2 relative">
+    <Link href={href} className="group block motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1">
+      <div className="aspect-[2/3] bg-card rounded-lg overflow-hidden mb-2 relative motion-safe:transition-shadow motion-safe:duration-300 group-hover:shadow-lg group-hover:shadow-background/50">
         {content.coverImage && !imgError ? (
           <Image
             src={content.coverImage}
             alt={content.title}
             fill
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 20vw, 16vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover motion-safe:group-hover:scale-105 motion-safe:transition-transform motion-safe:duration-300"
             onError={() => setImgError(true)}
           />
         ) : (
@@ -37,7 +37,7 @@ export function ContentCard({ content }: { content: Media }) {
           <span className="text-foreground text-tag font-bold uppercase">{content.type}</span>
         </div>
       </div>
-      <h3 className="text-foreground font-medium text-xs sm:text-sm line-clamp-2 leading-tight">{content.title}</h3>
+      <h3 className="text-foreground font-medium text-xs sm:text-sm line-clamp-2 leading-tight transition-colors group-hover:text-primary">{content.title}</h3>
     </Link>
   );
 }

@@ -11,7 +11,7 @@ export function buttonClasses(variant: ButtonVariant = 'default', className?: st
 
   return cn(
     // ponytail: px-[26px] py-[13px] = pad.button; literal because two-value token can't be single class
-    'inline-flex cursor-pointer items-center justify-center border px-[26px] py-[13px] font-mono text-xs uppercase tracking-xs transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40',
+    'inline-flex cursor-pointer items-center justify-center border px-[26px] py-[13px] font-mono text-xs uppercase tracking-xs transition-[color,background-color,border-color,transform] duration-150 motion-safe:active:scale-[0.97] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40',
     variants[variant],
     className,
   );
