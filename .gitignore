@@ -34,3 +34,5 @@ let
 .claude/
 .superpowers/
 coverage/
+.env.local
+certs/

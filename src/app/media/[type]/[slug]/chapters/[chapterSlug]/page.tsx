@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getChapterPages, getChapters } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
 
@@ -30,14 +31,15 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
     );
   }
 
-  // Fire-and-forget: record resume point + history for signed-in users. Never blocks reading.
+  // Record resume point + history via after(): runs post-response so DB latency never
+  // blocks reading, and Vercel keeps the instance alive until it settles.
   const current = chapters.find((c) => c.slug === chapterSlug);
   const userId = await getUserId();
   if (userId) {
-    await Promise.all([
+    after(Promise.all([
       upsertProgress(userId, { mediaRef: decodeSlug, mediaType: content.type, itemSlug: chapterSlug, itemNumber: current?.chapterNumber ?? 1, title: content.title }),
       recordHistory(userId, decodeSlug, chapterSlug),
-    ]).catch(() => {});
+    ]).catch(() => {}));
   }
 
   return (

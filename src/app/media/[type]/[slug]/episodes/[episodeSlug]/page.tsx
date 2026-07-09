@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getEpisodeSources, getEpisodes } from '@/lib/api';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
 
@@ -37,14 +38,16 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
   const episodeIndex = episodeResult.items.findIndex((ep) => ep.slug === episodeSlug);
   const resolvedEpisodes = episodeIndex >= 0 ? episodeResult.items : [{ slug: episodeSlug, episodeNumber: 1, createdAt: '' }];
 
-  // Fire-and-forget: record resume point + history for signed-in users. Never blocks playback.
+  // Record resume point + history for signed-in users via after(): runs post-response so
+  // DB latency never blocks render, and Vercel keeps the instance alive until it settles
+  // (a bare void promise can be dropped when the serverless instance freezes).
   const current = resolvedEpisodes[Math.max(0, episodeIndex)];
   const userId = await getUserId();
   if (userId) {
-    await Promise.all([
+    after(Promise.all([
       upsertProgress(userId, { mediaRef: decodeSlug, mediaType: content.type, itemSlug: episodeSlug, itemNumber: current.episodeNumber, title: content.title }),
       recordHistory(userId, decodeSlug, episodeSlug),
-    ]).catch(() => {});
+    ]).catch(() => {}));
   }
 
   return (

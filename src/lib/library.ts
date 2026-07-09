@@ -41,9 +41,11 @@ async function safeQuery<T>(fn: () => Promise<T>, fallback: T, op: string): Prom
   }
 }
 
-// mediaRef is our canonical type~provider~slug; reject anything that isn't a plausible ref.
+// mediaRef is whatever the pages pass to decodeMediaRef: the canonical slash form
+// `type/slug` (e.g. anime/one-piece), the legacy `type~provider~slug`, or an opaque `m~…`.
+// Reject only empty/oversized/separatorless junk — a real ref always has a `/` or `~`.
 function isValidRef(ref: string): boolean {
-  return typeof ref === 'string' && ref.length > 0 && ref.length < 512 && ref.includes('~');
+  return typeof ref === 'string' && ref.length > 0 && ref.length < 512 && (ref.includes('/') || ref.includes('~'));
 }
 
 const VIDEO_TYPES = ['anime', 'donghua', 'movie'];
