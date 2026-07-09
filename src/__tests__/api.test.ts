@@ -472,3 +472,39 @@ it('keeps legacy media refs readable', async () => {
 
   await expect(getMediaBySlug('anime~anime~one-piece')).resolves.toMatchObject({ title: 'One Piece' });
 });
+
+// Owner-reported fix: episodes/chapters must be ascending (ep1 top, last bottom) so next/prev work.
+// Upstream returns newest-first; getEpisodes/getChapters sort ascending. Lock it.
+it('sorts episodes ascending regardless of upstream order', async () => {
+  const fetchMock = vi.fn().mockResolvedValueOnce({
+    ok: true,
+    text: async () => JSON.stringify({ status: 'success', data: { episodeList: [
+      { episodeId: 'ep-3', title: '3' },
+      { episodeId: 'ep-1', title: '1' },
+      { episodeId: 'ep-2', title: '2' },
+    ] } }),
+  });
+  setFetchMock(fetchMock);
+  const { getEpisodes } = await loadApi();
+
+  const eps = await getEpisodes('anime~samehadaku~night-signal');
+  expect(eps.map((e) => e.episodeNumber)).toEqual([1, 2, 3]);
+  expect(eps[0].slug).toBe('ep-1');
+});
+
+it('sorts chapters ascending regardless of upstream order', async () => {
+  const fetchMock = vi.fn().mockResolvedValueOnce({
+    ok: true,
+    text: async () => JSON.stringify({ status: 'success', chapters: [
+      { slug: 'ch-3', title: 'Chapter 3' },
+      { slug: 'ch-1', title: 'Chapter 1' },
+      { slug: 'ch-2', title: 'Chapter 2' },
+    ] }),
+  });
+  setFetchMock(fetchMock);
+  const { getChapters } = await loadApi();
+
+  const chs = await getChapters('comic~komikstation~night-signal');
+  expect(chs.map((c) => c.chapterNumber)).toEqual([1, 2, 3]);
+  expect(chs[0].slug).toBe('ch-1');
+});
