@@ -6,6 +6,9 @@ import { siteUrl } from '@/lib/site-url';
 import { SearchBar } from '@/components/sections/SearchBar';
 import { MobileNav } from '@/components/sections/MobileNav';
 import { BackToTop } from '@/components/sections/BackToTop';
+import { VercelAnalytics } from '@/components/analytics/VercelAnalytics';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
+import { GoogleAds } from '@/components/ads/GoogleAds';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const siteName = 'jawatch';
@@ -101,6 +104,11 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+
+        {/* Analytics + ad loader — env-gated, render nothing if IDs unset */}
+        <VercelAnalytics />
+        <GoogleAnalytics />
+        <GoogleAds />
       </body>
     </html>
   );
