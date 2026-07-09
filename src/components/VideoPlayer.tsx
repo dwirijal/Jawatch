@@ -166,15 +166,15 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
           )}
 
           {mirrorGroups.length > 0 && (
-            <section aria-labelledby="alt-server-heading" className="space-y-3 rounded-card border border-border/70 bg-card/40 p-4 grain">
+            <section aria-labelledby="alt-server-heading" className="space-y-3 rounded-card border border-border/70 bg-card/40 p-4 grain motion-safe:animate-rise-in">
               <h2 id="alt-server-heading" className="flex items-center gap-2 font-mono text-eyebrow uppercase text-accent-bright">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5">
                   <rect x="2" y="2.5" width="12" height="4" rx="1" /><rect x="2" y="9.5" width="12" height="4" rx="1" /><path d="M4.5 4.5h.01M4.5 11.5h.01" />
                 </svg>
                 Server alternatif
               </h2>
-              {mirrorGroups.map((group) => (
-                <div key={group.key} className="flex flex-wrap items-center gap-2">
+              {mirrorGroups.map((group, gi) => (
+                <div key={group.key} className="flex flex-wrap items-center gap-2 motion-safe:animate-rise-in" style={{ animationDelay: `${gi * 60}ms` }}>
                   <span className="flex min-w-24 items-center gap-1.5 font-mono text-tag uppercase text-foreground">
                     <span className="h-1.5 w-1.5 rounded-full bg-accent-bright/70" aria-hidden="true" />
                     {group.key}
@@ -191,12 +191,12 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                         aria-pressed={active}
                         aria-busy={busy}
                         aria-label={`Putar ${group.key}${m.quality ? ` ${m.quality}` : ''}`}
-                        className={`inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 font-mono text-tag uppercase transition-all duration-200 motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 ${active ? 'border-amber bg-primary text-void shadow-[0_0_0_3px_rgba(var(--primary),0.15)]' : 'border-border text-muted-foreground hover:border-amber/50 hover:text-foreground hover:bg-card/60'}`}
+                        className={`group/mirror inline-flex items-center gap-1.5 rounded-pill border px-3.5 py-1.5 font-mono text-tag uppercase transition-all duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 ${active ? 'border-amber bg-primary text-void shadow-[0_0_0_3px_rgba(var(--primary),0.15)]' : 'border-border text-muted-foreground hover:border-amber/50 hover:text-foreground hover:bg-card/60 hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.4)]'}`}
                       >
                         {busy ? (
                           <span className="h-3 w-3 rounded-full border-2 border-current border-t-transparent motion-safe:animate-spin" aria-hidden="true" />
                         ) : (
-                          <svg viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5" aria-hidden="true"><path d="M4 3l9 5-9 5z" /></svg>
+                          <svg viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5 motion-safe:transition-transform motion-safe:group-hover/mirror:scale-125" aria-hidden="true"><path d="M4 3l9 5-9 5z" /></svg>
                         )}
                         {m.quality || 'Stream'}
                       </button>
@@ -208,7 +208,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
           )}
 
           {downloadGroups.length > 0 && (
-            <details className="group/dl rounded-card border border-border/70 bg-card/40 grain overflow-hidden">
+            <details className="group/dl rounded-card border border-border/70 bg-card/40 grain overflow-hidden motion-safe:animate-rise-in">
               <summary className="flex cursor-pointer items-center gap-2 px-5 py-3.5 font-mono text-eyebrow uppercase text-accent-bright transition-colors hover:text-primary">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5">
                   <path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13h10" />
@@ -228,15 +228,15 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
                     </h3>
                     <ul className="flex flex-wrap gap-2">
                       {group.items.map((d, i) => (
-                        <li key={`${d.url}-${i}`}>
+                        <li key={`${d.url}-${i}`} className="motion-safe:animate-rise-in" style={{ animationDelay: `${i * 40}ms` }}>
                           <a
                             href={d.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`Download ${d.label} ${group.key}`}
-                            className="inline-flex items-center gap-1.5 rounded-pill border border-border px-3.5 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-all duration-200 hover:border-amber/50 hover:text-foreground hover:bg-card/60 motion-safe:active:scale-95 motion-reduce:active:scale-100"
+                            className="group/dlink inline-flex items-center gap-1.5 rounded-pill border border-border px-3.5 py-1.5 font-mono text-tag uppercase text-muted-foreground transition-all duration-200 hover:border-amber/50 hover:text-foreground hover:bg-card/60 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.4)] motion-safe:active:scale-95 motion-reduce:active:scale-100"
                           >
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-2.5 w-2.5" aria-hidden="true"><path d="M8 2v7M5 6.5L8 9l3-2.5M3 12h10" /></svg>
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-2.5 w-2.5 motion-safe:transition-transform motion-safe:group-hover/dlink:translate-y-0.5" aria-hidden="true"><path d="M8 2v7M5 6.5L8 9l3-2.5M3 12h10" /></svg>
                             {d.label}
                           </a>
                         </li>
