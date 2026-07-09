@@ -352,6 +352,11 @@ function chapterNumberFromTitle(title?: string, fallback = 1): number {
 async function fetchUpstreamJsonOnce(path: string) {
   if (!MEDIA_API_BASE) throw new MediaApiError();
   if (!path.startsWith('/')) throw new MediaApiError('Invalid request path');
+  // SSRF chokepoint: many callers interpolate URL-param slugs (epSlug, chSlug, genre,
+  // ref.slug) into `path`. Reject path traversal (../, encoded ..) + protocol-relative //
+  // here so no single call site can be forgotten. serverId has its own charset guard too.
+  // (Single encoded slashes are allowed — search queries are encodeURIComponent'd.)
+  if (/\.\.|%2e%2e|\\|\/\//i.test(path)) throw new MediaApiError('Invalid request path');
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), MEDIA_API_TIMEOUT_MS);

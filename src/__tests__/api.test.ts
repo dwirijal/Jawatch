@@ -94,6 +94,18 @@ describe('API Client', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it('rejects path traversal in interpolated slugs at the fetch chokepoint (SSRF)', async () => {
+    const fetchMock = vi.fn();
+    setFetchMock(fetchMock);
+    const { getEpisodePlayback, getChapterPages } = await loadApi();
+
+    // epSlug/chSlug come from URL params → traversal must be rejected before any fetch.
+    // The guard throws MediaApiError; the important guarantee is the network is never hit.
+    await expect(getEpisodePlayback('anime~anime~x', '../../../internal')).rejects.toThrow();
+    await expect(getChapterPages('comic~komikstation~x', '..%2f..%2fadmin')).rejects.toThrow();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('throws a neutral error on non-timeout media source failure', async () => {
     const fetchMock = vi.fn()
       .mockResolvedValue({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })
