@@ -15,6 +15,7 @@ export const COPY = {
     resumeRead: 'Lanjut baca',
     bookmarkSaved: 'Tersimpan ke Library',
     bookmarkRemoved: 'Dihapus dari Library',
+    removeFromList: 'Hapus dari daftar',
   },
   reader: {
     loadFailed: 'Gagal memuat chapter. Halaman lama tetap ditampilkan.',

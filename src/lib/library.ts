@@ -120,6 +120,18 @@ export async function upsertProgress(userId: string, p: ProgressInput): Promise<
   }, null, 'upsertProgress');
 }
 
+// ponytail: no optimistic return — caller revalidates the rail via server action.
+export async function deleteProgress(userId: string, mediaRef: string): Promise<void> {
+  if (!userId || !isValidRef(mediaRef)) return;
+  await safeQuery(async () => {
+    await pool.query(
+      'delete from library_progress where user_id = $1 and media_ref = $2',
+      [userId, mediaRef],
+    );
+    return null;
+  }, null, 'deleteProgress');
+}
+
 export async function listProgress(userId: string, kind: 'watch' | 'read'): Promise<ProgressInput[]> {
   if (!userId) return [];
   return safeQuery(async () => {
