@@ -27,7 +27,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-void to-transparent" />
       <div className="absolute inset-0 scanlines pointer-events-none" />
 
-      <div className="relative z-10 mx-auto grid min-h-[82vh] w-full max-w-[1160px] items-end gap-10 px-4 pb-16 pt-28 sm:px-8 md:grid-cols-[minmax(0,1fr)_300px] md:pb-24">
+      <div className="relative z-10 mx-auto grid min-h-[82vh] w-full max-w-page items-end gap-10 px-4 pb-16 pt-28 sm:px-8 md:grid-cols-[minmax(0,1fr)_300px] md:pb-24">
         <div className="max-w-3xl">
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span className="rounded-sm border border-amber/60 px-2 py-1 font-mono text-tag uppercase text-primary">{item.type}</span>

@@ -66,7 +66,7 @@ export default function RootLayout({
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-background focus:px-4 focus:py-2 focus:rounded-page focus:font-mono focus:text-micro">Skip to content</a>
         {/* Sticky Nav */}
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
-          <div className="max-w-[1160px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
+          <div className="max-w-page mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="font-serif text-xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity shrink-0">
               <span className="hidden sm:inline">jawatch</span>
@@ -107,7 +107,7 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="border-t border-border mt-20">
-          <div className="max-w-[1160px] mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="max-w-page mx-auto px-4 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="font-mono text-micro text-muted-foreground">
               jawatch &copy; {new Date().getFullYear()}
             </div>

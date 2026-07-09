@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import { text, tracking, motion, shadow } from "./src/components/ui/tokens";
+import { text, tracking, motion, shadow, container } from "./src/components/ui/tokens";
 
 const config: Config = {
   content: [
@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        page: container.maxWidth, // single source for the 1160px content width
+      },
       colors: {
         background: "rgb(var(--background) / <alpha-value>)",
         foreground: "rgb(var(--foreground) / <alpha-value>)",

@@ -17,7 +17,7 @@ export async function ContinueRail() {
   if (watch.length === 0 && read.length === 0) return null;
 
   return (
-    <div className="mx-auto max-w-[1160px] px-4 pt-16 sm:px-8">
+    <div className="mx-auto max-w-page px-4 pt-16 sm:px-8">
       {watch.length > 0 && (
         <section>
           <SectionHeader eyebrow={COPY.library.resumeEyebrow} title={COPY.library.resumeWatch} href="/library/watch-progress" />
