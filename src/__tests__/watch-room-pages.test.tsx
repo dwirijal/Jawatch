@@ -14,6 +14,10 @@ vi.mock('@/components/VideoPlayer', () => ({
   ),
 }));
 
+// BookmarkButton is a client component (useRouter/useTransition) — stub it in server-page tests.
+vi.mock('@/components/BookmarkButton', () => ({ BookmarkButton: () => <button type="button">Bookmark</button> }));
+vi.mock('@/lib/session', () => ({ getUserId: vi.fn(async () => null) }));
+
 vi.mock('@/lib/api', async () => {
   const api = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
   return {

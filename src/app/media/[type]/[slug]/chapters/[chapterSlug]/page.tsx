@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getMediaBySlug, getChapterPages, getChapters } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
 import { EmptyState } from '@/components/sections/EmptyState';
+import { getUserId } from '@/lib/session';
+import { upsertProgress, recordHistory } from '@/lib/library';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -26,6 +28,16 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
         />
       </div>
     );
+  }
+
+  // Fire-and-forget: record resume point + history for signed-in users. Never blocks reading.
+  const current = chapters.find((c) => c.slug === chapterSlug);
+  const userId = await getUserId();
+  if (userId) {
+    await Promise.all([
+      upsertProgress(userId, { mediaRef: decodeSlug, mediaType: content.type, itemSlug: chapterSlug, itemNumber: current?.chapterNumber ?? 1, title: content.title }),
+      recordHistory(userId, decodeSlug, chapterSlug),
+    ]).catch(() => {});
   }
 
   return (
