@@ -5,8 +5,7 @@ import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaR
 import { BookOpen, Calendar, Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { EmptyState } from '@/components/sections/EmptyState';
+import { redirect, notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
@@ -53,19 +52,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
 
   const content = await getMediaBySlug(decodeSlug);
   if (!content || !ref) {
-    return (
-      <div className="min-h-screen bg-background grain">
-        <main className="mx-auto max-w-[1160px] px-4 py-16 sm:px-8">
-          <EmptyState
-            eyebrow="Not found"
-            title="Media tidak ditemukan"
-            description="Judul yang kamu cari mungkin sudah dipindah atau tidak tersedia."
-            href="/"
-            actionLabel="Kembali ke beranda"
-          />
-        </main>
-      </div>
-    );
+    notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
   }
 
   const canonicalPath = buildCanonicalPath(ref);
