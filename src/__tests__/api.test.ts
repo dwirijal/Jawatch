@@ -492,6 +492,21 @@ it('sorts episodes ascending regardless of upstream order', async () => {
   expect(eps[0].slug).toBe('ep-1');
 });
 
+it('falls back to mangasusuku when komikstation comic list fails', async () => {
+  // komikstation scraper fails intermittently (success:false); comic discover must still return items.
+  const fetchMock = vi.fn()
+    .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ success: false, message: 'Error scraping' }) })
+    .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify({ success: true, mangaList: [
+      { title: 'Fallback Comic', slug: 'fallback-comic', image: 'https://img/f.jpg' },
+    ] }) });
+  setFetchMock(fetchMock);
+  const { getMedia } = await loadApi();
+
+  const { data } = await getMedia('comic', 1, 20);
+  expect(data).toHaveLength(1);
+  expect(data[0]).toMatchObject({ title: 'Fallback Comic', type: 'comic' });
+});
+
 it('sorts chapters ascending regardless of upstream order', async () => {
   const fetchMock = vi.fn().mockResolvedValueOnce({
     ok: true,

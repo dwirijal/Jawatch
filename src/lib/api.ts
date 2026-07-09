@@ -654,8 +654,11 @@ async function getUpstreamMediaByType(type: MediaType, limit?: number): Promise<
       return (Array.isArray(body.data) ? body.data : []).map(mapDonghuaListItem).slice(0, limit || 20);
     }
     case 'comic': {
-      const body = unwrapUpstreamEnvelope('/comic/komikstation/list', await fetchUpstreamJson('/comic/komikstation/list'));
-      return (Array.isArray(body.results) ? body.results : []).map((item: any) => mapComicListItem(item, 'komikstation')).slice(0, limit || 20);
+      // komikstation is the primary source but its scraper fails intermittently; fall back to mangasusuku so comic discover isn't empty.
+      const komik = await getComicListFrom('/comic/komikstation/list', 'komikstation', ['results', 'seriesList', 'data']).catch(() => [] as Media[]);
+      if (komik.length > 0) return komik.slice(0, limit || 20);
+      const manga = await getComicListFrom('/comic/mangasusuku/list', 'mangasusuku', ['mangaList', 'data', 'results']).catch(() => [] as Media[]);
+      return manga.slice(0, limit || 20);
     }
     default:
       return [];
@@ -695,6 +698,12 @@ function slugFromTitle(title: string): string {
 function firstArray(...values: any[]): any[] {
   for (const value of values) if (Array.isArray(value)) return value;
   return [];
+}
+
+// Fetch a comic list from one provider, reading the item array from whichever envelope key it uses.
+async function getComicListFrom(path: string, provider: string, keys: string[]): Promise<Media[]> {
+  const body = unwrapUpstreamEnvelope(path, await fetchUpstreamJson(path));
+  return firstArray(...keys.map((k) => body[k])).map((item: any) => mapComicListItem(item, provider));
 }
 
 async function getComicRecommendations(limit?: number): Promise<Media[]> {
