@@ -26,6 +26,18 @@ describe('library repository', () => {
     expect(query).not.toHaveBeenCalled();
   });
 
+  it('accepts the canonical slash-form ref the pages actually pass (regression)', async () => {
+    // Every page passes `${type}/${slug}` (e.g. anime/one-piece), NOT the tilde form.
+    // The guard previously required '~' and silently no-op'd all real writes.
+    query.mockResolvedValueOnce({ rowCount: 0 }); // delete
+    query.mockResolvedValueOnce({ rowCount: 1 }); // insert
+    const { toggleBookmark } = await load();
+    const on = await toggleBookmark('u1', { mediaRef: 'anime/one-piece', mediaType: 'anime', title: 'One Piece' });
+    expect(on).toBe(true);
+    expect(query).toHaveBeenCalled();
+    expect(query.mock.calls[1][1]).toEqual(['u1', 'anime/one-piece', 'anime', 'One Piece', null]);
+  });
+
   it('toggles bookmark on (insert) when none exists', async () => {
     query.mockResolvedValueOnce({ rowCount: 0 }); // delete removed nothing
     query.mockResolvedValueOnce({ rowCount: 1 }); // insert
