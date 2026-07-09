@@ -65,13 +65,15 @@ describe('watch-room pages', () => {
     expect(screen.getByTestId('video-player-props')).toHaveTextContent('0:episode-2');
   });
 
-  it('returns not found when the current episode does not exist', async () => {
+  it('renders a soft-404 EmptyState when no episode sources are available', async () => {
+    // Intended behavior: no sources -> in-page EmptyState (robots noindex), not a hard 404 throw.
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
     vi.mocked(api.getEpisodes).mockResolvedValue(episodes);
     vi.mocked(api.getEpisodeSources).mockRejectedValue(new Error('Media source unavailable'));
     const { default: EpisodePage } = await import('@/app/media/[type]/[slug]/episodes/[episodeSlug]/page');
 
-    await expect(EpisodePage({ params: Promise.resolve({ type: 'anime', slug: 'anime-slug', episodeSlug: 'not-real' }) })).rejects.toThrow('NEXT_HTTP_ERROR_FALLBACK;404');
+    render(await EpisodePage({ params: Promise.resolve({ type: 'anime', slug: 'anime-slug', episodeSlug: 'not-real' }) }));
+    expect(screen.getByText('Episode tidak tersedia')).toBeInTheDocument();
   });
 
   it('renders a start watching CTA on video media details', async () => {
