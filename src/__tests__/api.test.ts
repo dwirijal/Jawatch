@@ -83,6 +83,17 @@ describe('API Client', () => {
     expect(fetchMock).toHaveBeenCalledTimes(4);
   });
 
+  it('rejects a malicious serverId before any upstream fetch (SSRF guard)', async () => {
+    const fetchMock = vi.fn();
+    setFetchMock(fetchMock);
+    const { resolveEpisodeMirror } = await loadApi();
+
+    // path traversal / host injection attempts must throw without ever hitting the network
+    await expect(resolveEpisodeMirror('anime~anime~x', '../../../admin')).rejects.toThrow();
+    await expect(resolveEpisodeMirror('anime~anime~x', 'evil.com/x')).rejects.toThrow();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('throws a neutral error on non-timeout media source failure', async () => {
     const fetchMock = vi.fn()
       .mockResolvedValue({ ok: true, text: async () => JSON.stringify({ status: 'success', data: [] }) })

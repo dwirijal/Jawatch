@@ -424,6 +424,18 @@ function emptyMediaListOnSourceError(error: unknown): Media[] {
   throw error;
 }
 
+// SSRF guard: coverImage comes from untrusted upstream and is fetched server-side by the
+// next/image optimizer. Drop anything that isn't a plain http(s) URL so a compromised
+// upstream can't smuggle file://, data:, or an internal host into the optimizer.
+function safeHttpUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+  try {
+    return ['http:', 'https:'].includes(new URL(url).protocol) ? url : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function baseMedia(type: MediaType, slug: string, title: string, coverImage?: string): Media {
   const ref = decodeMediaRef(slug);
   if (ref && ref.provider !== 'resolve') {
@@ -433,7 +445,7 @@ function baseMedia(type: MediaType, slug: string, title: string, coverImage?: st
     slug,
     type,
     title,
-    coverImage,
+    coverImage: safeHttpUrl(coverImage),
     createdAt: EMPTY_DATE,
     updatedAt: EMPTY_DATE,
   };
@@ -1100,6 +1112,9 @@ export async function getEpisodePlayback(slug: string, epSlug: string): Promise<
 export async function resolveEpisodeMirror(slug: string, serverId: string): Promise<string> {
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) throw new Error('Unknown media ref');
+  // SSRF guard: serverId is a URL param — reject anything but the upstream's own id charset
+  // so it can't inject path traversal (../) or an alternate host into the fetch path.
+  if (!/^[A-Za-z0-9_-]+$/.test(serverId)) throw new Error('Invalid serverId');
   const prefix = ref.provider === 'samehadaku' ? '/anime/samehadaku/server' : '/anime/server';
   const path = `${prefix}/${serverId}`;
   const body = unwrapUpstreamEnvelope(path, await fetchUpstreamJson(path));
