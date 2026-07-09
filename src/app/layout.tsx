@@ -101,10 +101,23 @@ export default function RootLayout({
             <div className="font-mono text-micro text-muted-foreground">
               jawatch &copy; {new Date().getFullYear()}
             </div>
-            <div className="flex gap-6 font-mono text-micro">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-mono text-micro">
               <Link href="/sitemap.xml" className="text-muted-foreground hover:text-foreground transition-colors">Sitemap</Link>
               <Link href="/discover" className="text-muted-foreground hover:text-foreground transition-colors">Browse</Link>
               <Link href="/library" className="text-muted-foreground hover:text-foreground transition-colors">Library</Link>
+              {/* Follow-creator CTA — filled-on-hover pill in always-present footer slot (non-intrusive per retention research) */}
+              <a
+                href="https://x.com/Anvxxr"
+                target="_blank"
+                rel="noopener noreferrer me"
+                aria-label="Ikuti kreator di X (buka tab baru)"
+                className="group inline-flex items-center gap-1.5 rounded-pill border border-border bg-card/60 px-3 py-1.5 uppercase text-foreground transition-all duration-200 hover:border-primary/60 hover:bg-primary hover:text-void motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 motion-reduce:active:scale-100"
+              >
+                <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className="h-3 w-3 motion-safe:transition-transform motion-safe:group-hover:scale-110">
+                  <path d="M12.6 1.5h2.3l-5 5.7 5.9 7.8h-4.6l-3.6-4.7-4.1 4.7H1.1l5.4-6.1L0.8 1.5h4.7l3.3 4.3zm-.8 12.9h1.3L4.3 2.8H2.9z" />
+                </svg>
+                Follow @Anvxxr
+              </a>
             </div>
           </div>
         </footer>
