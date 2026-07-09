@@ -6,6 +6,7 @@ export { Field } from './Field';
 export { Gauge } from './Gauge';
 export { Pager } from './Pager';
 export { Skeleton, SkeletonCard } from './Skeleton';
+export { SkeletonGrid } from './SkeletonGrid';
 export { Strip } from './Strip';
 export { Tabs } from './Tabs';
 export { Toast } from './Toast';
