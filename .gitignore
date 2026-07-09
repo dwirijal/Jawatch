@@ -33,3 +33,4 @@ let
 # Local Claude artifacts
 .claude/
 .superpowers/
+coverage/
