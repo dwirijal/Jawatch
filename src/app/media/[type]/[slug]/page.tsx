@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Badge, Strip } from '@/components/ui';
+import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 import { buttonClasses } from '@/components/ui/Button';
 import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { BookOpen, Calendar, Play, Star } from 'lucide-react';
@@ -155,6 +156,9 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
              name: item.title || 'Untitled',
              href: `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${item.slug}`,
           }))} />
+
+        {/* Non-intrusive ad slot: between content and recommendations, never mid-content */}
+        <SafeSlotIklan slot="detail-related" format="horizontal" />
 
         <section className="mt-16">
           <div className="mb-6 border-l-2 border-amber pl-4">
