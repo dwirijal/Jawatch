@@ -54,6 +54,8 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable}`}>
       <body className="bg-background text-foreground font-sans antialiased min-h-screen flex flex-col">
+        {/* Skip link — WCAG 2.4.1 bypass blocks */}
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-background focus:px-4 focus:py-2 focus:rounded-page focus:font-mono focus:text-micro">Skip to content</a>
         {/* Sticky Nav */}
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-4">
@@ -72,7 +74,7 @@ export default function RootLayout({
               <Link href="/trending" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Trending</Link>
               <Link href="/popular" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Popular</Link>
               <Link href="/latest" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Latest</Link>
-              <Link href="/random" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-primary transition-colors">🎲</Link>
+              <Link href="/random" aria-label="Random title" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-primary transition-colors"><span aria-hidden="true">🎲</span></Link>
               <Link href="/login" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Login</Link>
               <Link href="/register" className="p-2 min-h-[48px] flex items-center text-primary hover:text-primary/80 transition-colors">Register</Link>
             </nav>
@@ -88,7 +90,7 @@ export default function RootLayout({
         </header>
 
         {/* Main */}
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
 
         {/* Back to top */}
         <BackToTop />
