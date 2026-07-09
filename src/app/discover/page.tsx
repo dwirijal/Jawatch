@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/discover' },
 };
 
-const types = ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'];
+// Only types with an upstream data source. manga/movie have no backing feed -> would render empty dead-end pages.
+const types = ['anime', 'donghua', 'comic', 'novel'];
 
 export default async function DiscoverPage() {
   const { data: contents } = await getMedia(undefined, 1, 60);

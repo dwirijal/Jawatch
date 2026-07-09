@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 export const revalidate = 300;
 
-const validTypes = ['anime', 'manga', 'movie', 'donghua', 'comic', 'novel'];
+// Only types with an upstream data source. manga/movie have no backing feed -> 404 instead of empty page.
+const validTypes = ['anime', 'donghua', 'comic', 'novel'];
 
 type Props = { params: Promise<{ type: string }> };
 
