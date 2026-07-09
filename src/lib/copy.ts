@@ -34,6 +34,9 @@ export const COPY = {
     noStream: 'Stream belum tersedia untuk episode ini.',
     altServers: 'Server alternatif',
     listFailed: 'Daftar episode gagal dimuat. Episode saat ini tetap bisa diputar.',
+    // ponytail: ID-only button labels; swap to i18n key if a locale switcher lands.
+    fullscreenEnter: 'Layar penuh',
+    fullscreenExit: 'Keluar layar penuh',
     playMirror: (name: string, quality?: string) => `Putar ${name}${quality ? ` ${quality}` : ''}`,
   },
   detail: {

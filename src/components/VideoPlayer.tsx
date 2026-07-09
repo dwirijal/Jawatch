@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePlayback } from '@/lib/api';
 import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
 import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
@@ -30,6 +30,80 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
   const [activeSource, setActiveSource] = useState(0);
   const [activeMirror, setActiveMirror] = useState('');
   const [theater, setTheater] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // ponytail: container ref so the Fullscreen API fullscreens our chrome + the
+  // iframe together; more reliable than the embed's own (cross-embed-inconsistent) button.
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const enterFullscreen = useCallback(async () => {
+    // ponytail: jsdom lacks Fullscreen/ScreenOrientation — every path feature-detects
+    // so test render never throws. iOS <=17 falls back to iframe.webkitEnterFullscreen,
+    // else to the CSS theater state. No dead clicks.
+    const container = containerRef.current;
+    if (container?.requestFullscreen) {
+      try {
+        await container.requestFullscreen();
+        if ('orientation' in screen && typeof (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock === 'function') {
+          try {
+            await (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.('landscape');
+          } catch {
+            // orientation.lock rejects on desktop/unsupported — swallow silently
+          }
+        }
+        return;
+      } catch {
+        // fall through to theater fallback below
+      }
+    }
+    const iframe = container?.querySelector('iframe');
+    // non-standard iOS Safari fullscreen on the media element
+    if (iframe && typeof (iframe as HTMLIFrameElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen === 'function') {
+      (iframe as HTMLIFrameElement & { webkitEnterFullscreen?: () => void }).webkitEnterFullscreen?.();
+      return;
+    }
+    setTheater(true);
+  }, []);
+
+  const exitFullscreen = useCallback(async () => {
+    if (typeof document.exitFullscreen === 'function') {
+      try {
+        await document.exitFullscreen();
+      } catch {
+        // already exited via system gesture
+      }
+    }
+    if ('orientation' in screen && typeof screen.orientation?.unlock === 'function') {
+      try {
+        screen.orientation.unlock();
+      } catch {
+        // not locked — ignore
+      }
+    }
+  }, []);
+
+  const toggleFullscreen = useCallback(() => {
+    if (isFullscreen) {
+      void exitFullscreen();
+    } else {
+      void enterFullscreen();
+    }
+  }, [isFullscreen, enterFullscreen, exitFullscreen]);
+
+  useEffect(() => {
+    const sync = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    // ponytail: webkit variant for legacy Safari; guarded so jsdom is safe.
+    const webkitSync = () => {
+      const el = (document as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
+      setIsFullscreen(Boolean(el));
+    };
+    document.addEventListener('fullscreenchange', sync);
+    document.addEventListener('webkitfullscreenchange', webkitSync);
+    return () => {
+      document.removeEventListener('fullscreenchange', sync);
+      document.removeEventListener('webkitfullscreenchange', webkitSync);
+    };
+  }, []);
 
   const videoUrl = sources[activeSource]?.url;
   const currentEp = episodes[epIndex];
@@ -106,7 +180,10 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
     <section className="space-y-6" aria-label="Watch room">
       <div className={`grid gap-5 ${theater ? 'grid-cols-1' : 'lg:grid-cols-[minmax(0,1fr)_320px]'}`}>
         <div className="space-y-4">
-          <div className={`relative aspect-video overflow-hidden rounded-card bg-background shadow-2xl ring-1 ring-hairline ${theater ? 'theater-breakout' : ''}`}>
+          <div
+            ref={containerRef}
+            className={`relative aspect-video overflow-hidden rounded-card bg-background shadow-2xl ring-1 ring-hairline ${theater ? 'theater-breakout' : ''}`}
+          >
             {loading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
                 <Spinner size="lg" className="text-amber" />
@@ -121,6 +198,24 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
               allow="autoplay; fullscreen; encrypted-media"
               sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
             />
+            {/* ponytail: mobile-first real Fullscreen API; desktop keeps the CSS theater button below.
+                min 44px tap target, lg:hidden so it never collides with theater on desktop. */}
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? COPY.watch.fullscreenExit : COPY.watch.fullscreenEnter}
+              aria-pressed={isFullscreen}
+              className="lg:hidden absolute bottom-3 right-3 z-10 flex min-h-11 min-w-11 items-center justify-center rounded-pill border border-white/15 bg-background/70 backdrop-blur-sm text-white/70 transition-colors motion-safe:transition-colors hover:text-white hover:border-white/30 hover:bg-background/90 focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            >
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4" aria-hidden="true">
+                {isFullscreen ? (
+                  <path d="M5 2L2 2L2 5M11 2L14 2L14 5M2 11L2 14L5 14M14 11L14 14L11 14" />
+                ) : (
+                  <path d="M2 5L2 2L5 2M14 5L14 2L11 2M5 14L2 14L2 11M11 14L14 14L14 11" />
+                )}
+              </svg>
+            </button>
+
             <button
               type="button"
               onClick={() => setTheater(!theater)}
