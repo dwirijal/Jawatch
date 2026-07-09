@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Badge, Strip } from '@/components/ui';
 import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
+import { MediaJsonLd } from '@/components/seo/MediaJsonLd';
 import { buttonClasses } from '@/components/ui/Button';
 import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { BookOpen, Calendar, Play, Star } from 'lucide-react';
@@ -83,6 +84,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
 
   return (
     <div className="min-h-screen bg-background grain">
+      <MediaJsonLd media={content} canonicalPath={canonicalPath} />
       <div className="relative min-h-[520px] overflow-hidden border-b border-border bg-background">
         {content.coverImage && <Image src={content.coverImage} alt="" fill priority sizes="100vw" className="object-cover opacity-15 blur-[2px] saturate-50" />}
         <div className="absolute inset-0 bg-gradient-to-t from-void via-void/85 to-void/25" />
