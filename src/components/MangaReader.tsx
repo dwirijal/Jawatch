@@ -5,6 +5,7 @@ import type { Chapter, ChapterPage } from '@/lib/api';
 import { getChapterPagesClient } from '@/lib/client-media';
 import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
 import { Spinner } from '@/components/ui/Spinner';
+import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 
 interface Props {
   slug: string;
@@ -164,6 +165,9 @@ export function MangaReader({ slug, chapters, initialPages, currentChapterSlug, 
 
       {/* End sentinel — triggers auto-advance when scrolled into view */}
       {pages.length > 0 && <div ref={endRef} aria-hidden="true" className="h-px w-full" />}
+
+      {/* Inter-chapter ad — only renders when ads configured (dev placeholder otherwise) */}
+      {pages.length > 0 && hasNext && <SafeSlotIklan slot="reader-inter-chapter" format="horizontal" />}
 
       {/* End-of-chapter CTA */}
       {pages.length > 0 && hasNext && (
