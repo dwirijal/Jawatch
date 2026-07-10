@@ -5,21 +5,22 @@ import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 import { MediaJsonLd } from '@/components/seo/MediaJsonLd';
 import { buttonClasses } from '@/components/ui/Button';
 import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
-import { BookOpen, Calendar, Play, Star } from 'lucide-react';
+import { Calendar, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect, notFound } from 'next/navigation';
-import { BookmarkButton } from '@/components/BookmarkButton';
-import { getUserId } from '@/lib/session';
-import { isBookmarked, listProgress } from '@/lib/library';
-import { COPY } from '@/lib/copy';
+import { notFound } from 'next/navigation';
+import { DetailActions } from '@/components/DetailActions';
 
-export async function generateMetadata({ params, searchParams }: { params: Promise<{ type: string; slug: string }>; searchParams?: Promise<{ src?: string }> }): Promise<Metadata> {
+// ISR: static CDN-cached shell (fast load + ~0 Vercel invocation). Per-user bits
+// (bookmark + resume CTA) hydrate client-side via /api/user/library-state — so
+// crawlers and signed-out visitors get pure static HTML.
+export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
-  const { src } = (await searchParams) ?? {};
   const decodeSlug = `${type}/${slug}`;
   const ref = decodeMediaRef(decodeSlug);
-  const content = await getMediaBySlug(decodeSlug, src);
+  const content = await getMediaBySlug(decodeSlug);
 
   if (!content || !ref) {
     return {
@@ -53,14 +54,12 @@ export async function generateMetadata({ params, searchParams }: { params: Promi
   };
 }
 
-export default async function MediaPage({ params, searchParams }: { params: Promise<{ type: string; slug: string }>; searchParams?: Promise<{ src?: string }> }) {
+export default async function MediaPage({ params }: { params: Promise<{ type: string; slug: string }> }) {
   const { type, slug } = await params;
-  const { src } = (await searchParams) ?? {};
   const decodeSlug = `${type}/${slug}`;
   const ref = decodeMediaRef(decodeSlug);
 
-  // src = provider hint from the list link (#286) — lets resolve skip blind probing.
-  const content = await getMediaBySlug(decodeSlug, src);
+  const content = await getMediaBySlug(decodeSlug);
   if (!content || !ref) {
     notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
   }
@@ -73,19 +72,7 @@ export default async function MediaPage({ params, searchParams }: { params: Prom
   const startHref = firstItem ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${firstItem.slug}` : null;
   const related = await getMediaRelated(decodeSlug);
 
-  const userId = await getUserId();
-  const bookmarked = userId ? await isBookmarked(userId, decodeSlug) : false;
   const bookmarkInput = { mediaRef: decodeSlug, mediaType: content.type, title: content.title, coverImage: content.coverImage ?? null };
-
-  // Resume-aware CTA: if this title has saved progress, offer "Continue" over "Start".
-  const progress = userId
-    ? (await listProgress(userId, isVideo ? 'watch' : 'read').catch(() => [])).find((p) => p.mediaRef === decodeSlug)
-    : undefined;
-  const resumeHref = progress ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${progress.itemSlug}` : null;
-  const ctaHref = resumeHref ?? startHref;
-  const ctaLabel = progress
-    ? COPY.detail.resume(isVideo, progress.itemNumber)
-    : isVideo ? 'Start watching' : 'Start reading';
 
   return (
     <div className="min-h-screen bg-background grain">
@@ -140,15 +127,13 @@ export default async function MediaPage({ params, searchParams }: { params: Prom
                 ))}
               </div>
             )}
-            <div className="flex flex-wrap items-center gap-3">
-              {ctaHref && (
-                <Link href={ctaHref} className="mt-8 inline-flex items-center gap-2 rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                  {isVideo ? <Play className="h-4 w-4 fill-void" aria-hidden="true" /> : <BookOpen className="h-4 w-4" aria-hidden="true" />}
-                  {ctaLabel}
-                </Link>
-              )}
-              <BookmarkButton media={bookmarkInput} initial={bookmarked} />
-            </div>
+            <DetailActions
+              mediaRef={decodeSlug}
+              isVideo={isVideo}
+              startHref={startHref}
+              itemBasePath={`${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}`}
+              bookmarkInput={bookmarkInput}
+            />
           </div>
         </Container>
       </div>
