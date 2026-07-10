@@ -69,6 +69,12 @@ export const COPY = {
   support: {
     prompt: 'Suka jawatch? Dukung biar tetap gratis & bebas iklan berlebih.',
     donate: 'Dukung',
+    shop: 'Top-up',
     follow: 'Follow @Anvxxr',
+    crypto: 'Atau kirim kripto',
+    copyAddress: 'Salin alamat',
+    showQr: 'Tampilkan QR',
+    copied: 'Alamat disalin',
+    copyFailed: 'Gagal menyalin — salin manual',
   },
 } as const;

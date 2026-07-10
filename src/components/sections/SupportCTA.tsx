@@ -1,10 +1,11 @@
 import { Heart } from 'lucide-react';
 import { COPY } from '@/lib/copy';
+import { CryptoDonate } from '@/components/sections/CryptoDonate';
+import { SAWERIA_URL, SAWERIA_SHOP_URL } from '@/lib/wallets';
 
 // End-of-content support prompt (tasteful, non-nagging per retention research).
-// Donate link is env-gated — renders only when NEXT_PUBLIC_DONATE_URL is set, so no
-// invented payment URL. Follow-creator is always shown.
-const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL;
+// Donate link defaults to the public Saweria profile; env override wins if set.
+const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL || SAWERIA_URL;
 
 export function SupportCTA() {
   return (
@@ -14,16 +15,22 @@ export function SupportCTA() {
         {COPY.support.prompt}
       </p>
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {DONATE_URL && (
-          <a
-            href={DONATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-pill bg-primary px-4 py-2 font-mono text-tag uppercase tracking-tag text-void transition-all duration-base hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            {COPY.support.donate}
-          </a>
-        )}
+        <a
+          href={DONATE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-pill bg-primary px-4 py-2 font-mono text-tag uppercase tracking-tag text-void transition-all duration-base hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {COPY.support.donate}
+        </a>
+        <a
+          href={SAWERIA_SHOP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-pill border border-border px-4 py-2 font-mono text-tag uppercase tracking-tag text-foreground transition-all duration-base hover:border-primary/60 hover:text-primary motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {COPY.support.shop}
+        </a>
         <a
           href="https://x.com/Anvxxr"
           target="_blank"
@@ -33,6 +40,7 @@ export function SupportCTA() {
           {COPY.support.follow}
         </a>
       </div>
+      <CryptoDonate />
     </aside>
   );
 }
