@@ -10,6 +10,12 @@ export const revalidate = 300;
 // Only types with an upstream data source. manga/movie have no backing feed -> 404 instead of empty page.
 const validTypes = ['anime', 'donghua', 'comic', 'novel'];
 
+// Prerender the fixed type set so these pages are cached (SSG + ISR), not rendered
+// per request. Bounded list → safe to build-time generate.
+export function generateStaticParams() {
+  return validTypes.map((type) => ({ type }));
+}
+
 type Props = { params: Promise<{ type: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

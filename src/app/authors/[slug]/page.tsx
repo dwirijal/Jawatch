@@ -3,7 +3,12 @@ import { Container } from '@/components/layout/Container';
 import { Card } from '@/components/ui';
 
 // ISR: pure content, no per-user data → CDN-cached shell (fast load + ~0 invocation).
+// generateStaticParams (empty) is REQUIRED to opt a dynamic segment into ISR caching —
+// revalidate alone leaves it fully dynamic. Empty = no build fetch, cache on first visit.
 export const revalidate = 300;
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function AuthorSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

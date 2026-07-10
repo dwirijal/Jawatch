@@ -14,7 +14,14 @@ import { DetailActions } from '@/components/DetailActions';
 // ISR: static CDN-cached shell (fast load + ~0 Vercel invocation). Per-user bits
 // (bookmark + resume CTA) hydrate client-side via /api/user/library-state — so
 // crawlers and signed-out visitors get pure static HTML.
+// generateStaticParams (empty) opts this dynamic segment INTO on-demand ISR caching:
+// no build-time upstream fetch, but the rendered page is cached on first visit and
+// reused for `revalidate` seconds. Without it, `revalidate` alone leaves the route
+// fully dynamic (rendered every request) — verified via x-nextjs-cache + timing.
 export const revalidate = 300;
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
