@@ -4,6 +4,9 @@ import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { Container } from '@/components/layout/Container';
 
+// ISR: pure content, no per-user data → CDN-cached shell (fast load + ~0 invocation).
+export const revalidate = 300;
+
 type Props = { params: Promise<{ slug: string }> };
 
 function genreTitle(slug: string): string {

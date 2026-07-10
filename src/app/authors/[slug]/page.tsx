@@ -2,6 +2,9 @@ import { getMediaByAuthor } from '@/lib/api';
 import { Container } from '@/components/layout/Container';
 import { Card } from '@/components/ui';
 
+// ISR: pure content, no per-user data → CDN-cached shell (fast load + ~0 invocation).
+export const revalidate = 300;
+
 export default async function AuthorSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const contents = await getMediaByAuthor(slug);

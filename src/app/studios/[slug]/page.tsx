@@ -2,6 +2,9 @@ import { getMediaByStudio } from '@/lib/api';
 import { Card } from '@/components/ui';
 import { Container } from '@/components/layout/Container';
 
+// ISR: pure content, no per-user data → CDN-cached shell (fast load + ~0 invocation).
+export const revalidate = 300;
+
 export default async function StudioSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const contents = await getMediaByStudio(slug);
