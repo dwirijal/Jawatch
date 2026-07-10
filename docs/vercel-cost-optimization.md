@@ -47,14 +47,20 @@ The #1 driver was the indexed, highest-traffic route (`/media/[type]/[slug]`) fo
 
 Deliberate. They are `robots: noindex` (no crawler traffic), need fresh playback per request, and use `after()` to record resume server-side. Traffic is a fraction of detail-page traffic, conversion risk is higher, benefit lower. Left dynamic.
 
-### On the `ƒ` build glyph
+### `generateStaticParams` is required — `revalidate` alone is NOT enough
 
-After the change the route still prints `ƒ` (like every `[param]` route without `generateStaticParams`). The glyph only means "not prerendered at build" — it does **not** mean "renders every request." Runtime cost changed fundamentally:
+**Correction (commit `7444627`).** Removing `getUserId()`→`headers()` was necessary but not sufficient. A dynamic `[param]` segment with `export const revalidate` but **no `generateStaticParams`** stays `ƒ` Dynamic — it renders on every request and emits no `x-nextjs-cache` header. Verified with live headers + timing:
 
-- **Before:** used `headers()` → opted out of cache → rendered on every request (billed each hit).
-- **After:** zero dynamic APIs + `revalidate = 300` → **on-demand ISR**: first visit renders and caches, subsequent visits within 300s served from full-route cache (no invocation).
+| State | Build glyph | `x-nextjs-cache` | Response time |
+|-------|-------------|------------------|---------------|
+| `revalidate` only | `ƒ` | absent | ~120 ms (renders every hit) |
+| `revalidate` + `generateStaticParams` | `●` | `HIT` / `x-nextjs-prerender: 1` | ~13 ms (served from cache) |
 
-`generateStaticParams` was intentionally **not** added — it would force build-time upstream fetches (slow/fragile builds; the audit flagged avoiding exactly that). On-demand ISR caches on first real visit with no build-time cost.
+Fix applied to 5 routes:
+- **`discover/[type]`** — returns the fixed `validTypes` set → prerendered SSG at build (bounded list, safe).
+- **`media/[type]/[slug]`, `genres/[slug]`, `authors/[slug]`, `studios/[slug]`** — return `[]` → **on-demand ISR**: no build-time upstream fetch, page renders and caches on first visit, reused for `revalidate` seconds. This avoids the slow/fragile build the audit warned about while still getting the cache.
+
+After the fix all 5 build as `●` and serve `Cache-Control: s-maxage=300, stale-while-revalidate`.
 
 ## 3. Scaling math — which limit hits first
 
@@ -78,5 +84,6 @@ The repo has donate + shop links (`CryptoDonate.tsx`, `SupportCTA.tsx`, Saweria)
 
 - `bunx tsc --noEmit` → **EXIT 0**
 - `bun run test:run` → **101/101 pass (15 files)**
-- `bun run build` → success; detail route no longer uses dynamic APIs (on-demand ISR)
+- `bun run build` → success; `/`, `discover/[type]`, `media/[type]/[slug]`, `genres/[slug]`, `authors/[slug]`, `studios/[slug]` all build as `○`/`●` (static/SSG-ISR).
+- **Live-verified** (`next start` prod): detail page `x-nextjs-cache: HIT`, `x-nextjs-prerender: 1`, `s-maxage=300`; response ~13 ms cached vs ~120 ms uncached.
 - No prod deploy performed (owner approval required).
