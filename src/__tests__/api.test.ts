@@ -294,6 +294,41 @@ describe('API Client', () => {
     ]);
   });
 
+  it('extracts mirrors and downloads from a samehadaku episode', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      text: async () => JSON.stringify({
+        status: 'success',
+        data: {
+          defaultStreamingUrl: 'https://player.test/samehadaku',
+          server: {
+            qualities: [
+              { title: '480p', serverList: [{ title: 'blogspot', serverId: 'SH-480' }] },
+              { title: '720p', serverList: [{ title: 'vidhide ', serverId: 'SH-720' }] },
+            ],
+          },
+          downloadUrl: {
+            qualities: [
+              { title: 'Mp4_720p', size: '90 MB', urls: [{ title: 'Mega', url: 'https://dl.test/sh-720-mega' }] },
+            ],
+          },
+        },
+      }),
+    });
+    setFetchMock(fetchMock);
+    const { getEpisodePlayback } = await loadApi();
+
+    const playback = await getEpisodePlayback('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6InNhbWVoYWRha3UiLCJzbHVnIjoic2FtZWhhZGFrdS1hbiJ9', 'samehadaku-ep-12');
+    expect(playback.sources).toEqual([{ url: 'https://player.test/samehadaku', label: 'Default', quality: 'auto' }]);
+    expect(playback.mirrors).toEqual([
+      { serverId: 'SH-480', label: 'blogspot', quality: '480p' },
+      { serverId: 'SH-720', label: 'vidhide', quality: '720p' },
+    ]);
+    expect(playback.downloads).toEqual([
+      { url: 'https://dl.test/sh-720-mega', label: 'Mega', quality: 'Mp4_720p', size: '90 MB' },
+    ]);
+  });
+
   it('resolves a mirror URL from the correct provider path', async () => {
     const otakuMock = vi.fn().mockResolvedValueOnce({
       ok: true,
