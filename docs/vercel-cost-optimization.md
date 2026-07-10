@@ -67,7 +67,7 @@ Assume ~1 MB cover egress per pageview (home-heavy ~2 MB, detail ~0.4 MB).
 ## 4. Owner-gated recommendations (NOT implemented — need your call)
 
 1. **Lock `remotePatterns` to an allowlist** (`next.config.js:25-34`) — currently `hostname: '**'`. Prevents anyone using the site's `/_next/image` as an open proxy (unbounded transform/bandwidth abuse) and shrinks SSRF surface. *Not done:* upstream host set changes across providers; needs your confirmation of the allowed hosts to avoid breaking covers.
-2. **Homepage `/` ISR** — currently `ƒ` because `ContinueRail` (`page.tsx:38`) calls `getUserId()`. Same pattern as this fix: move ContinueRail to client fetch. Deferred — separate change, wanted this one isolated.
+2. ~~**Homepage `/` ISR**~~ — **DONE** (commit `798d0c4`). ContinueRail moved to client fetch via `/api/user/progress`; `/` now builds as `○ Static` (revalidate 300).
 3. **Persist provider ref in Data Cache + thread `?src`** so `resolveCanonicalRef` short-circuits cold fan-out. Lower priority now that detail HTML is cached 300s (fan-out runs ≤once/300s/title).
 
 ## 5. ⚠️ ToS caveat — Hobby is non-commercial
