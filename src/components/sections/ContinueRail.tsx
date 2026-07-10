@@ -1,19 +1,30 @@
-import { getUserId } from '@/lib/session';
-import { listProgress } from '@/lib/library';
+'use client';
+import { useEffect, useState } from 'react';
+import type { ProgressInput } from '@/lib/library';
 import { SectionHeader } from './SectionHeader';
 import { ProgressList } from './ProgressList';
 import { COPY } from '@/lib/copy';
 
-// Home "Continue watching/reading" rail. Reads session (dynamic) — renders
-// nothing for guests or when there's no progress, so it costs guests zero space.
-export async function ContinueRail() {
-  const userId = await getUserId();
-  if (!userId) return null;
+// Home "Continue watching/reading" rail. Fetches session progress client-side so the
+// homepage shell stays ISR-static (CDN-cached, ~0 Vercel invocation). Renders nothing
+// for guests, on error, or when there's no progress — costs guests zero space.
+export function ContinueRail() {
+  const [watch, setWatch] = useState<ProgressInput[]>([]);
+  const [read, setRead] = useState<ProgressInput[]>([]);
 
-  const [watch, read] = await Promise.all([
-    listProgress(userId, 'watch').catch(() => []),
-    listProgress(userId, 'read').catch(() => []),
-  ]);
+  useEffect(() => {
+    const ctrl = new AbortController();
+    fetch('/api/user/progress', { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { watch: ProgressInput[]; read: ProgressInput[] } | null) => {
+        if (!data) return;
+        setWatch(data.watch);
+        setRead(data.read);
+      })
+      .catch(() => {}); // guest / offline: stay empty
+    return () => ctrl.abort();
+  }, []);
+
   if (watch.length === 0 && read.length === 0) return null;
 
   return (
