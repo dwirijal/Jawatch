@@ -8,6 +8,12 @@ export const auth = betterAuth({
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
+  // ponytail: extra origins (LAN IP, staging) via comma-separated env; baseURL is always trusted.
+  // Add each dev/LAN origin to BETTER_AUTH_TRUSTED_ORIGINS to avoid "Invalid origin" 403s.
+  trustedOrigins: (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
   emailAndPassword: { enabled: true, requireEmailVerification: false },
   // ponytail: Google is env-gated; when unset, socialProviders is empty -> no OAuth UI. Add more providers when needed.
   socialProviders: googleEnabled
