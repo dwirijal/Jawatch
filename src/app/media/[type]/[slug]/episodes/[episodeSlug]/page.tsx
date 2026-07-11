@@ -9,6 +9,7 @@ import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
 import { COPY } from '@/lib/copy';
+import { Reveal } from '@/components/motion/Reveal';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -63,7 +64,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
         { name: `Episode ${current.episodeNumber}`, path: `/${type}/${slug}/episodes/${episodeSlug}` },
       ]} />
       <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
-      <div className="mt-10"><SupportCTA /></div>
+      <Reveal><div className="mt-10"><SupportCTA /></div></Reveal>
     </Container>
   );
 }

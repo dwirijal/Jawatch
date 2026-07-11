@@ -8,6 +8,7 @@ import { after } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { upsertProgress, recordHistory } from '@/lib/library';
 import { COPY } from '@/lib/copy';
+import { Reveal } from '@/components/motion/Reveal';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: true },
@@ -54,7 +55,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
         { name: `Chapter ${current?.chapterNumber ?? 1}`, path: `/${type}/${slug}/chapters/${chapterSlug}` },
       ]} />
       <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
-      <div className="mt-10"><SupportCTA /></div>
+      <Reveal><div className="mt-10"><SupportCTA /></div></Reveal>
     </div>
   );
 }
