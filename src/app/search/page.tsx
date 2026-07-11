@@ -37,11 +37,16 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       </form>
 
       <div className="mb-8 flex flex-wrap gap-2">
-        <Link href={activeType ? `/search?q=${encodeURIComponent(query)}` : '#'} className={`rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors ${activeType ? 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary' : 'border-primary text-primary'}`}>all</Link>
+        {activeType ? (
+          <Link href={`/search?q=${encodeURIComponent(query)}`} className="rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors border-border bg-card text-muted-foreground hover:border-primary hover:text-primary">all</Link>
+        ) : (
+          <span aria-current="page" className="rounded-pill border px-4 py-2 font-mono text-micro uppercase border-primary text-primary">all</span>
+        )}
         {types.map((t) => (
           <Link
             key={t}
             href={`/search?q=${encodeURIComponent(query)}&type=${t}`}
+            aria-current={activeType === t ? 'page' : undefined}
             className={`rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors ${activeType === t ? 'border-primary text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
           >
             {t}
