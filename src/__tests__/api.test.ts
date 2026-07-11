@@ -359,8 +359,8 @@ describe('API Client', () => {
         status: 'Ongoing',
         synopsis: 'Animasu story',
         genres: [{ name: 'Comedy', slug: 'comedy' }],
+        episodes: [{ name: 'Episode 5', slug: 'animasu-ep-5' }],
       },
-      episodes: [{ name: 'Episode 5', slug: 'animasu-ep-5' }],
     };
     const fetchMock = vi.fn()
       .mockResolvedValueOnce({
@@ -388,6 +388,36 @@ describe('API Client', () => {
 
     const sources = await getEpisodeSources('m~eyJ0eXBlIjoiYW5pbWUiLCJwcm92aWRlciI6ImFuaW1hc3UiLCJzbHVnIjoiYW5pbWFzdS1hbiJ9', 'animasu-ep-5');
     expect(sources).toEqual([{ url: 'https://player.test/animasu-720p', label: '720p', quality: '720p' }]);
+  });
+
+  it('maps Donghua top-level details and episodes_list (no success envelope)', async () => {
+    // regression: donghua returns airing status as `status` ("Ongoing"), failing the
+    // success-envelope check; title/poster/episodes_list live at top level, data is null.
+    const detailResponse = {
+      status: 'Ongoing',
+      title: 'Donghua Show',
+      poster: 'https://img/dh.jpg',
+      synopsis: 'Donghua story',
+      studio: 'Soyep',
+      genres: [{ name: 'Action', slug: 'action' }],
+      episodes_list: [
+        { episode: 'Donghua Show Episode 2', slug: 'dh-slug-episode-2' },
+        { episode: 'Donghua Show Episode 1', slug: 'dh-slug-episode-1' },
+      ],
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify(detailResponse) })
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify(detailResponse) });
+    setFetchMock(fetchMock);
+    const { getMediaBySlug, getEpisodes } = await loadApi();
+
+    const ref = 'm~eyJ0eXBlIjoiZG9uZ2h1YSIsInByb3ZpZGVyIjoiZG9uZ2h1YiIsInNsdWciOiJkaC1zbHVnIn0';
+    const media = await getMediaBySlug(ref);
+    expect(media).toMatchObject({ title: 'Donghua Show', type: 'donghua' });
+
+    const eps = await getEpisodes(ref);
+    // ascending sort: episode 1 first
+    expect(eps.map((e) => e.slug)).toEqual(['dh-slug-episode-1', 'dh-slug-episode-2']);
   });
 
   it('maps Kiryuu details, chapters, and pages', async () => {

@@ -597,13 +597,16 @@ function collectSuggestions(recommendations: any, related: any): { slug: string;
 }
 
 function mapDonghuaDetail(ref: MediaRef, payload: any): Media {
-  const data = unwrapUpstreamEnvelope(`/anime/donghua/detail/${ref.slug}`, payload).data;
+  // donghua endpoint returns airing status as `status` ("Ongoing"/"Completed"), so it
+  // fails the success-envelope check — fields live at the top level, `data` is null.
+  const data = payload;
+  if (!data?.title) throw new MediaApiError('Unexpected media source envelope');
   return {
     ...baseMedia('donghua', encodeMediaRef('donghua', ref.provider, ref.slug), dedupeTitle(data.title), data.poster),
     synopsis: data.synopsis,
-    status: data.info?.status,
+    status: data.status,
     genres: mapGenres(data.genres, 'name'),
-    studios: data.info?.studio ? [{ slug: String(data.info.studio).toLowerCase().replace(/\s+/g, '-'), name: data.info.studio }] : null,
+    studios: data.studio ? [{ slug: String(data.studio).toLowerCase().replace(/\s+/g, '-'), name: data.studio }] : null,
   };
 }
 
@@ -1023,7 +1026,9 @@ async function getEpisodesUnsorted(slug: string): Promise<Episode[]> {
     }
     if (ref.provider === 'animasu') {
       const body = await fetchUpstreamJson(`/anime/animasu/detail/${ref.slug}`);
-      return (Array.isArray(body.episodes) ? body.episodes : []).map((item: any, index: number) => ({
+      // upstream nests the list under detail.episodes ({name, slug}), not body.episodes
+      const list = Array.isArray(body.detail?.episodes) ? body.detail.episodes : [];
+      return list.map((item: any, index: number) => ({
         slug: item.slug,
         episodeNumber: chapterNumberFromTitle(item.name, index + 1),
         title: item.name,
@@ -1033,11 +1038,14 @@ async function getEpisodesUnsorted(slug: string): Promise<Episode[]> {
   }
 
   if (ref.type === 'donghua') {
-    const body = unwrapUpstreamEnvelope(`/anime/donghua/detail/${ref.slug}`, await fetchUpstreamJson(`/anime/donghua/detail/${ref.slug}`));
-    return (Array.isArray(body.data?.episodes) ? body.data.episodes : []).map((item: any, index: number) => ({
+    // donghua uses no success-envelope (status = airing state); read top-level.
+    const body = await fetchUpstreamJson(`/anime/donghua/detail/${ref.slug}`);
+    // upstream key is episodes_list ({episode, slug}), not data.episodes
+    const list = Array.isArray(body.episodes_list) ? body.episodes_list : [];
+    return list.map((item: any, index: number) => ({
       slug: item.slug,
-      episodeNumber: Number(item.episode ?? index + 1) || index + 1,
-      title: item.title,
+      episodeNumber: chapterNumberFromTitle(item.episode, index + 1),
+      title: item.episode,
       createdAt: EMPTY_DATE,
     }));
   }
