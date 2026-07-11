@@ -18,9 +18,9 @@ export function NovelReader({ chapter, chapters, currentChapterSlug, itemBasePat
   const next = idx !== -1 && idx < chapters.length - 1 ? chapters[idx + 1] : null;
 
   return (
-    <article className="mx-auto max-w-2xl">
+    <article className="mx-auto max-w-prose">
       <Nav prev={prev} next={next} base={itemBasePath} detailPath={detailPath} />
-      <div className="prose-reader mt-8 space-y-4 text-pretty font-serif text-lg leading-relaxed text-foreground">
+      <div className="mt-8 space-y-4 text-pretty font-serif text-lg leading-relaxed text-foreground">
         {chapter.paragraphs.map((p, i) => (
           <p key={i}>{p}</p>
         ))}
