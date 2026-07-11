@@ -458,6 +458,40 @@ describe('API Client', () => {
     expect(pages).toEqual([{ url: 'https://img/page1.jpg', pageNumber: 1 }]);
   });
 
+  it('maps Sakuranovel chapters (ascending) and reads chapter prose', async () => {
+    // novel ref: {type:novel, provider:sakuranovel, slug:nv-slug}
+    const NOVEL_REF = 'm~eyJ0eXBlIjoibm92ZWwiLCJwcm92aWRlciI6InNha3VyYW5vdmVsIiwic2x1ZyI6Im52LXNsdWcifQ';
+    const detailResponse = {
+      data: {
+        title: 'Nv Novel',
+        poster: 'https://img/nv.jpg',
+        status: 'Ongoing',
+        genres: [{ name: 'Fantasy', slug: 'fantasy' }],
+        // upstream lists chapters newest-first
+        chapters: [
+          { title: 'Chapter 2', slug: 'nv-ch-2', date: '09/07/2026', read_endpoint: '/movie/novel/sakuranovel/read/nv-ch-2' },
+          { title: 'Chapter 1', slug: 'nv-ch-1', date: '08/07/2026', read_endpoint: '/movie/novel/sakuranovel/read/nv-ch-1' },
+        ],
+      },
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, text: async () => JSON.stringify(detailResponse) })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({ data: { title: 'Chapter 1', content: '<p>Line one.</p>\n<p>Line two.</p>', navigation: {} } }),
+      });
+    setFetchMock(fetchMock);
+    const { getChapters, getNovelChapter } = await loadApi();
+
+    const chs = await getChapters(NOVEL_REF);
+    expect(chs.map((c: { slug: string }) => c.slug)).toEqual(['nv-ch-1', 'nv-ch-2']);
+    expect(chs[0]).toMatchObject({ slug: 'nv-ch-1', chapterNumber: 1 });
+
+    const chapter = await getNovelChapter(NOVEL_REF, 'nv-ch-1');
+    expect(chapter?.paragraphs).toEqual(['Line one.', 'Line two.']);
+    expect(fetchMock.mock.calls.map((c) => c[0]).join(' ')).toContain('/novel/sakuranovel/read/nv-ch-1');
+  });
+
   it('maps Komikindo details, chapters, and pages', async () => {
     const detailResponse = {
       data: {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { getMediaBySlug, getChapterPages, getChapters } from '@/lib/api';
+import { getMediaBySlug, getChapterPages, getChapters, getNovelChapter } from '@/lib/api';
 import { MangaReader } from '@/components/MangaReader';
+import { NovelReader } from '@/components/NovelReader';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { SupportCTA } from '@/components/sections/SupportCTA';
 import { BreadcrumbJsonLd } from '@/components/seo/BreadcrumbJsonLd';
@@ -17,11 +18,16 @@ export const metadata: Metadata = {
 export default async function ChapterPage({ params }: { params: Promise<{ type: string; slug: string; chapterSlug: string }> }) {
   const { type, slug, chapterSlug } = await params;
   const decodeSlug = `${type}/${slug}`;
-  const pages = await getChapterPages(decodeSlug, chapterSlug);
-  const content = await getMediaBySlug(decodeSlug);
-  const chapters = await getChapters(decodeSlug);
+  const isNovel = type === 'novel';
+  const [pages, novel, content, chapters] = await Promise.all([
+    isNovel ? Promise.resolve([]) : getChapterPages(decodeSlug, chapterSlug),
+    isNovel ? getNovelChapter(decodeSlug, chapterSlug) : Promise.resolve(null),
+    getMediaBySlug(decodeSlug),
+    getChapters(decodeSlug),
+  ]);
 
-  if (!content || pages.length === 0) {
+  const hasContent = isNovel ? (novel?.paragraphs.length ?? 0) > 0 : pages.length > 0;
+  if (!content || !hasContent) {
     return (
       <div className="max-w-4xl mx-auto py-16">
         <EmptyState
@@ -54,7 +60,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
         { name: content.title, path: `/${type}/${slug}` },
         { name: `Chapter ${current?.chapterNumber ?? 1}`, path: `/${type}/${slug}/chapters/${chapterSlug}` },
       ]} />
-      <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
+      {isNovel && novel ? (
+        <NovelReader chapter={novel} chapters={chapters} currentChapterSlug={chapterSlug} itemBasePath={`/media/${type}/${slug}/chapters`} detailPath={`/media/${type}/${slug}`} />
+      ) : (
+        <MangaReader slug={decodeSlug} chapters={chapters} initialPages={pages} currentChapterSlug={chapterSlug} mediaType={content.type} title={content.title} />
+      )}
       <Reveal><div className="mt-10"><SupportCTA /></div></Reveal>
     </div>
   );

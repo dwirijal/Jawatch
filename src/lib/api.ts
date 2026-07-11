@@ -1151,6 +1151,20 @@ export async function getChapters(slug: string): Promise<Chapter[]> {
 async function getChaptersUnsorted(slug: string): Promise<Chapter[]> {
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
+
+  if (ref.type === 'novel' && ref.provider === 'sakuranovel') {
+    // detail returns chapters at data.chapters ({title, date, slug}); read_endpoint
+    // is upstream junk (wrong /movie/ prefix) so we ignore it and rebuild the path.
+    const body = await fetchUpstreamJson(`/novel/sakuranovel/detail/${ref.slug}`);
+    const data = body?.data || body;
+    return (Array.isArray(data.chapters) ? data.chapters : []).map((item: any, index: number) => ({
+      slug: stripTrailingSlash(item.slug),
+      chapterNumber: chapterNumberFromTitle(item.title, index + 1),
+      title: item.title,
+      createdAt: toDate(item.date),
+    }));
+  }
+
   if (ref.type !== 'comic') return [];
 
   if (ref.provider === 'komikstation') {
@@ -1254,6 +1268,24 @@ export async function getChapterPages(slug: string, chSlug: string): Promise<Cha
   }
 
   return [];
+}
+
+export interface NovelChapter { title: string; paragraphs: string[]; }
+
+// Novel chapters are prose, not image pages. Upstream returns untrusted HTML at
+// data.content — we strip tags to plain paragraphs so React auto-escapes (no XSS,
+// no sanitizer dep). read_endpoint from detail has a bad /movie/ prefix; rebuild it.
+export async function getNovelChapter(slug: string, chSlug: string): Promise<NovelChapter | null> {
+  const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
+  if (!ref || ref.type !== 'novel' || ref.provider !== 'sakuranovel') return null;
+  const body = await fetchUpstreamJson(`/novel/sakuranovel/read/${chSlug}`);
+  const data = body?.data || body;
+  if (!data?.content) return null;
+  const paragraphs = String(data.content)
+    .split(/<\/p>|<br\s*\/?>|\n/i)
+    .map((chunk) => chunk.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim())
+    .filter(Boolean);
+  return { title: data.title || '', paragraphs };
 }
 
 async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
