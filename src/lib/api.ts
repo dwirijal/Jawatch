@@ -824,16 +824,19 @@ export async function getMedia(type?: string, page?: number, limit?: number): Pr
 export async function getPopular(limit?: number): Promise<Media[]> {
   try {
     const size = limit || 20;
-    const [weekly, recommendations, popularBody] = await Promise.all([
-      getTopWeeklyComics(Math.ceil(size / 3)),
-      getComicRecommendations(Math.ceil(size / 3)),
-      fetchUpstreamJson('/comic/mangasusuku/popular'),
+    // ponytail: per-source catch so one dead upstream (500/timeout) doesn't blank the whole page.
+    const [weekly, recommendations, popular] = await Promise.all([
+      getTopWeeklyComics(Math.ceil(size / 3)).catch(emptyMediaListOnSourceError),
+      getComicRecommendations(Math.ceil(size / 3)).catch(emptyMediaListOnSourceError),
+      fetchUpstreamJson('/comic/mangasusuku/popular')
+        .then((body) =>
+          firstArray(body.mangaList, body.results, body.data).map((item: any) => {
+            const slug = item.slug || slugFromTitle(item.title);
+            return mapComicListItem({ ...item, slug }, 'mangasusuku');
+          }),
+        )
+        .catch(emptyMediaListOnSourceError),
     ]);
-
-    const popular = firstArray(popularBody.mangaList, popularBody.results, popularBody.data).map((item: any) => {
-      const slug = item.slug || slugFromTitle(item.title);
-      return mapComicListItem({ ...item, slug }, 'mangasusuku');
-    });
 
     return [...weekly, ...recommendations, ...popular].slice(0, size);
   } catch (error) {
