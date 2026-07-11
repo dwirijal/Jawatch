@@ -26,7 +26,7 @@ export default async function StudiosPage() {
             <Link
               key={studio.slug}
               href={`/studios/${studio.slug}`}
-              className="flex min-h-[48px] items-center rounded-page border border-border bg-card px-4 py-3 font-serif text-base text-foreground transition-colors hover:border-primary hover:text-primary"
+              className="flex min-h-[48px] items-center rounded-page border border-border bg-card px-4 py-3 font-serif text-base text-foreground transition-all duration-base hover:border-primary hover:text-primary motion-safe:hover:-translate-y-0.5"
             >
               {studio.name}
             </Link>
