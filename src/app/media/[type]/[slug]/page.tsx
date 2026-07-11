@@ -10,6 +10,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DetailActions } from '@/components/DetailActions';
+import { Reveal } from '@/components/motion/Reveal';
+import { CountUp } from '@/components/motion/CountUp';
 
 // ISR: static CDN-cached shell (fast load + ~0 Vercel invocation). Per-user bits
 // (bookmark + resume CTA) hydrate client-side via /api/user/library-state — so
@@ -102,7 +104,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             </div>
             <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-foreground text-shadow-lg md:text-5.5xl">{content.title}</h1>
             <div className="mt-5 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-tag text-muted-foreground">
-              {content.rating?.average ? <span className="inline-flex items-center gap-1"><Star className="h-4 w-4 text-primary fill-amber" aria-hidden="true" />{content.rating.average.toFixed(1)}</span> : null}
+              {content.rating?.average ? <span className="inline-flex items-center gap-1"><Star className="h-4 w-4 text-primary fill-amber" aria-hidden="true" /><CountUp value={content.rating.average} decimals={1} /></span> : null}
               {year && <span className="inline-flex items-center gap-1"><Calendar className="h-4 w-4 text-accent-bright" aria-hidden="true" />{year}</span>}
               <span>{items.length} {isVideo ? 'episodes' : 'chapters'}</span>
             </div>
@@ -147,18 +149,21 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
 
       <Container y="4rem">
         <section className="max-w-3xl">
-          <div className="mb-6 border-l-2 border-amber pl-4">
-            <h2 className="font-serif text-xl font-bold text-foreground">{isVideo ? 'Episodes' : 'Chapters'}</h2>
-          </div>
-          <Strip items={items.map((item, index) => ({
-             number: `${isVideo ? 'EP' : 'CH'} ${'episodeNumber' in item ? item.episodeNumber : item.chapterNumber || index + 1}`,
-             name: item.title || 'Untitled',
-             href: `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${item.slug}`,
-          }))} />
+          <Reveal>
+            <div className="mb-6 border-l-2 border-amber pl-4">
+              <h2 className="font-serif text-xl font-bold text-foreground">{isVideo ? 'Episodes' : 'Chapters'}</h2>
+            </div>
+            <Strip items={items.map((item, index) => ({
+               number: `${isVideo ? 'EP' : 'CH'} ${'episodeNumber' in item ? item.episodeNumber : item.chapterNumber || index + 1}`,
+               name: item.title || 'Untitled',
+               href: `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${item.slug}`,
+            }))} />
+          </Reveal>
 
         {/* Non-intrusive ad slot: between content and recommendations, never mid-content */}
         <SafeSlotIklan slot="detail-related" format="horizontal" />
 
+        <Reveal>
         <section className="mt-16">
           <div className="mb-6 border-l-2 border-amber pl-4">
             <h2 className="font-serif text-xl font-bold text-foreground">Related</h2>
@@ -170,12 +175,12 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
                   if (!ref) return null;
                   const path = buildCanonicalPath(ref);
                   return (
-                    <Link key={item.slug} href={path} className="group rounded-page border border-border bg-card/40 p-3 transition-colors hover:border-amber/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <Link key={item.slug} href={path} className="group block rounded-page border border-border bg-card/40 p-3 transition-all duration-base hover:border-amber/40 motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                       <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-background">
-                        {item.coverImage ? <Image src={item.coverImage} alt={item.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" /> : null}
+                        {item.coverImage ? <Image src={item.coverImage} alt={item.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105" /> : null}
                       </div>
                       <div className="mt-3">
-                        <div className="font-serif text-sm text-foreground line-clamp-2">{item.title}</div>
+                        <div className="font-serif text-sm text-foreground line-clamp-2 transition-colors group-hover:text-primary">{item.title}</div>
                         <div className="mt-1 text-tag uppercase text-muted-foreground">{item.type}</div>
                       </div>
                     </Link>
@@ -186,6 +191,7 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
             <div className="rounded-page border border-border bg-card/30 p-6 text-sm text-muted-foreground">No related items.</div>
           )}
         </section>
+        </Reveal>
         </section>
       </Container>
     </div>
