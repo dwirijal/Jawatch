@@ -26,7 +26,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
   return (
     <Container>
-      <SectionHeader eyebrow="Search" title="Find your next title" description="Search across watch and read formats without leaving jawatch." />
+      <SectionHeader as="h1" eyebrow="Search" title="Find your next title" description="Search across watch and read formats without leaving jawatch." />
       <form action="/search" method="GET" className="mb-4">
         <label className="flex items-center gap-3 rounded-card border border-border bg-card px-4 py-3 focus-within:border-primary/70">
           <Search className="h-5 w-5 text-muted-foreground" aria-hidden="true" />

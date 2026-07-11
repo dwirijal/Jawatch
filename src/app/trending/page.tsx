@@ -15,7 +15,7 @@ export default async function TrendingPage() {
 
   return (
     <Container y="48px">
-      <SectionHeader eyebrow="Browse" title="Trending tonight" description="Fast-moving picks for the next watch or chapter run." />
+      <SectionHeader as="h1" eyebrow="Browse" title="Trending tonight" description="Fast-moving picks for the next watch or chapter run." />
       <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
       <MediaGrid items={contents} />
     </Container>

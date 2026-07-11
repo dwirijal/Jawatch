@@ -7,14 +7,16 @@ type SectionHeaderProps = {
   description?: string;
   href?: string;
   actionLabel?: string;
+  // Heading level: 'h1' when this is the page's primary title, else 'h2' (default) for sections.
+  as?: 'h1' | 'h2';
 };
 
-export function SectionHeader({ eyebrow, title, description, href, actionLabel = 'View all' }: SectionHeaderProps) {
+export function SectionHeader({ eyebrow, title, description, href, actionLabel = 'View all', as: Heading = 'h2' }: SectionHeaderProps) {
   return (
     <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between border-l-2 border-amber pl-4">
       <div>
         {eyebrow && <div className="font-mono text-eyebrow uppercase text-accent-bright">{eyebrow}</div>}
-        <h2 className="mt-1 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h2>
+        <Heading className="mt-1 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</Heading>
         {description && <p className="mt-2 max-w-2xl text-xs text-muted-foreground">{description}</p>}
       </div>
       {href && (

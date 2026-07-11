@@ -17,7 +17,7 @@ export default async function LatestPage() {
 
   return (
     <Container y="48px">
-      <SectionHeader eyebrow="Browse" title="Latest drops" description="Fresh episodes, chapters, and releases added to the shelf." />
+      <SectionHeader as="h1" eyebrow="Browse" title="Latest drops" description="Fresh episodes, chapters, and releases added to the shelf." />
       <p className="mb-4 font-mono text-xs text-muted-foreground">{contents.length} titles</p>
       <MediaGrid items={contents} />
     </Container>

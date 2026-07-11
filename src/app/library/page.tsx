@@ -19,7 +19,7 @@ const tiles = [
 export default function LibraryPage() {
   return (
     <Container>
-      <SectionHeader eyebrow="Library" title="Your shelf" description="Standalone placeholders for saved titles and progress surfaces." />
+      <SectionHeader as="h1" eyebrow="Library" title="Your shelf" description="Standalone placeholders for saved titles and progress surfaces." />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map(({ href, label, description, icon: Icon }) => (
           <Link key={href} href={href} className="group rounded-card border border-border bg-card p-6 transition-all duration-base hover:border-primary/70 motion-safe:hover:-translate-y-0.5">

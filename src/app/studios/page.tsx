@@ -17,7 +17,7 @@ export default async function StudiosPage() {
 
   return (
     <Container>
-      <SectionHeader eyebrow="Browse" title="Studios" description="Find titles by the studio behind them." />
+      <SectionHeader as="h1" eyebrow="Browse" title="Studios" description="Find titles by the studio behind them." />
       {studios.length === 0 ? (
         <p className="font-mono text-sm text-muted-foreground">No studios available right now.</p>
       ) : (
