@@ -11,12 +11,12 @@ export function Gauge({
   const circumference = 2 * Math.PI * 42; // r=42
   const offset = circumference * (1 - pct);
   // teal → amber gradient based on rating
-  const color = pct > 0.7 ? 'rgb(var(--primary))' : 'rgb(var(--accent))';
+  const color = pct > 0.7 ? 'oklch(var(--primary))' : 'oklch(var(--accent))';
 
   return (
     <div className="relative w-24 h-24">
       <svg width="96" height="96" className="-rotate-90">
-        <circle cx="48" cy="48" r="42" fill="none" stroke="rgb(var(--muted))" strokeWidth="4" />
+        <circle cx="48" cy="48" r="42" fill="none" stroke="oklch(var(--muted))" strokeWidth="4" />
         <circle
           cx="48" cy="48" r="42" fill="none"
           stroke={color} strokeWidth="4"

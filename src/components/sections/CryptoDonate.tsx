@@ -83,9 +83,6 @@ function WalletRow({ wallet }: { wallet: Wallet }) {
 export function CryptoDonate() {
   return (
     <div className="w-full max-w-md">
-      <p className="mb-2 text-center font-mono text-micro uppercase tracking-micro text-muted-foreground">
-        {COPY.support.crypto}
-      </p>
       <ul className="flex flex-col gap-2">
         {WALLETS.map((w) => (
           <WalletRow key={w.id} wallet={w} />

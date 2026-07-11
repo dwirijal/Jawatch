@@ -53,11 +53,11 @@ export function Card({
 
       {/* Perforation line - top */}
       <div className="absolute top-2 left-2 right-2 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ backgroundImage: 'repeating-linear-gradient(90deg, rgb(var(--primary)) 0 3px, transparent 3px 6px)' }} />
+        style={{ backgroundImage: 'repeating-linear-gradient(90deg, oklch(var(--primary)) 0 3px, transparent 3px 6px)' }} />
 
       {/* Perforation line - bottom */}
       <div className="absolute bottom-[72px] left-2 right-2 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ backgroundImage: 'repeating-linear-gradient(90deg, rgb(var(--primary)) 0 3px, transparent 3px 6px)' }} />
+        style={{ backgroundImage: 'repeating-linear-gradient(90deg, oklch(var(--primary)) 0 3px, transparent 3px 6px)' }} />
 
       {/* New badge */}
       {isNew && (

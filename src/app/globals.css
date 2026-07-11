@@ -1,35 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+/* ponytail: @config keeps the existing tailwind.config.ts (color aliases, tokens,
+   keyframes) working under TW4 without porting it all to @theme — incremental cutover
+   per TW4 upgrade guide. Move to @theme later only if config-in-JS becomes a burden. */
+@config "../../tailwind.config.ts";
 
 @layer base {
   :root {
-    --background: 7 8 12;
-    --foreground: 246 241 232;
-    --card: 18 20 29;
-    --card-foreground: 246 241 232;
-    --muted: 34 37 48;
-    --muted-foreground: 155 151 143;
-    --border: 48 50 62;
-    --primary: 245 158 36;
-    --primary-foreground: 8 8 11;
-    --accent: 91 178 169;
-    --accent-foreground: 5 18 18;
-    --accent-bright: 126 214 203;
-    --destructive: 239 68 68;
+    /* ponytail: oklch L C H components, consumed via oklch(var(--x) / <alpha>).
+       Perceptually equal to the prior rgb triplets (converted, not eyeballed).
+       Keeping the var()+alpha technique means atom class names stay unchanged. */
+    --background: 13.51% 0.0094 272.54;
+    --foreground: 95.96% 0.0131 82.40;
+    --card: 19.35% 0.0185 274.81;
+    --card-foreground: 95.96% 0.0131 82.40;
+    --muted: 26.63% 0.0210 272.98;
+    --muted-foreground: 67.74% 0.0125 84.59;
+    --border: 32.02% 0.0215 277.68;
+    --primary: 76.93% 0.1593 68.33;
+    --primary-foreground: 13.60% 0.0068 285.45;
+    --accent: 70.69% 0.0854 186.62;
+    --accent-foreground: 16.97% 0.0195 195.47;
+    --accent-bright: 81.76% 0.0868 185.42;
+    --destructive: 63.68% 0.2078 25.33;
   }
 
   :focus-visible {
-    outline: 2px solid rgb(var(--primary));
+    outline: 2px solid oklch(var(--primary));
     outline-offset: 2px;
   }
 
   body {
     background:
-      radial-gradient(circle at 20% -10%, rgb(var(--primary) / 0.16), transparent 34rem),
-      radial-gradient(circle at 80% 0%, rgb(var(--accent) / 0.12), transparent 30rem),
-      rgb(var(--background));
-    color: rgb(var(--foreground));
+      radial-gradient(circle at 20% -10%, oklch(var(--primary) / 0.16), transparent 34rem),
+      radial-gradient(circle at 80% 0%, oklch(var(--accent) / 0.12), transparent 30rem),
+      oklch(var(--background));
+    color: oklch(var(--foreground));
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
@@ -63,7 +68,7 @@
 
   .glow-border { transition: box-shadow 0.3s ease, transform 0.3s ease; }
   .glow-border:hover {
-    box-shadow: 0 0 24px rgb(var(--primary) / 0.18), inset 0 0 0 1px rgb(var(--primary) / 0.32);
+    box-shadow: 0 0 24px oklch(var(--primary) / 0.18), inset 0 0 0 1px oklch(var(--primary) / 0.32);
   }
 
   @keyframes marquee {
