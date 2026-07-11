@@ -6,6 +6,7 @@ import { ContinueRail } from '@/components/sections/ContinueRail';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { getHomeRails, getGenres } from '@/lib/api';
+import { Reveal } from '@/components/motion/Reveal';
 import Link from 'next/link';
 
 export const revalidate = 300;
@@ -65,41 +66,47 @@ export default async function HomePage() {
       <Container y="4rem">
         <div className="space-y-20">
           {rails.map((rail) => (
-            <section key={rail.title}>
-              <SectionHeader eyebrow="Shelf" title={rail.title} href={rail.href} />
-              <MediaGrid items={rail.items} limit={15} />
-            </section>
+            <Reveal key={rail.title}>
+              <section>
+                <SectionHeader eyebrow="Shelf" title={rail.title} href={rail.href} />
+                <MediaGrid items={rail.items} limit={15} />
+              </section>
+            </Reveal>
           ))}
         </div>
 
-        <section className="mt-20">
-          <SectionHeader eyebrow="Browse" title="Genres" href="/genres" />
-          <div className="flex flex-wrap gap-2">
-            {genres.map((genre) => (
-              <Link
-                key={genre.slug}
-                href={`/genres/${genre.slug}`}
-                className="rounded-pill border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-              >
-                {genre.name}
-              </Link>
-            ))}
-          </div>
-        </section>
+        <Reveal>
+          <section className="mt-20">
+            <SectionHeader eyebrow="Browse" title="Genres" href="/genres" />
+            <div className="flex flex-wrap gap-2">
+              {genres.map((genre) => (
+                <Link
+                  key={genre.slug}
+                  href={`/genres/${genre.slug}`}
+                  className="rounded-pill border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary hover:-translate-y-0.5 motion-safe:duration-base"
+                >
+                  {genre.name}
+                </Link>
+              ))}
+            </div>
+          </section>
+        </Reveal>
 
+        <Reveal>
         <section className="mt-24 rounded-page border border-border bg-card/40 px-6 py-16 text-center grain relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber/30 to-transparent" />
           <h2 className="font-serif text-3.5xl font-semibold text-foreground">Explore the full catalog</h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">Find something to watch, read, queue, or revisit.</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/discover" className="inline-flex rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void transition-colors hover:bg-primary/90">
+            <Link href="/discover" className="inline-flex rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-void shadow-lift transition-all duration-base hover:bg-primary/90 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95">
               Browse all
             </Link>
-            <Link href="/random" className="inline-flex rounded-page border border-border px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-foreground transition-colors hover:border-primary hover:text-primary" aria-label="Surprise me with a random title">
+            <Link href="/random" className="inline-flex rounded-page border border-border px-6 py-3 font-mono text-xs font-semibold uppercase tracking-tag text-foreground transition-all duration-base hover:border-primary hover:text-primary motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-95" aria-label="Surprise me with a random title">
               🎲 Surprise me
             </Link>
           </div>
         </section>
+        </Reveal>
       </Container>
     </>
   );
