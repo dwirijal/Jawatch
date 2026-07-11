@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type PointerEvent } from 'react';
 import { Media, decodeMediaRef, buildMediaLink } from '@/lib/api';
 
 export function ContentCard({ content }: { content: Media }) {
@@ -11,9 +11,27 @@ export function ContentCard({ content }: { content: Media }) {
   const ref = decodeMediaRef(content.slug);
   const href = ref ? buildMediaLink(ref) : `/media/${content.slug}`;
 
+  // ponytail: reactbits-style SpotlightCard — pointer-follow glow via CSS vars.
+  // Fine-pointer only (no touch/keyboard cost), token-colored, opacity gated by
+  // group-hover so it costs nothing at rest and needs no reduced-motion handling.
+  const handlePointer = (e: PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== 'mouse') return;
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
+
   return (
     <Link href={href} className="group block motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1">
-      <div className="aspect-[2/3] bg-card rounded-card overflow-hidden mb-2 relative motion-safe:transition-shadow motion-safe:duration-300 group-hover:shadow-lg group-hover:shadow-background/50">
+      <div
+        onPointerMove={handlePointer}
+        className="aspect-[2/3] bg-card rounded-card overflow-hidden mb-2 relative motion-safe:transition-shadow motion-safe:duration-300 group-hover:shadow-lg group-hover:shadow-background/50"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-base group-hover:opacity-100"
+          style={{ background: 'radial-gradient(180px circle at var(--mx) var(--my), oklch(var(--primary) / 0.18), transparent 60%)' }}
+        />
         {content.coverImage && !imgError ? (
           <Image
             src={content.coverImage}
