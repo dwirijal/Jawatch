@@ -22,6 +22,7 @@
     "@vercel/blob": "^2.6.1",
     "better-auth": "^1.6.23",
     "lucide-react": "^1.24.0",
+    "motion": "^12.42.2",
     "next": "^15.3.6",
     "pg": "^8.22.0",
     "qrcode": "^1.5.4",
