@@ -42,7 +42,7 @@ export default async function DiscoverTypePage({ params }: Props) {
       <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground capitalize">{type}</h1>
       <p className="mt-2 text-sm text-muted-foreground">Curated {type} picks from the jawatch catalog.</p>
       <div className="mt-6 mb-8 flex flex-wrap gap-2">
-        <Link href="/discover" className="rounded-full border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+        <Link href="/discover" className="rounded-pill border border-border bg-card px-4 py-2 font-mono text-micro uppercase text-muted-foreground transition-colors hover:border-primary hover:text-primary">
           All
         </Link>
         {validTypes.map((t) => (
