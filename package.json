@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0",
     "lint": "eslint . --ext .ts,.tsx",
-    "test": "vitest",
+    "test": "vitest run",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
