@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/ui/RefererImage';
 import { useState } from 'react';
 
 export function Card({
@@ -24,7 +24,7 @@ export function Card({
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link href={href} className="group relative aspect-[2/3] overflow-hidden bg-card block transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
+    <Link href={href} className="group relative aspect-[2/3] overflow-hidden bg-card block transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
       {/* Poster bg */}
       {coverImage && !imgError ? (
         <Image
@@ -66,9 +66,9 @@ export function Card({
         </span>
       )}
 
-      {/* Rating badge */}
+      {/* Rating badge — more prominent on hover */}
       {rating && rating > 0 && (
-        <span className="absolute top-2 left-2 font-mono text-eyebrow px-1.5 py-px bg-background/80 backdrop-blur-sm text-primary rounded-sm z-10 border border-border/80">
+        <span className="absolute top-2 left-2 font-mono text-eyebrow px-1.5 py-px bg-background/80 backdrop-blur-sm text-primary rounded-sm z-10 border border-border/80 group-hover:bg-primary group-hover:text-void group-hover:border-primary group-hover:shadow-[0_0_8px_oklch(var(--primary)/0.5)] transition-all duration-200">
           ★ {rating.toFixed(1)}
         </span>
       )}

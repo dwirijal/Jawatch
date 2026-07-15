@@ -6,7 +6,7 @@ import { MediaJsonLd } from '@/components/seo/MediaJsonLd';
 import { buttonClasses } from '@/components/ui/Button';
 import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { Calendar, Star } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/ui/RefererImage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DetailActions } from '@/components/DetailActions';

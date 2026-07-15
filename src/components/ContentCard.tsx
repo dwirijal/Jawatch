@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import Image from '@/components/ui/RefererImage';
 import { useState, type PointerEvent } from 'react';
 import { Media, decodeMediaRef, buildMediaLink } from '@/lib/api';
 

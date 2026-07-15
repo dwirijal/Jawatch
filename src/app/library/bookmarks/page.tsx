@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/layout/Container';
-import Image from 'next/image';
+import Image from '@/components/ui/RefererImage';
 import Link from 'next/link';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { Bookmark } from 'lucide-react';

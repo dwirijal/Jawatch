@@ -1,5 +1,5 @@
 import { BookOpen, Info, Play, Star } from 'lucide-react';
-import Image from 'next/image';
+import Image from '@/components/ui/RefererImage';
 import { Parallax } from '@/components/motion/Parallax';
 import { CountUp } from '@/components/motion/CountUp';
 import Link from 'next/link';
