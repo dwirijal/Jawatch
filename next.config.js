@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-// ponytail: CSP keeps 'unsafe-inline' (no nonce) because Next streaming + per-route nonces aren't wired; ceiling: migrate to nonce once nonces are per-route.
+// ponytail: allow LAN HMR so 192.168.x.x clients can hot-reload during dev.
+const allowedDevOrigins = ['192.168.100.6'];
 // 'unsafe-eval' is dev-only (Next HMR needs it); prod drops it — GA/AdSense/Next-prod don't use eval, so it's pure XSS surface in prod.
 const scriptSrc = process.env.NODE_ENV === 'production'
   ? "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googletagservices.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://va.jawatch.web.id"
@@ -17,7 +18,7 @@ const securityHeaders = [
 ]
 
 const nextConfig = {
-  // Removed output: 'standalone' to fix Vercel missing module errors
+  output: 'standalone',
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 2678400, // 31d — cover art is immutable; slashes Vercel image-optimization re-transforms
@@ -36,6 +37,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['react', 'react-dom'],
   },
+  allowedDevOrigins,
   async headers() {
     return [
       {

@@ -98,6 +98,48 @@
   /* entrance for watch-room chips/sections; stagger via inline animation-delay */
   .animate-rise-in { animation: rise-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
+  /* SectionHeader — animated primary underline */
+  @keyframes growUp {
+    from { height: 0; opacity: 0; }
+    to { height: 100%; opacity: 1; }
+  }
+  /* SectionHeader — eyebrow glow pulse */
+  @keyframes glowPulse {
+    0%, 100% { opacity: 1; text-shadow: 0 0 12px oklch(var(--accent-bright)/0.5); }
+    50% { opacity: 0.85; text-shadow: 0 0 6px oklch(var(--accent-bright)/0.3); }
+  }
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      oklch(var(--muted) / 0.4) 0%,
+      oklch(var(--muted) / 0.7) 50%,
+      oklch(var(--muted) / 0.4) 100%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* EmptyState — floating icon */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  /* EmptyState — gradient border shift */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  /* EmptyState — top shimmer line */
+  @keyframes shimmer-line {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     /* ponytail: blanket guard closes the gap where transition-* + built-in
        animate-spin/pulse kept moving. Keep 0.01ms (not 0) so transitionend still

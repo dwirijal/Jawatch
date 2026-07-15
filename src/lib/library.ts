@@ -20,6 +20,8 @@ export interface ProgressInput {
   itemSlug: string;
   itemNumber: number;
   title?: string | null;
+  /** cover image — populated by /api/user/progress via media JOIN when Go API is up */
+  coverImage?: string | null;
 }
 
 const UNDEFINED_TABLE = '42P01';

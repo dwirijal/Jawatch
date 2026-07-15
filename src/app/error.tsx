@@ -13,6 +13,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <Container y="80px">
       <EmptyState
+        as="h1"
         eyebrow={COPY.error.eyebrow}
         title={COPY.error.title}
         description={COPY.error.desc}

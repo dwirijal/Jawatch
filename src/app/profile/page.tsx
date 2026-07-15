@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ProfilePage() {
   return (
     <Container>
-      <EmptyState icon={<UserRound className="h-6 w-6" aria-hidden="true" />} eyebrow="Profile" title="Profile is offline" description="jawatch is running standalone here. Account features can be added after storage and auth are approved." href="/discover" actionLabel="Browse instead" />
+      <EmptyState as="h1" icon={<UserRound className="h-6 w-6" aria-hidden="true" />} eyebrow="Profile" title="Profile is offline" description="jawatch is running standalone here. Account features can be added after storage and auth are approved." href="/discover" actionLabel="Browse instead" />
     </Container>
   );
 }

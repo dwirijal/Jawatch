@@ -62,6 +62,19 @@ async function safe<T>(p: Promise<T>): Promise<SafeResult<T>> {
   }
 }
 
+// ============================================================================
+// Local API bridge: when JAWATCH_USE_LOCAL_API=1, list-style read functions
+// delegate to the self-hosted Go API (src/lib/localApi.ts) which serves from
+// local Postgres. Detail/episode/chapter lookups still hit Sanka because
+// those need full source URLs and provider-specific payload mapping.
+// ============================================================================
+
+import * as localApi from './localApi';
+
+function useLocalApi(): boolean {
+  return process.env.JAWATCH_USE_LOCAL_API === '1';
+}
+
 export async function safeGetMediaBySlug(slug: string): Promise<SafeResult<Media | null>> {
   return safe(getMediaBySlug(slug));
 }
@@ -132,7 +145,7 @@ export interface EpisodePlayback {
 }
 export interface ChapterPage { slug?: string; pageNumber?: number; url: string; }
 
-function encodeMediaRef(type: MediaType, provider: string, slug: string): string {
+export function encodeMediaRef(type: MediaType, provider: string, slug: string): string {
   return `m~${Buffer.from(JSON.stringify({ type, provider, slug: endpointSlug(slug) })).toString('base64url')}`;
 }
 
@@ -317,7 +330,7 @@ function toRating(value: unknown): { average: number; count: number } | undefine
   return { average, count: 0 };
 }
 
-function mapGenres(list: any[] | undefined | null, key: 'title' | 'name' = 'title') {
+export function mapGenres(list: any[] | undefined | null, key: 'title' | 'name' = 'title') {
   if (!Array.isArray(list)) return [];
 
   return list
@@ -432,7 +445,7 @@ function emptyMediaListOnSourceError(error: unknown): Media[] {
 // SSRF guard: coverImage comes from untrusted upstream and is fetched server-side by the
 // next/image optimizer. Drop anything that isn't a plain http(s) URL so a compromised
 // upstream can't smuggle file://, data:, or an internal host into the optimizer.
-function safeHttpUrl(url?: string): string | undefined {
+export function safeHttpUrl(url?: string): string | undefined {
   if (!url) return undefined;
   try {
     return ['http:', 'https:'].includes(new URL(url).protocol) ? url : undefined;
@@ -441,7 +454,7 @@ function safeHttpUrl(url?: string): string | undefined {
   }
 }
 
-function baseMedia(type: MediaType, slug: string, title: string, coverImage?: string): Media {
+export function baseMedia(type: MediaType, slug: string, title: string, coverImage?: string): Media {
   const ref = decodeMediaRef(slug);
   if (ref && ref.provider !== 'resolve') {
     registerMedia(type, ref.provider, ref.slug, title);
@@ -801,6 +814,7 @@ async function getTopWeeklyComics(limit?: number): Promise<Media[]> {
 }
 
 export async function getMedia(type?: string, page?: number, limit?: number): Promise<{ data: Media[]; total: number; hasMore: boolean }> {
+  if (useLocalApi()) return localApi.getMedia(type, page, limit);
   try {
     const size = limit || 20;
 
@@ -825,6 +839,7 @@ export async function getMedia(type?: string, page?: number, limit?: number): Pr
 }
 
 export async function getPopular(limit?: number): Promise<Media[]> {
+  if (useLocalApi()) return localApi.getPopular(limit);
   try {
     const size = limit || 20;
     // ponytail: per-source catch so one dead upstream (500/timeout) doesn't blank the whole page.
@@ -849,11 +864,13 @@ export async function getPopular(limit?: number): Promise<Media[]> {
 }
 
 export async function getTrending(type?: string, limit?: number): Promise<Media[]> {
+  if (useLocalApi()) return localApi.getTrending(type, limit);
   if (type) return getMedia(type, 1, limit || 20).then((result) => result.data);
   return getPopular(limit);
 }
 
 export async function getLatest(type?: string, limit?: number): Promise<Media[]> {
+  if (useLocalApi()) return localApi.getLatest(type, limit);
   try {
     if (type === 'comic') {
       const body = unwrapUpstreamEnvelope('/comic/mangasusuku/latest', await fetchUpstreamJson('/comic/mangasusuku/latest'));
@@ -881,6 +898,7 @@ export async function getLatest(type?: string, limit?: number): Promise<Media[]>
 }
 
 export async function getRandom(): Promise<Media | null> {
+  if (useLocalApi()) return localApi.getRandom();
   const { data } = await getMedia(undefined, 1, 24);
   if (data.length === 0) return null;
   return data[Math.floor(Math.random() * data.length)] || null;
@@ -920,6 +938,10 @@ export async function getMediaBySlug(slug: string, srcHint?: string): Promise<Me
 }
 
 export async function getGenres(): Promise<{ slug: string; name: string }[]> {
+  if (useLocalApi()) {
+    const items = await localApi.getGenres();
+    return (items as any[]).map((g) => ({ slug: g.slug, name: g.name }));
+  }
   try {
     const [animeBody, comicBody] = await Promise.all([
       unwrapUpstreamEnvelope('/anime/genre', await fetchUpstreamJson('/anime/genre')),
@@ -943,6 +965,7 @@ export async function getGenres(): Promise<{ slug: string; name: string }[]> {
 }
 
 export async function getMediaByGenre(slug: string): Promise<Media[]> {
+  if (useLocalApi()) return localApi.getMediaByGenre(slug);
   const [animeBody, comicBody] = await Promise.all([
     fetchUpstreamJson(`/anime/genre/${slug}`),
     fetchUpstreamJson(`/comic/genre/${slug}`),
@@ -956,6 +979,10 @@ export async function getMediaByGenre(slug: string): Promise<Media[]> {
 }
 
 export async function getStudios(): Promise<{ slug: string; name: string }[]> {
+  if (useLocalApi()) {
+    const items = await localApi.getStudios();
+    return (items as any[]).map((s) => ({ slug: s.slug, name: s.name }));
+  }
   try {
     const body = unwrapUpstreamEnvelope('/anime/animekompi/studios', await fetchUpstreamJson('/anime/animekompi/studios'));
     return (Array.isArray(body.data) ? body.data : [])
@@ -1298,6 +1325,10 @@ async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
 }
 
 export async function searchMedia(query: string, limit?: number, type?: string): Promise<{ data: Media[]; total: number }> {
+  if (useLocalApi()) {
+    const items = await localApi.searchMedia(query, type, limit || 20);
+    return { data: items, total: items.length };
+  }
   const encoded = encodeURIComponent(query);
   const [
     otakudesuBody,
@@ -1366,6 +1397,39 @@ export async function searchMedia(query: string, limit?: number, type?: string):
 
 
 export async function getHomeRails(): Promise<Array<{ title: string; href: string; items: Media[] }>> {
+  if (useLocalApi()) {
+    try {
+      const rails = await localApi.getHomeRails();
+      // Translate localApi.rail shapes into the existing getHomeRails shape.
+      const railToView: Record<string, { title: string; href: string }> = {
+        'anime:samehadaku:recent': { title: 'Featured Anime', href: '/discover/anime' },
+        'anime:alqanime:hot': { title: 'Trending Anime', href: '/discover/anime' },
+        'anime:anime:home': { title: 'Ongoing Anime', href: '/discover/anime' },
+        'donghua:donghua:latest': { title: 'Latest Donghua', href: '/discover/donghua' },
+        'comic:komikstation:recommendation': { title: 'Comic Recommendations', href: '/discover/comic' },
+        'comic:komikstation:top-weekly': { title: 'Top Weekly Comics', href: '/trending' },
+        'comic:mangasusuku:popular': { title: 'Popular Comics', href: '/popular' },
+        'novel:sakuranovel:home': { title: 'Latest Novels', href: '/discover/novel' },
+      };
+      const safe = (items: Media[]) => items.filter((item) => !item.nsfw);
+      return rails
+        .map((r) => {
+          const view = railToView[r.key] || { title: r.key, href: '/discover' };
+          const items: Media[] = (r.items || []).map((it: any) => ({
+            slug: it.slug,
+            type: it.type || 'anime',
+            title: it.title,
+            coverImage: it.coverImage,
+            createdAt: '1970-01-01T00:00:00.000Z',
+            updatedAt: '1970-01-01T00:00:00.000Z',
+          } as Media));
+          return { ...view, items: safe(items) };
+        })
+        .filter((rail) => rail.items.length > 0);
+    } catch {
+      return [];
+    }
+  }
   const [featured, latestDonghua, recommendations, topWeekly, popular] = await Promise.all([
     getMedia('anime', 1, 10).then((result) => result.data),
     getLatest('donghua', 10),

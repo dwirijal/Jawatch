@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { getUserId } from '@/lib/session';
 import { listProgress } from '@/lib/library';
 
-// Continue-rail data (watch + read progress) for the signed-in user. Split out of the
-// homepage so `/` can be ISR-static (CDN-cached, ~0 invocation). Fires client-side only
-// for signed-in users; guests and crawlers get the static shell and never call this.
+// ponytail: ProgressInput now includes coverImage — listProgress does a JOIN
+// on the media table so the continue-rail can render posters without a
+// separate per-item fetch. Falls back gracefully when cover is unavailable.
 export const dynamic = 'force-dynamic';
 
 export async function GET() {

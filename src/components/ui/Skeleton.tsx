@@ -1,5 +1,5 @@
 // Shaped placeholder for loading states — beats a bare spinner (perceived-latency).
-// motion-safe pulse only; reduced-motion users get a static block.
+// Shimmer animation replaces pulse; reduced-motion users get a static block.
 export function Skeleton({
   className = '',
   rounded = 'card',
@@ -18,7 +18,7 @@ export function Skeleton({
   return (
     <div
       aria-hidden="true"
-      className={`${radius} bg-muted/60 motion-safe:animate-pulse ${className}`}
+      className={`${radius} bg-muted/60 motion-safe:animate-shimmer ${className}`}
     />
   );
 }

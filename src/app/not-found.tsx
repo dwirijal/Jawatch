@@ -6,6 +6,7 @@ export default function NotFound() {
   return (
     <Container y="80px">
       <EmptyState
+        as="h1"
         eyebrow="404"
         title={COPY.empty.pageNotFound}
         description={COPY.empty.notAvailableDesc('Judul')}

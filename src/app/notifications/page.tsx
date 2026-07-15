@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function NotificationsPage() {
   return (
     <Container>
-      <EmptyState icon={<Bell className="h-6 w-6" aria-hidden="true" />} eyebrow="Notifications" title="Quiet for now" description="Release alerts need account storage. For now, discover pages are the source of truth." href="/latest" actionLabel="See latest" />
+      <EmptyState as="h1" icon={<Bell className="h-6 w-6" aria-hidden="true" />} eyebrow="Notifications" title="Quiet for now" description="Release alerts need account storage. For now, discover pages are the source of truth." href="/latest" actionLabel="See latest" />
     </Container>
   );
 }

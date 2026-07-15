@@ -1,21 +1,33 @@
 import { betterAuth } from 'better-auth';
 import { pool } from './db';
+import { getValkey } from './cache';
 
 const googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 
+const secondaryStorage = {
+  get: async (key: string) => {
+    const v = await getValkey().get(key);
+    return v ?? null;
+  },
+  set: async (key: string, value: string, ttl?: number) => {
+    if (ttl) await getValkey().set(key, value, 'EX', ttl);
+    else await getValkey().set(key, value);
+  },
+  delete: async (key: string) => {
+    await getValkey().del(key);
+  },
+};
+
 export const auth = betterAuth({
-  // better-auth's Kysely adapter accepts a pg Pool directly (detects `connect` -> PostgresDialect).
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
-  // ponytail: extra origins (LAN IP, staging) via comma-separated env; baseURL is always trusted.
-  // Add each dev/LAN origin to BETTER_AUTH_TRUSTED_ORIGINS to avoid "Invalid origin" 403s.
+  secondaryStorage,
   trustedOrigins: (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean),
   emailAndPassword: { enabled: true, requireEmailVerification: false },
-  // ponytail: Google is env-gated; when unset, socialProviders is empty -> no OAuth UI. Add more providers when needed.
   socialProviders: googleEnabled
     ? {
         google: {

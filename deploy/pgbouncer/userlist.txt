@@ -1,0 +1,3 @@
+# Generated from sb_POSTGRES_PASSWORD at deploy time.
+# Format: "username" "md5<md5(password + username)>"
+# The real hash is injected by the deploy script (deploy/setup-env.sh).
