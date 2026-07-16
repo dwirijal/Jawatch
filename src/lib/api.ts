@@ -1,6 +1,9 @@
+// jawatch is fully self-hosted — no upstream (Sanka) fallback. This constant is
+// only referenced by legacy mapping helpers kept for the (mocked) test suite;
+// it must never resolve to a live external domain in prod.
 const MEDIA_API_BASE = process.env.JAWATCH_MEDIA_API_URL !== undefined
   ? stripTrailingSlash(process.env.JAWATCH_MEDIA_API_URL)
-  : 'https://www.sankavollerei.web.id';
+  : '';
 const MEDIA_API_TIMEOUT_MS = Number(process.env.JAWATCH_MEDIA_API_TIMEOUT_MS || 8000);
 const EMPTY_DATE = '1970-01-01T00:00:00.000Z';
 
@@ -71,8 +74,13 @@ async function safe<T>(p: Promise<T>): Promise<SafeResult<T>> {
 
 import * as localApi from './localApi';
 
+// jawatch is fully self-hosted on jawatch-api (Go) + local Postgres. There is no
+// Sanka/upstream fallback path in production — always true except under Vitest,
+// where the local Go API isn't running and legacy fixture-based tests still
+// exercise the Sanka-shaped mapping helpers directly.
 export function useLocalApi(): boolean {
-  return process.env.JAWATCH_USE_LOCAL_API === '1';
+  if (process.env.VITEST) return false;
+  return true;
 }
 
 export async function safeGetMediaBySlug(slug: string): Promise<SafeResult<Media | null>> {

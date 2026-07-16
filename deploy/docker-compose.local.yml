@@ -1,10 +1,11 @@
 name: jawatch
 
-# Local self-hosted stack for jawatch.web.id
-# - app: Next.js standalone, capped 2c / 4g
-# - valkey: LRU cache (better-auth secondaryStorage + route cache), capped 512m
-# - pgbouncer: transaction pool fronting Supabase PG (non-pooling 5432), capped 256m
-# Cloudflare Tunnel (separate systemd/cloudflared) proxies jawatch.web.id -> app:3000
+# Fully self-hosted jawatch stack — no Sanka/upstream fallback, no Supabase Postgres.
+# - app: Next.js standalone (state: better-auth sessions + library_* tables)
+# - jawatch-api: Go content API (media/genres/episodes/chapters), serves from its own PG data
+# - Both connect to the shared dwizzyOS infra: DOS-pgb (pgbouncer -> DOS-pg), DOS-vk (valkey)
+# - app joins the external `dwizzyOS` network so Caddy (jawatch.web.id -> jawatch:3000) can reach it
+# - jawatch-api + app also join `gebelin_backend` (external, internal-only) to reach DOS-pgb/DOS-vk directly
 
 x-restarts: &restart_policy
   restart: unless-stopped
@@ -12,46 +13,42 @@ x-restarts: &restart_policy
 services:
   app:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
+      args:
+        JAWATCH_USE_LOCAL_API: "1"
+        JAWATCH_LOCAL_API_URL: "http://jawatch-api:8080"
+        JAWATCH_LOCAL_API_TIMEOUT_MS: "4000"
     image: jawatch:local
+    container_name: jawatch
     <<: *restart_policy
     depends_on:
-      valkey:
-        condition: service_healthy
-      pgbouncer:
-        condition: service_healthy
+      jawatch-api:
+        condition: service_started
     environment:
       NODE_ENV: production
       PORT: "3000"
-      # DB via local pgbouncer (resolves to the compose network)
-      sb_POSTGRES_URL: postgres://postgres.krddamyzkrjmonwbxzas:${SB_PG_PASSWORD}@pgbouncer:6432/postgres?sslmode=disable
-      sb_POSTGRES_PRISMA_URL: postgres://postgres.krddamyzkrjmonwbxzas:${SB_PG_PASSWORD}@pgbouncer:6432/postgres?sslmode=disable
-      sb_POSTGRES_URL_NON_POOLING: postgres://postgres.krddamyzkrjmonwbxzas:${SB_PG_PASSWORD}@pgbouncer:6432/postgres?sslmode=disable
-      sb_POSTGRES_HOST: pgbouncer
-      sb_POSTGRES_DATABASE: postgres
-      sb_POSTGRES_USER: postgres.krddamyzkrjmonwbxzas
-      sb_POSTGRES_PASSWORD: ${SB_PG_PASSWORD}
+      # library_* state tables live in the same DOS-pg database as jawatch-api's media tables,
+      # reached through the shared pgbouncer (transaction pool).
+      sb_POSTGRES_URL: postgres://dwizzy:${DOS_PG_PASSWORD}@DOS-pgb:6432/dwizzyos?sslmode=disable
+      sb_POSTGRES_PRISMA_URL: postgres://dwizzy:${DOS_PG_PASSWORD}@DOS-pgb:6432/dwizzyos?sslmode=disable
+      sb_POSTGRES_URL_NON_POOLING: postgres://dwizzy:${DOS_PG_PASSWORD}@DOS-pgb:6432/dwizzyos?sslmode=disable
+      sb_POSTGRES_HOST: DOS-pgb
+      sb_POSTGRES_DATABASE: dwizzyos
+      sb_POSTGRES_USER: dwizzy
+      sb_POSTGRES_PASSWORD: ${DOS_PG_PASSWORD}
       sb_POSTGRES_CA_CERT: ""
-      VALKEY_URL: redis://valkey:6379
+      VALKEY_URL: redis://:${DOS_VALKEY_PASSWORD}@DOS-vk:6379
+      JAWATCH_USE_LOCAL_API: "1"
+      JAWATCH_LOCAL_API_URL: "http://jawatch-api:8080"
+      JAWATCH_LOCAL_API_TIMEOUT_MS: "4000"
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-https://jawatch.web.id}
       BETTER_AUTH_TRUSTED_ORIGINS: ${BETTER_AUTH_TRUSTED_ORIGINS:-https://jawatch.web.id}
       NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
-      NEXT_PUBLIC_sb_SUPABASE_URL: ${NEXT_PUBLIC_sb_SUPABASE_URL}
-      NEXT_PUBLIC_sb_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_sb_SUPABASE_ANON_KEY}
-      NEXT_PUBLIC_sb_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_sb_SUPABASE_PUBLISHABLE_KEY}
-      sb_SUPABASE_URL: ${sb_SUPABASE_URL}
-      sb_SUPABASE_ANON_KEY: ${sb_SUPABASE_ANON_KEY}
-      sb_SUPABASE_PUBLISHABLE_KEY: ${sb_SUPABASE_PUBLISHABLE_KEY}
-      sb_SUPABASE_SECRET_KEY: ${sb_SUPABASE_SECRET_KEY}
-      sb_SUPABASE_JWT_SECRET: ${sb_SUPABASE_JWT_SECRET}
-      sb_SUPABASE_SERVICE_ROLE_KEY: ${sb_SUPABASE_SERVICE_ROLE_KEY}
-      BLOB_STORE_ID: ${BLOB_STORE_ID}
-      BLOB_WEBHOOK_PUBLIC_KEY: ${BLOB_WEBHOOK_PUBLIC_KEY}
-      EDGE_CONFIG: ${EDGE_CONFIG}
-    ports:
-      - "127.0.0.1:3000:3000"
+    networks:
+      - dwizzyOS
+      - backend
     deploy:
       resources:
         limits:
@@ -67,54 +64,33 @@ services:
       retries: 5
       start_period: 40s
 
-  valkey:
-    image: valkey/valkey:8-alpine
-    <<: *restart_policy
-    command:
-      - valkey-server
-      - --save
-      - ""
-      - --appendonly
-      - "no"
-      - --maxmemory
-      - 512mb
-      - --maxmemory-policy
-      - allkeys-lru
-    volumes:
-      - jawatch-valkey-data:/data
-    healthcheck:
-      test: ["CMD", "valkey-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 512m
-
-  pgbouncer:
-    image: edoburu/pgbouncer:latest
+  jawatch-api:
+    build:
+      context: ../../jawatch-api
+      dockerfile: Dockerfile
+    image: jawatch-api:local
+    container_name: jawatch-api
     <<: *restart_policy
     environment:
-      DATABASE_URL: postgres://postgres.krddamyzkrjmonwbxzas:${SB_PG_PASSWORD}@db.krddamyzkrjmonwbxzas.supabase.co:5432/postgres
-      POOL_MODE: transaction
-      MAX_CLIENT_CONN: "200"
-      DEFAULT_POOL_SIZE: "20"
-      LISTEN_PORT: "6432"
-    # config + auth_file mounted; edoburu image reads /etc/pgbouncer
-    volumes:
-      - ./deploy/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 6432 || exit 1"]
-      interval: 10s
-      timeout: 3s
-      retries: 10
+      JAWATCH_API_LISTEN: ":8080"
+      JAWATCH_DATABASE_URL: postgres://dwizzy:${DOS_PG_PASSWORD}@DOS-pgb:6432/dwizzyos?sslmode=disable
+    networks:
+      - backend
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: 256m
+          cpus: "1.0"
+          memory: 512m
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/api/v1/media?limit=1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-volumes:
-  jawatch-valkey-data:
+networks:
+  dwizzyOS:
+    external: true
+  backend:
+    name: gebelin_backend
+    external: true
