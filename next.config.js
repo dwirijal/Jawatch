@@ -58,6 +58,16 @@ const nextConfig = {
         destination: '/media/:slug',
         permanent: true,
       },
+      {
+        // Next 16's `generateSitemaps` pattern serves child chunks at
+        // `/sitemap/<id>.xml` but does not auto-generate a `/sitemap.xml`
+        // index. A `sitemap.xml/route.ts` collides with Next's reserved
+        // metadata filename, so we serve the index from a normal route
+        // and rewrite the expected public path.
+        source: '/sitemap.xml',
+        destination: '/sitemap-index',
+        permanent: false,
+      },
     ];
   },
 }

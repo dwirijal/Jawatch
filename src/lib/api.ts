@@ -71,7 +71,7 @@ async function safe<T>(p: Promise<T>): Promise<SafeResult<T>> {
 
 import * as localApi from './localApi';
 
-function useLocalApi(): boolean {
+export function useLocalApi(): boolean {
   return process.env.JAWATCH_USE_LOCAL_API === '1';
 }
 

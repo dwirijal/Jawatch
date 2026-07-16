@@ -31,7 +31,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         <label className="flex items-center gap-3 rounded-card border border-border bg-card px-4 py-3 focus-within:border-primary/70">
           <Search className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <span className="sr-only">Search query</span>
-          <input name="q" defaultValue={query} placeholder={COPY.search.placeholder} className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" autoFocus />
+          <input name="q" defaultValue={query} placeholder={COPY.search.placeholder} className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
         </label>
         {activeType && <input type="hidden" name="type" value={activeType} />}
       </form>

@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/sections/SectionHeader';
 import { getHomeRails, getGenres } from '@/lib/api';
 import { Reveal } from '@/components/motion/Reveal';
 import Link from 'next/link';
+import { mediaHref } from '@/lib/mediaHref';
 
 export const revalidate = 300;
 
@@ -25,7 +26,7 @@ export default async function HomePage() {
       <Container className="text-center" y="6rem">
         <h1 className="font-serif text-2xl font-bold text-foreground">Something went wrong</h1>
         <p className="mt-3 text-sm text-muted-foreground">Failed to load content. Please try again.</p>
-        <a href="/" className="mt-6 inline-block rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-void">Retry</a>
+        <Link href="/"> <span className="mt-6 inline-block rounded-page bg-primary px-6 py-3 font-mono text-xs font-semibold uppercase text-void cursor-pointer">Retry</span></Link>
       </Container>
     );
   }
@@ -51,7 +52,7 @@ export default async function HomePage() {
             {[...contents.slice(0, 20), ...contents.slice(0, 20)].map((item, index) => (
               <Link
                 key={`${item.slug}-${index}`}
-                href={`/media/${item.slug}`}
+                href={mediaHref(item.slug)}
                 className="group flex min-w-[260px] shrink-0 items-center gap-3 rounded-page border border-border bg-card/50 px-4 py-2.5 transition-all duration-300 hover:border-amber/40 hover:-translate-y-0.5"
               >
                 <span className="w-5 font-mono text-tag tabular-nums text-primary/60">{String((index % 20) + 1).padStart(2, '0')}</span>

@@ -1,6 +1,7 @@
 import { getMediaByAuthor } from '@/lib/api';
 import { Container } from '@/components/layout/Container';
 import { Card } from '@/components/ui';
+import { mediaHref } from '@/lib/mediaHref';
 
 // ISR: pure content, no per-user data → CDN-cached shell (fast load + ~0 invocation).
 // generateStaticParams (empty) is REQUIRED to opt a dynamic segment into ISR caching —
@@ -24,7 +25,7 @@ export default async function AuthorSlugPage({ params }: { params: Promise<{ slu
         {contents.map((item) => (
           <Card
             key={item.slug}
-            href={`/media/${item.slug}`}
+            href={mediaHref(item.slug)}
             kind={item.type}
             title={item.title}
             coverImage={item.coverImage}

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 // Force dev React build so `react.act` exists (React 19.2.x removed it from production).
-process.env.NODE_ENV = 'development';
+(process.env as any).NODE_ENV = 'development';
 
 export default defineConfig({
   plugins: [react()],

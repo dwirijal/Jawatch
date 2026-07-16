@@ -19,14 +19,15 @@ vi.mock('@/components/BookmarkButton', () => ({ BookmarkButton: () => <button ty
 vi.mock('@/lib/session', () => ({ getUserId: vi.fn(async () => null) }));
 
 vi.mock('@/lib/api', async () => {
-  const api = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
+  const actual = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
   return {
-    ...api,
+    ...actual,
     getMediaBySlug: vi.fn(),
     getEpisodePlayback: vi.fn(),
     getEpisodes: vi.fn(),
     getChapters: vi.fn(),
     getMediaRelated: vi.fn(),
+    useLocalApi: () => false,
   };
 });
 

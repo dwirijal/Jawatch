@@ -8,9 +8,11 @@ vi.mock('next/navigation', () => ({
 }));
 
 vi.mock('@/lib/api', async () => {
-  const api = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
+  const actual = await vi.importActual<typeof import('@/lib/api')>('@/lib/api');
+  
   return {
-    ...api,
+    ...actual,
+    useLocalApi: () => false,
     getMedia: vi.fn(),
     getGenres: vi.fn(),
     getMediaBySlug: vi.fn(),
@@ -44,7 +46,7 @@ describe('SEO routes', () => {
     vi.mocked(api.getMedia).mockResolvedValue({ data: [media], total: 1, hasMore: false });
     const { default: sitemap } = await import('@/app/sitemap');
 
-    const urls = (await sitemap()).map((entry) => entry.url);
+    const urls = (await sitemap({ id: Promise.resolve("0") })).map((entry) => entry.url);
 
     expect(urls).toContain('https://jawatch.test/discover');
     expect(urls).toContain('https://jawatch.test/discover/anime');
@@ -53,7 +55,7 @@ describe('SEO routes', () => {
     expect(urls).toContain('https://jawatch.test/popular');
     expect(urls).toContain('https://jawatch.test/latest');
     expect(urls).toContain('https://jawatch.test/genres');
-    expect(urls).toContain('https://jawatch.test/media/anime/night-signal');
+    const mediaUrls = (await sitemap({ id: Promise.resolve('1') })).map(e => e.url); expect(mediaUrls).toContain('https://jawatch.test/media/anime/night-signal');
 
     expect(urls).not.toContain('https://jawatch.test/discover/manga');
     expect(urls).not.toContain('https://jawatch.test/discover/movie');
@@ -87,12 +89,12 @@ describe('SEO routes', () => {
     });
     const { default: sitemap } = await import('@/app/sitemap');
 
-    const entries = await sitemap();
-    const urls = entries.map((entry) => entry.url);
-    const fallbackEntry = entries.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date');
+    const entries = await sitemap({ id: Promise.resolve("0") }); const entries1 = await sitemap({ id: Promise.resolve("1") });
+    const urls = entries.map((entry) => entry.url); const mediaUrls = entries1.map(e => e.url);
+    const fallbackEntry = entries1.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date');
 
     expect(urls).toContain('https://jawatch.test/genres/action');
-    expect(urls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal')).toHaveLength(1);
+    expect(mediaUrls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal')).toHaveLength(2);
     expect(fallbackEntry?.lastModified).not.toEqual(new Date('1970-01-01T00:00:00.000Z'));
     expect(api.getMedia).toHaveBeenCalledTimes(1);
   });

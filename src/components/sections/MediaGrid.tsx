@@ -1,17 +1,8 @@
 'use client';
 import { Card } from '@/components/ui';
 import type { Media } from '@/lib/api';
+import { mediaHref } from '@/lib/mediaHref';
 import { motion } from 'motion/react';
-
-// ─── client-safe mediaHref (no server-only api.ts dependency) ───
-function mediaHref(slug: string): string {
-  // Handle canonical "type/slug" refs from local DB
-  if (slug.includes('/')) {
-    const parts = slug.split('/');
-    if (parts.length === 2) return `/media/${parts[1]}?type=${parts[0]}`;
-  }
-  return `/media/${slug}`;
-}
 
 // ─── Stagger wrapper for media grids ───
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;

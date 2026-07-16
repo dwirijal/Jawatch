@@ -4,7 +4,8 @@ import { Badge, Strip } from '@/components/ui';
 import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 import { MediaJsonLd } from '@/components/seo/MediaJsonLd';
 import { buttonClasses } from '@/components/ui/Button';
-import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
+import * as localApiLib from '@/lib/localApi';
+import { getMediaBySlug, getChapters, getEpisodes, getMediaRelated, decodeMediaRef, buildCanonicalPath, useLocalApi } from '@/lib/api';
 import { Calendar, Star } from 'lucide-react';
 import Image from '@/components/ui/RefererImage';
 import Link from 'next/link';
@@ -27,18 +28,32 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string; slug: string }> }): Promise<Metadata> {
   const { type, slug } = await params;
-  const decodeSlug = `${type}/${slug}`;
+
+  // Use URL-friendly decoding explicitly
+  const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
+  const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
+
+  if (useLocalApi()) {
+    const data = await localApiLib.getMediaBySlug(decodeSlug);
+    if (!data) {
+      return {
+        title: { absolute: 'Media tidak ditemukan | jawatch' },
+        robots: { index: false, follow: false },
+      };
+    }
+  }
+
   const content = await getMediaBySlug(decodeSlug);
 
-  if (!content || !ref) {
+  if (!content) {
     return {
       title: { absolute: 'Media tidak ditemukan | jawatch' },
       robots: { index: false, follow: false },
     };
   }
 
-  const canonicalPath = buildCanonicalPath(ref);
+  const canonicalPath = ref ? buildCanonicalPath(ref) : `/media/${type}/${decodedStr}`;
   const title = `${content.title} | jawatch`;
   const description = content.synopsis || `Tonton dan baca ${content.title} di jawatch.`;
   const images = content.coverImage ? [{ url: content.coverImage }] : [];
@@ -65,15 +80,25 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
 
 export default async function MediaPage({ params }: { params: Promise<{ type: string; slug: string }> }) {
   const { type, slug } = await params;
-  const decodeSlug = `${type}/${slug}`;
+  
+  // Use URL-friendly decoding explicitly
+  const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
+  const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
 
+  if (useLocalApi()) {
+    const data = await localApiLib.getMediaBySlug(decodeSlug);
+    if (!data) {
+      notFound();
+    }
+  }
+
   const content = await getMediaBySlug(decodeSlug);
-  if (!content || !ref) {
+  if (!content) {
     notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
   }
 
-  const canonicalPath = buildCanonicalPath(ref);
+  const canonicalPath = ref ? buildCanonicalPath(ref) : `/media/${type}/${decodedStr}`;
   const year = content.createdAt ? new Date(content.createdAt).getUTCFullYear() : null;
   const isVideo = ['anime', 'donghua', 'movie'].includes(content.type);
   const items = isVideo ? await getEpisodes(decodeSlug) : await getChapters(decodeSlug);
