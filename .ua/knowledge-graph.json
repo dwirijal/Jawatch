@@ -1,0 +1,2998 @@
+{
+  "metadata": {
+    "name": "jawatch",
+    "language": "typescript",
+    "generatedAt": "2026-07-16T22:44:07.155584Z",
+    "totalNodes": 144,
+    "totalEdges": 242
+  },
+  "nodes": [
+    {
+      "id": "config:next-env",
+      "type": "type",
+      "name": "next-env.d.ts",
+      "path": "next-env.d.ts",
+      "description": "Next.js TypeScript environment declarations",
+      "tags": [
+        "config",
+        "types",
+        "next"
+      ]
+    },
+    {
+      "id": "config:tailwind",
+      "type": "util",
+      "name": "tailwind.config",
+      "path": "tailwind.config.ts",
+      "description": "Tailwind CSS configuration including custom tokens",
+      "tags": [
+        "config",
+        "styling"
+      ]
+    },
+    {
+      "id": "config:vitest",
+      "type": "util",
+      "name": "vitest.config",
+      "path": "vitest.config.ts",
+      "description": "Vitest test runner configuration",
+      "tags": [
+        "config",
+        "testing"
+      ]
+    },
+    {
+      "id": "config:vitest-setup",
+      "type": "util",
+      "name": "vitest.setup",
+      "path": "vitest.setup.ts",
+      "description": "Vitest global test setup file",
+      "tags": [
+        "config",
+        "testing"
+      ]
+    },
+    {
+      "id": "script:migrate",
+      "type": "util",
+      "name": "migrate",
+      "path": "scripts/migrate.ts",
+      "description": "Database migration script using pg pool",
+      "tags": [
+        "script",
+        "database",
+        "migration"
+      ]
+    },
+    {
+      "id": "layout:root",
+      "type": "layout",
+      "name": "RootLayout",
+      "path": "src/app/layout.tsx",
+      "description": "Root app layout: fonts, nav (SearchBar, MobileNav, BottomNav), analytics, ads, ToastProvider",
+      "tags": [
+        "layout",
+        "root",
+        "nav"
+      ]
+    },
+    {
+      "id": "page:home",
+      "type": "page",
+      "name": "HomePage",
+      "path": "src/app/page.tsx",
+      "description": "Home page with HeroSpotlight and ContinueRail for trending/recent media",
+      "tags": [
+        "page",
+        "home",
+        "trending"
+      ]
+    },
+    {
+      "id": "page:error",
+      "type": "page",
+      "name": "ErrorPage",
+      "path": "src/app/error.tsx",
+      "description": "Next.js error boundary page with EmptyState component",
+      "tags": [
+        "page",
+        "error"
+      ]
+    },
+    {
+      "id": "page:global-error",
+      "type": "page",
+      "name": "GlobalError",
+      "path": "src/app/global-error.tsx",
+      "description": "Global Next.js error boundary (client component)",
+      "tags": [
+        "page",
+        "error",
+        "global"
+      ]
+    },
+    {
+      "id": "page:not-found",
+      "type": "page",
+      "name": "NotFound",
+      "path": "src/app/not-found.tsx",
+      "description": "404 not-found page using EmptyState",
+      "tags": [
+        "page",
+        "404"
+      ]
+    },
+    {
+      "id": "page:template",
+      "type": "layout",
+      "name": "Template",
+      "path": "src/app/template.tsx",
+      "description": "App-level route template with Reveal motion animation",
+      "tags": [
+        "layout",
+        "animation"
+      ]
+    },
+    {
+      "id": "page:search",
+      "type": "page",
+      "name": "SearchPage",
+      "path": "src/app/search/page.tsx",
+      "description": "Search results page showing MediaGrid and RecentSearches",
+      "tags": [
+        "page",
+        "search"
+      ]
+    },
+    {
+      "id": "page:search-loading",
+      "type": "page",
+      "name": "SearchLoading",
+      "path": "src/app/search/loading.tsx",
+      "description": "Loading skeleton for search page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:discover",
+      "type": "page",
+      "name": "DiscoverPage",
+      "path": "src/app/discover/page.tsx",
+      "description": "Discover all media types listing page with MediaGrid",
+      "tags": [
+        "page",
+        "discover"
+      ]
+    },
+    {
+      "id": "page:discover-loading",
+      "type": "page",
+      "name": "DiscoverLoading",
+      "path": "src/app/discover/loading.tsx",
+      "description": "Loading skeleton for discover page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:discover-type",
+      "type": "page",
+      "name": "DiscoverTypePage",
+      "path": "src/app/discover/[type]/page.tsx",
+      "description": "Filtered discovery page for a specific media type (anime/manga/etc)",
+      "tags": [
+        "page",
+        "discover",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:discover-type-loading",
+      "type": "page",
+      "name": "DiscoverTypeLoading",
+      "path": "src/app/discover/[type]/loading.tsx",
+      "description": "Loading skeleton for discover-type page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:latest",
+      "type": "page",
+      "name": "LatestPage",
+      "path": "src/app/latest/page.tsx",
+      "description": "Latest released media page with SectionHeader and MediaGrid",
+      "tags": [
+        "page",
+        "latest"
+      ]
+    },
+    {
+      "id": "page:latest-loading",
+      "type": "page",
+      "name": "LatestLoading",
+      "path": "src/app/latest/loading.tsx",
+      "description": "Loading skeleton for latest page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:popular",
+      "type": "page",
+      "name": "PopularPage",
+      "path": "src/app/popular/page.tsx",
+      "description": "Popular media listing page",
+      "tags": [
+        "page",
+        "popular"
+      ]
+    },
+    {
+      "id": "page:popular-loading",
+      "type": "page",
+      "name": "PopularLoading",
+      "path": "src/app/popular/loading.tsx",
+      "description": "Loading skeleton for popular page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:trending",
+      "type": "page",
+      "name": "TrendingPage",
+      "path": "src/app/trending/page.tsx",
+      "description": "Trending media listing page with MediaGrid",
+      "tags": [
+        "page",
+        "trending"
+      ]
+    },
+    {
+      "id": "page:trending-loading",
+      "type": "page",
+      "name": "TrendingLoading",
+      "path": "src/app/trending/loading.tsx",
+      "description": "Loading skeleton for trending page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:genres",
+      "type": "page",
+      "name": "GenresPage",
+      "path": "src/app/genres/page.tsx",
+      "description": "Genre listing index page with SectionHeader",
+      "tags": [
+        "page",
+        "genres"
+      ]
+    },
+    {
+      "id": "page:genres-loading",
+      "type": "page",
+      "name": "GenresLoading",
+      "path": "src/app/genres/loading.tsx",
+      "description": "Loading skeleton for genres page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:genres-slug",
+      "type": "page",
+      "name": "GenreSlugPage",
+      "path": "src/app/genres/[slug]/page.tsx",
+      "description": "Media grid for a specific genre slug",
+      "tags": [
+        "page",
+        "genres",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:authors-slug",
+      "type": "page",
+      "name": "AuthorSlugPage",
+      "path": "src/app/authors/[slug]/page.tsx",
+      "description": "Author detail page showing related media",
+      "tags": [
+        "page",
+        "authors",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:authors-loading",
+      "type": "page",
+      "name": "AuthorSlugLoading",
+      "path": "src/app/authors/[slug]/loading.tsx",
+      "description": "Loading skeleton for author page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:studios-page",
+      "type": "page",
+      "name": "StudiosPage",
+      "path": "src/app/studios/page.tsx",
+      "description": "Studio listing index page",
+      "tags": [
+        "page",
+        "studios"
+      ]
+    },
+    {
+      "id": "page:studios-loading",
+      "type": "page",
+      "name": "StudiosLoading",
+      "path": "src/app/studios/loading.tsx",
+      "description": "Loading skeleton for studios page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:studios-slug",
+      "type": "page",
+      "name": "StudioSlugPage",
+      "path": "src/app/studios/[slug]/page.tsx",
+      "description": "Media listing for a specific studio",
+      "tags": [
+        "page",
+        "studios",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:media-detail",
+      "type": "page",
+      "name": "MediaDetailPage",
+      "path": "src/app/media/[type]/[slug]/page.tsx",
+      "description": "Media detail page: cover, info, DetailActions, ads, JSON-LD SEO",
+      "tags": [
+        "page",
+        "media",
+        "detail",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:media-loading",
+      "type": "page",
+      "name": "MediaLoading",
+      "path": "src/app/media/[type]/[slug]/loading.tsx",
+      "description": "Loading skeleton for media detail page",
+      "tags": [
+        "page",
+        "loading",
+        "skeleton"
+      ]
+    },
+    {
+      "id": "page:media-episode",
+      "type": "page",
+      "name": "EpisodePlayerPage",
+      "path": "src/app/media/[type]/[slug]/episodes/[episodeSlug]/page.tsx",
+      "description": "Episode watch page with VideoPlayer, SupportCTA, breadcrumbs",
+      "tags": [
+        "page",
+        "episode",
+        "player",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:media-chapter",
+      "type": "page",
+      "name": "ChapterReaderPage",
+      "path": "src/app/media/[type]/[slug]/chapters/[chapterSlug]/page.tsx",
+      "description": "Chapter reader page for manga/novel with MangaReader/NovelReader",
+      "tags": [
+        "page",
+        "chapter",
+        "reader",
+        "dynamic"
+      ]
+    },
+    {
+      "id": "page:login",
+      "type": "page",
+      "name": "LoginPage",
+      "path": "src/app/login/page.tsx",
+      "description": "User login form page",
+      "tags": [
+        "page",
+        "auth",
+        "login"
+      ]
+    },
+    {
+      "id": "page:register",
+      "type": "page",
+      "name": "RegisterPage",
+      "path": "src/app/register/page.tsx",
+      "description": "User registration form page (client component)",
+      "tags": [
+        "page",
+        "auth",
+        "register"
+      ]
+    },
+    {
+      "id": "page:profile",
+      "type": "page",
+      "name": "ProfilePage",
+      "path": "src/app/profile/page.tsx",
+      "description": "User profile page",
+      "tags": [
+        "page",
+        "profile",
+        "user"
+      ]
+    },
+    {
+      "id": "page:library",
+      "type": "page",
+      "name": "LibraryPage",
+      "path": "src/app/library/page.tsx",
+      "description": "Library hub page with SectionHeader",
+      "tags": [
+        "page",
+        "library"
+      ]
+    },
+    {
+      "id": "page:library-bookmarks",
+      "type": "page",
+      "name": "BookmarksPage",
+      "path": "src/app/library/bookmarks/page.tsx",
+      "description": "User bookmarks list page",
+      "tags": [
+        "page",
+        "library",
+        "bookmarks"
+      ]
+    },
+    {
+      "id": "page:library-history",
+      "type": "page",
+      "name": "HistoryPage",
+      "path": "src/app/library/history/page.tsx",
+      "description": "User watch/read history page",
+      "tags": [
+        "page",
+        "library",
+        "history"
+      ]
+    },
+    {
+      "id": "page:library-lists",
+      "type": "page",
+      "name": "ListsPage",
+      "path": "src/app/library/lists/page.tsx",
+      "description": "User custom media lists page",
+      "tags": [
+        "page",
+        "library",
+        "lists"
+      ]
+    },
+    {
+      "id": "page:library-reading-progress",
+      "type": "page",
+      "name": "ReadingProgressPage",
+      "path": "src/app/library/reading-progress/page.tsx",
+      "description": "User reading progress tracking page",
+      "tags": [
+        "page",
+        "library",
+        "progress",
+        "reading"
+      ]
+    },
+    {
+      "id": "page:library-watch-progress",
+      "type": "page",
+      "name": "WatchProgressPage",
+      "path": "src/app/library/watch-progress/page.tsx",
+      "description": "User watch progress tracking page",
+      "tags": [
+        "page",
+        "library",
+        "progress",
+        "watch"
+      ]
+    },
+    {
+      "id": "page:notifications",
+      "type": "page",
+      "name": "NotificationsPage",
+      "path": "src/app/notifications/page.tsx",
+      "description": "User notifications page with EmptyState",
+      "tags": [
+        "page",
+        "notifications"
+      ]
+    },
+    {
+      "id": "page:random",
+      "type": "page",
+      "name": "RandomPage",
+      "path": "src/app/random/page.tsx",
+      "description": "Random media redirect page",
+      "tags": [
+        "page",
+        "random"
+      ]
+    },
+    {
+      "id": "page:media-type-route",
+      "type": "api-route",
+      "name": "MediaTypeRoute",
+      "path": "src/app/media/[...type]/route.ts",
+      "description": "Catch-all route handler for legacy media type URLs",
+      "tags": [
+        "route",
+        "redirect",
+        "media"
+      ]
+    },
+    {
+      "id": "page:manifest",
+      "type": "util",
+      "name": "manifest",
+      "path": "src/app/manifest.ts",
+      "description": "Next.js web app manifest generator",
+      "tags": [
+        "pwa",
+        "manifest"
+      ]
+    },
+    {
+      "id": "page:robots",
+      "type": "util",
+      "name": "robots",
+      "path": "src/app/robots.ts",
+      "description": "Next.js robots.txt generator using siteUrl",
+      "tags": [
+        "seo",
+        "robots"
+      ]
+    },
+    {
+      "id": "page:sitemap",
+      "type": "util",
+      "name": "sitemap",
+      "path": "src/app/sitemap.ts",
+      "description": "Next.js sitemap generator using API data and siteUrl",
+      "tags": [
+        "seo",
+        "sitemap"
+      ]
+    },
+    {
+      "id": "page:sitemap-index",
+      "type": "api-route",
+      "name": "SitemapIndexRoute",
+      "path": "src/app/sitemap-index/route.ts",
+      "description": "Sitemap index route handler listing all sitemap chunks",
+      "tags": [
+        "seo",
+        "sitemap",
+        "route"
+      ]
+    },
+    {
+      "id": "api-route:auth-all",
+      "type": "api-route",
+      "name": "AuthAllRoute",
+      "path": "src/app/api/auth/[...all]/route.ts",
+      "description": "Better-auth catch-all handler for authentication endpoints",
+      "tags": [
+        "api",
+        "auth",
+        "better-auth"
+      ]
+    },
+    {
+      "id": "api-route:auth-sign-out",
+      "type": "api-route",
+      "name": "AuthSignOutRoute",
+      "path": "src/app/api/auth/sign-out/route.ts",
+      "description": "Sign-out API route using auth and site-url",
+      "tags": [
+        "api",
+        "auth",
+        "sign-out"
+      ]
+    },
+    {
+      "id": "api-route:health",
+      "type": "api-route",
+      "name": "HealthRoute",
+      "path": "src/app/api/health/route.ts",
+      "description": "Health check API endpoint",
+      "tags": [
+        "api",
+        "health",
+        "monitoring"
+      ]
+    },
+    {
+      "id": "api-route:media-chapter-pages",
+      "type": "api-route",
+      "name": "ChapterPagesRoute",
+      "path": "src/app/api/media/[slug]/chapters/[chapterSlug]/pages/route.ts",
+      "description": "Proxy API route: fetch manga chapter pages from Go backend",
+      "tags": [
+        "api",
+        "media",
+        "chapter",
+        "proxy"
+      ]
+    },
+    {
+      "id": "api-route:media-episode-server",
+      "type": "api-route",
+      "name": "EpisodeServerRoute",
+      "path": "src/app/api/media/[slug]/episodes/[episodeSlug]/server/[serverId]/route.ts",
+      "description": "Proxy API route: fetch episode server stream from Go backend",
+      "tags": [
+        "api",
+        "media",
+        "episode",
+        "server",
+        "proxy"
+      ]
+    },
+    {
+      "id": "api-route:media-episode-sources",
+      "type": "api-route",
+      "name": "EpisodeSourcesRoute",
+      "path": "src/app/api/media/[slug]/episodes/[episodeSlug]/sources/route.ts",
+      "description": "Proxy API route: fetch available episode sources from Go backend",
+      "tags": [
+        "api",
+        "media",
+        "episode",
+        "sources",
+        "proxy"
+      ]
+    },
+    {
+      "id": "api-route:user-library-state",
+      "type": "api-route",
+      "name": "LibraryStateRoute",
+      "path": "src/app/api/user/library-state/route.ts",
+      "description": "API route: get/update user library state (bookmarks, status) from session",
+      "tags": [
+        "api",
+        "user",
+        "library",
+        "session"
+      ]
+    },
+    {
+      "id": "api-route:user-progress",
+      "type": "api-route",
+      "name": "UserProgressRoute",
+      "path": "src/app/api/user/progress/route.ts",
+      "description": "API route: get/update user watch/read progress from session",
+      "tags": [
+        "api",
+        "user",
+        "progress",
+        "session"
+      ]
+    },
+    {
+      "id": "util:media-actions",
+      "type": "util",
+      "name": "actions",
+      "path": "src/app/media/[type]/[slug]/actions.ts",
+      "description": "Server actions for bookmarking and progress updates on media detail",
+      "tags": [
+        "server-action",
+        "bookmark",
+        "progress",
+        "media"
+      ]
+    },
+    {
+      "id": "component:ContentCard",
+      "type": "component",
+      "name": "ContentCard",
+      "path": "src/components/ContentCard.tsx",
+      "description": "Media content card with poster, title, rating using RefererImage",
+      "tags": [
+        "component",
+        "card",
+        "media",
+        "client"
+      ]
+    },
+    {
+      "id": "component:VideoPlayer",
+      "type": "component",
+      "name": "VideoPlayer",
+      "path": "src/components/VideoPlayer.tsx",
+      "description": "Client-side video player handling episode sources, mirrors, playback groups",
+      "tags": [
+        "component",
+        "video",
+        "player",
+        "client"
+      ]
+    },
+    {
+      "id": "component:MangaReader",
+      "type": "component",
+      "name": "MangaReader",
+      "path": "src/components/MangaReader.tsx",
+      "description": "Client-side manga/comic chapter reader with page navigation and ads",
+      "tags": [
+        "component",
+        "manga",
+        "reader",
+        "client"
+      ]
+    },
+    {
+      "id": "component:NovelReader",
+      "type": "component",
+      "name": "NovelReader",
+      "path": "src/components/NovelReader.tsx",
+      "description": "Novel chapter text reader component",
+      "tags": [
+        "component",
+        "novel",
+        "reader"
+      ]
+    },
+    {
+      "id": "component:BookmarkButton",
+      "type": "component",
+      "name": "BookmarkButton",
+      "path": "src/components/BookmarkButton.tsx",
+      "description": "Client bookmark toggle button using server actions and toast notifications",
+      "tags": [
+        "component",
+        "bookmark",
+        "button",
+        "client"
+      ]
+    },
+    {
+      "id": "component:DetailActions",
+      "type": "component",
+      "name": "DetailActions",
+      "path": "src/components/DetailActions.tsx",
+      "description": "Media detail action bar: BookmarkButton, library status, copy",
+      "tags": [
+        "component",
+        "detail",
+        "actions",
+        "client"
+      ]
+    },
+    {
+      "id": "component:ErrorBoundary",
+      "type": "component",
+      "name": "ErrorBoundary",
+      "path": "src/components/ErrorBoundary.tsx",
+      "description": "React error boundary class component",
+      "tags": [
+        "component",
+        "error",
+        "boundary",
+        "client"
+      ]
+    },
+    {
+      "id": "component:HeroSpotlight",
+      "type": "component",
+      "name": "HeroSpotlight",
+      "path": "src/components/sections/HeroSpotlight.tsx",
+      "description": "Full-bleed hero section with spotlight media, poster, parallax animation, CountUp stats",
+      "tags": [
+        "component",
+        "hero",
+        "spotlight",
+        "section"
+      ]
+    },
+    {
+      "id": "component:ContinueRail",
+      "type": "component",
+      "name": "ContinueRail",
+      "path": "src/components/sections/ContinueRail.tsx",
+      "description": "Horizontal scrollable rail showing continue watching/reading items",
+      "tags": [
+        "component",
+        "rail",
+        "continue",
+        "section",
+        "client"
+      ]
+    },
+    {
+      "id": "component:MediaGrid",
+      "type": "component",
+      "name": "MediaGrid",
+      "path": "src/components/sections/MediaGrid.tsx",
+      "description": "Responsive grid of media cards using Card component and mediaHref",
+      "tags": [
+        "component",
+        "grid",
+        "media",
+        "section",
+        "client"
+      ]
+    },
+    {
+      "id": "component:SearchBar",
+      "type": "component",
+      "name": "SearchBar",
+      "path": "src/components/sections/SearchBar.tsx",
+      "description": "Global search input bar (client component)",
+      "tags": [
+        "component",
+        "search",
+        "nav",
+        "client"
+      ]
+    },
+    {
+      "id": "component:BottomNav",
+      "type": "component",
+      "name": "BottomNav",
+      "path": "src/components/sections/BottomNav.tsx",
+      "description": "Bottom navigation bar for mobile with library/copy links",
+      "tags": [
+        "component",
+        "nav",
+        "mobile",
+        "client"
+      ]
+    },
+    {
+      "id": "component:MobileNav",
+      "type": "component",
+      "name": "MobileNav",
+      "path": "src/components/sections/MobileNav.tsx",
+      "description": "Mobile navigation using Disclosure component",
+      "tags": [
+        "component",
+        "nav",
+        "mobile",
+        "client"
+      ]
+    },
+    {
+      "id": "component:BackToTop",
+      "type": "component",
+      "name": "BackToTop",
+      "path": "src/components/sections/BackToTop.tsx",
+      "description": "Scroll-to-top floating button",
+      "tags": [
+        "component",
+        "navigation",
+        "client"
+      ]
+    },
+    {
+      "id": "component:SectionHeader",
+      "type": "component",
+      "name": "SectionHeader",
+      "path": "src/components/sections/SectionHeader.tsx",
+      "description": "Reusable section heading with title and optional link",
+      "tags": [
+        "component",
+        "header",
+        "section"
+      ]
+    },
+    {
+      "id": "component:EmptyState",
+      "type": "component",
+      "name": "EmptyState",
+      "path": "src/components/sections/EmptyState.tsx",
+      "description": "Empty/zero-state UI with icon, message, and optional Button",
+      "tags": [
+        "component",
+        "empty",
+        "state"
+      ]
+    },
+    {
+      "id": "component:ProgressList",
+      "type": "component",
+      "name": "ProgressList",
+      "path": "src/components/sections/ProgressList.tsx",
+      "description": "List of user watch/read progress items with remove button",
+      "tags": [
+        "component",
+        "progress",
+        "list",
+        "library"
+      ]
+    },
+    {
+      "id": "component:RecentSearches",
+      "type": "component",
+      "name": "RecentSearches",
+      "path": "src/components/sections/RecentSearches.tsx",
+      "description": "Client component displaying recent search history from localStorage",
+      "tags": [
+        "component",
+        "search",
+        "history",
+        "client"
+      ]
+    },
+    {
+      "id": "component:RemoveProgressButton",
+      "type": "component",
+      "name": "RemoveProgressButton",
+      "path": "src/components/sections/RemoveProgressButton.tsx",
+      "description": "Button to remove a progress entry using server actions",
+      "tags": [
+        "component",
+        "progress",
+        "button",
+        "client"
+      ]
+    },
+    {
+      "id": "component:SupportCTA",
+      "type": "component",
+      "name": "SupportCTA",
+      "path": "src/components/sections/SupportCTA.tsx",
+      "description": "Support/donation call-to-action section with CryptoDonate",
+      "tags": [
+        "component",
+        "support",
+        "cta",
+        "section"
+      ]
+    },
+    {
+      "id": "component:CryptoDonate",
+      "type": "component",
+      "name": "CryptoDonate",
+      "path": "src/components/sections/CryptoDonate.tsx",
+      "description": "Cryptocurrency donation widget using WALLETS config and toast",
+      "tags": [
+        "component",
+        "crypto",
+        "donate",
+        "client"
+      ]
+    },
+    {
+      "id": "component:Container",
+      "type": "component",
+      "name": "Container",
+      "path": "src/components/layout/Container.tsx",
+      "description": "Page layout container with responsive padding using design tokens",
+      "tags": [
+        "component",
+        "layout",
+        "container"
+      ]
+    },
+    {
+      "id": "component:Reveal",
+      "type": "component",
+      "name": "Reveal",
+      "path": "src/components/motion/Reveal.tsx",
+      "description": "Scroll-triggered reveal animation wrapper (client)",
+      "tags": [
+        "component",
+        "motion",
+        "animation",
+        "client"
+      ]
+    },
+    {
+      "id": "component:Parallax",
+      "type": "component",
+      "name": "Parallax",
+      "path": "src/components/motion/Parallax.tsx",
+      "description": "Parallax scroll effect wrapper (client)",
+      "tags": [
+        "component",
+        "motion",
+        "parallax",
+        "client"
+      ]
+    },
+    {
+      "id": "component:CountUp",
+      "type": "component",
+      "name": "CountUp",
+      "path": "src/components/motion/CountUp.tsx",
+      "description": "Animated number count-up display (client)",
+      "tags": [
+        "component",
+        "motion",
+        "animation",
+        "client"
+      ]
+    },
+    {
+      "id": "component:Stagger",
+      "type": "component",
+      "name": "Stagger",
+      "path": "src/components/motion/Stagger.tsx",
+      "description": "Staggered children animation wrapper (client)",
+      "tags": [
+        "component",
+        "motion",
+        "animation",
+        "client"
+      ]
+    },
+    {
+      "id": "component:GoogleAds",
+      "type": "component",
+      "name": "GoogleAds",
+      "path": "src/components/ads/GoogleAds.tsx",
+      "description": "Google AdSense script loader component",
+      "tags": [
+        "component",
+        "ads",
+        "google"
+      ]
+    },
+    {
+      "id": "component:SafeSlotIklan",
+      "type": "component",
+      "name": "SafeSlotIklan",
+      "path": "src/components/ads/SafeSlotIklan.tsx",
+      "description": "Safe ad slot with gambling domain blocklist filter",
+      "tags": [
+        "component",
+        "ads",
+        "safe",
+        "filter"
+      ]
+    },
+    {
+      "id": "component:SlotIklan",
+      "type": "component",
+      "name": "SlotIklan",
+      "path": "src/components/ads/SlotIklan.tsx",
+      "description": "Raw ad slot component (iklan = ad in Indonesian)",
+      "tags": [
+        "component",
+        "ads"
+      ]
+    },
+    {
+      "id": "util:gambling-blocklist",
+      "type": "util",
+      "name": "gambling-blocklist",
+      "path": "src/components/ads/gambling-blocklist.ts",
+      "description": "Blocklist of gambling ad domains for safe ad filtering",
+      "tags": [
+        "util",
+        "ads",
+        "blocklist"
+      ]
+    },
+    {
+      "id": "component:GoogleAnalytics",
+      "type": "component",
+      "name": "GoogleAnalytics",
+      "path": "src/components/analytics/GoogleAnalytics.tsx",
+      "description": "Google Analytics script loader (client component)",
+      "tags": [
+        "component",
+        "analytics",
+        "google",
+        "client"
+      ]
+    },
+    {
+      "id": "component:VercelAnalytics",
+      "type": "component",
+      "name": "VercelAnalytics",
+      "path": "src/components/analytics/VercelAnalytics.tsx",
+      "description": "Vercel Analytics integration component (client)",
+      "tags": [
+        "component",
+        "analytics",
+        "vercel",
+        "client"
+      ]
+    },
+    {
+      "id": "component:MediaJsonLd",
+      "type": "component",
+      "name": "MediaJsonLd",
+      "path": "src/components/seo/MediaJsonLd.tsx",
+      "description": "JSON-LD structured data for media detail pages",
+      "tags": [
+        "component",
+        "seo",
+        "json-ld",
+        "schema"
+      ]
+    },
+    {
+      "id": "component:BreadcrumbJsonLd",
+      "type": "component",
+      "name": "BreadcrumbJsonLd",
+      "path": "src/components/seo/BreadcrumbJsonLd.tsx",
+      "description": "JSON-LD breadcrumb structured data for episode/chapter pages",
+      "tags": [
+        "component",
+        "seo",
+        "json-ld",
+        "breadcrumb"
+      ]
+    },
+    {
+      "id": "component:Badge",
+      "type": "component",
+      "name": "Badge",
+      "path": "src/components/ui/Badge.tsx",
+      "description": "Small badge/label UI component",
+      "tags": [
+        "component",
+        "ui",
+        "badge"
+      ]
+    },
+    {
+      "id": "component:Button",
+      "type": "component",
+      "name": "Button",
+      "path": "src/components/ui/Button.tsx",
+      "description": "Button component with variant classes using cn utility",
+      "tags": [
+        "component",
+        "ui",
+        "button"
+      ]
+    },
+    {
+      "id": "component:Card",
+      "type": "component",
+      "name": "Card",
+      "path": "src/components/ui/Card.tsx",
+      "description": "Media card with image using RefererImage (client)",
+      "tags": [
+        "component",
+        "ui",
+        "card",
+        "client"
+      ]
+    },
+    {
+      "id": "component:Chip",
+      "type": "component",
+      "name": "Chip",
+      "path": "src/components/ui/Chip.tsx",
+      "description": "Chip/tag UI element using design tokens",
+      "tags": [
+        "component",
+        "ui",
+        "chip"
+      ]
+    },
+    {
+      "id": "component:Disclosure",
+      "type": "component",
+      "name": "Disclosure",
+      "path": "src/components/ui/Disclosure.tsx",
+      "description": "Accessible expand/collapse disclosure component",
+      "tags": [
+        "component",
+        "ui",
+        "disclosure",
+        "accordion"
+      ]
+    },
+    {
+      "id": "component:Field",
+      "type": "component",
+      "name": "Field",
+      "path": "src/components/ui/Field.tsx",
+      "description": "Form field input component",
+      "tags": [
+        "component",
+        "ui",
+        "form",
+        "field"
+      ]
+    },
+    {
+      "id": "component:Gauge",
+      "type": "component",
+      "name": "Gauge",
+      "path": "src/components/ui/Gauge.tsx",
+      "description": "Circular gauge/score display component",
+      "tags": [
+        "component",
+        "ui",
+        "gauge",
+        "score"
+      ]
+    },
+    {
+      "id": "component:Pager",
+      "type": "component",
+      "name": "Pager",
+      "path": "src/components/ui/Pager.tsx",
+      "description": "Pagination control component",
+      "tags": [
+        "component",
+        "ui",
+        "pagination"
+      ]
+    },
+    {
+      "id": "component:RefererImage",
+      "type": "component",
+      "name": "RefererImage",
+      "path": "src/components/ui/RefererImage.tsx",
+      "description": "Next.js Image wrapper that strips Referer header for external images",
+      "tags": [
+        "component",
+        "ui",
+        "image",
+        "referer"
+      ]
+    },
+    {
+      "id": "component:Skeleton",
+      "type": "component",
+      "name": "Skeleton",
+      "path": "src/components/ui/Skeleton.tsx",
+      "description": "Loading skeleton placeholder components (Skeleton, SkeletonCard)",
+      "tags": [
+        "component",
+        "ui",
+        "skeleton",
+        "loading"
+      ]
+    },
+    {
+      "id": "component:SkeletonGrid",
+      "type": "component",
+      "name": "SkeletonGrid",
+      "path": "src/components/ui/SkeletonGrid.tsx",
+      "description": "Grid of skeleton cards for loading states",
+      "tags": [
+        "component",
+        "ui",
+        "skeleton",
+        "grid",
+        "loading"
+      ]
+    },
+    {
+      "id": "component:Spinner",
+      "type": "component",
+      "name": "Spinner",
+      "path": "src/components/ui/Spinner.tsx",
+      "description": "Loading spinner component",
+      "tags": [
+        "component",
+        "ui",
+        "spinner",
+        "loading"
+      ]
+    },
+    {
+      "id": "component:Strip",
+      "type": "component",
+      "name": "Strip",
+      "path": "src/components/ui/Strip.tsx",
+      "description": "Horizontal strip/banner UI component",
+      "tags": [
+        "component",
+        "ui",
+        "strip"
+      ]
+    },
+    {
+      "id": "component:Tabs",
+      "type": "component",
+      "name": "Tabs",
+      "path": "src/components/ui/Tabs.tsx",
+      "description": "Tab navigation component (client)",
+      "tags": [
+        "component",
+        "ui",
+        "tabs",
+        "client"
+      ]
+    },
+    {
+      "id": "component:Toast",
+      "type": "component",
+      "name": "Toast",
+      "path": "src/components/ui/Toast.tsx",
+      "description": "Toast notification display component",
+      "tags": [
+        "component",
+        "ui",
+        "toast"
+      ]
+    },
+    {
+      "id": "component:ToastProvider",
+      "type": "component",
+      "name": "ToastProvider",
+      "path": "src/components/ui/ToastProvider.tsx",
+      "description": "Toast context provider and useToast hook",
+      "tags": [
+        "component",
+        "ui",
+        "toast",
+        "context",
+        "client"
+      ]
+    },
+    {
+      "id": "util:ui-index",
+      "type": "util",
+      "name": "ui/index",
+      "path": "src/components/ui/index.ts",
+      "description": "Barrel export for all UI components",
+      "tags": [
+        "util",
+        "ui",
+        "barrel",
+        "exports"
+      ]
+    },
+    {
+      "id": "util:tokens",
+      "type": "util",
+      "name": "tokens",
+      "path": "src/components/ui/tokens.ts",
+      "description": "Design token constants: space, radius, text, shadow, motion scales",
+      "tags": [
+        "util",
+        "ui",
+        "tokens",
+        "design-system"
+      ]
+    },
+    {
+      "id": "hook:useToast",
+      "type": "hook",
+      "name": "useToast",
+      "path": "src/components/ui/ToastProvider.tsx",
+      "description": "React hook for triggering toast notifications from ToastProvider context",
+      "tags": [
+        "hook",
+        "toast",
+        "context"
+      ]
+    },
+    {
+      "id": "hook:useLocalApi",
+      "type": "hook",
+      "name": "useLocalApi",
+      "path": "src/lib/api.ts",
+      "description": "Hook/util to check if local Go API is enabled via env flag",
+      "tags": [
+        "hook",
+        "api",
+        "feature-flag"
+      ]
+    },
+    {
+      "id": "lib:api",
+      "type": "util",
+      "name": "api",
+      "path": "src/lib/api.ts",
+      "description": "Core API client: media types, fetch helpers, buildMediaLink, encodeMediaRef, mapGenres",
+      "tags": [
+        "lib",
+        "api",
+        "media",
+        "fetch",
+        "types"
+      ]
+    },
+    {
+      "id": "lib:auth",
+      "type": "util",
+      "name": "auth",
+      "path": "src/lib/auth.ts",
+      "description": "Better-auth setup: Google OAuth, pg adapter, Valkey session cache",
+      "tags": [
+        "lib",
+        "auth",
+        "oauth",
+        "better-auth"
+      ]
+    },
+    {
+      "id": "lib:blob",
+      "type": "util",
+      "name": "blob",
+      "path": "src/lib/blob.ts",
+      "description": "Blob/file storage utility (Vercel Blob or compatible)",
+      "tags": [
+        "lib",
+        "storage",
+        "blob"
+      ]
+    },
+    {
+      "id": "lib:cache",
+      "type": "util",
+      "name": "cache",
+      "path": "src/lib/cache.ts",
+      "description": "Valkey/Redis cache client: getValkey, valkeyEnabled flag",
+      "tags": [
+        "lib",
+        "cache",
+        "valkey",
+        "redis"
+      ]
+    },
+    {
+      "id": "lib:client-media",
+      "type": "util",
+      "name": "client-media",
+      "path": "src/lib/client-media.ts",
+      "description": "Client-side fetch helpers for episode playback and chapter pages via local API",
+      "tags": [
+        "lib",
+        "client",
+        "media",
+        "fetch"
+      ]
+    },
+    {
+      "id": "lib:cn",
+      "type": "util",
+      "name": "cn",
+      "path": "src/lib/cn.ts",
+      "description": "clsx/tailwind-merge utility for conditional class names",
+      "tags": [
+        "lib",
+        "util",
+        "classnames",
+        "tailwind"
+      ]
+    },
+    {
+      "id": "lib:copy",
+      "type": "util",
+      "name": "copy",
+      "path": "src/lib/copy.ts",
+      "description": "Centralised UI copy strings (COPY constant)",
+      "tags": [
+        "lib",
+        "util",
+        "i18n",
+        "copy",
+        "strings"
+      ]
+    },
+    {
+      "id": "lib:db",
+      "type": "util",
+      "name": "db",
+      "path": "src/lib/db.ts",
+      "description": "PostgreSQL pool connection via pg",
+      "tags": [
+        "lib",
+        "database",
+        "postgres",
+        "pg"
+      ]
+    },
+    {
+      "id": "lib:library",
+      "type": "util",
+      "name": "library",
+      "path": "src/lib/library.ts",
+      "description": "Library persistence layer: bookmark and progress CRUD via pg pool",
+      "tags": [
+        "lib",
+        "library",
+        "database",
+        "bookmark",
+        "progress"
+      ]
+    },
+    {
+      "id": "lib:localApi",
+      "type": "util",
+      "name": "localApi",
+      "path": "src/lib/localApi.ts",
+      "description": "Local Go API client toggled by JAWATCH_USE_LOCAL_API env var",
+      "tags": [
+        "lib",
+        "api",
+        "local",
+        "go-backend"
+      ]
+    },
+    {
+      "id": "lib:mediaHref",
+      "type": "util",
+      "name": "mediaHref",
+      "path": "src/lib/mediaHref.ts",
+      "description": "Media URL builder: decodeMediaRefSlug, mediaHref for routing",
+      "tags": [
+        "lib",
+        "util",
+        "routing",
+        "url"
+      ]
+    },
+    {
+      "id": "lib:playback-groups",
+      "type": "util",
+      "name": "playback-groups",
+      "path": "src/lib/playback-groups.ts",
+      "description": "Group episode mirrors by provider and downloads by resolution",
+      "tags": [
+        "lib",
+        "util",
+        "playback",
+        "mirrors",
+        "episodes"
+      ]
+    },
+    {
+      "id": "lib:session",
+      "type": "util",
+      "name": "session",
+      "path": "src/lib/session.ts",
+      "description": "Resolve current user ID from better-auth session headers",
+      "tags": [
+        "lib",
+        "session",
+        "auth",
+        "user"
+      ]
+    },
+    {
+      "id": "lib:site-url",
+      "type": "util",
+      "name": "site-url",
+      "path": "src/lib/site-url.ts",
+      "description": "Canonical site URL constant from environment",
+      "tags": [
+        "lib",
+        "util",
+        "seo",
+        "url"
+      ]
+    },
+    {
+      "id": "lib:wallets",
+      "type": "util",
+      "name": "wallets",
+      "path": "src/lib/wallets.ts",
+      "description": "Crypto wallet addresses and Saweria donation URLs",
+      "tags": [
+        "lib",
+        "util",
+        "crypto",
+        "donate",
+        "wallets"
+      ]
+    },
+    {
+      "id": "test:api",
+      "type": "util",
+      "name": "api.test",
+      "path": "src/__tests__/api.test.ts",
+      "description": "Unit tests for api.ts media helpers",
+      "tags": [
+        "test",
+        "api"
+      ]
+    },
+    {
+      "id": "test:ContentCard",
+      "type": "util",
+      "name": "ContentCard.test",
+      "path": "src/__tests__/ContentCard.test.tsx",
+      "description": "Unit tests for ContentCard component",
+      "tags": [
+        "test",
+        "component",
+        "ContentCard"
+      ]
+    },
+    {
+      "id": "test:library",
+      "type": "util",
+      "name": "library.test",
+      "path": "src/__tests__/library.test.ts",
+      "description": "Unit tests for library.ts persistence helpers",
+      "tags": [
+        "test",
+        "library"
+      ]
+    },
+    {
+      "id": "test:playback-groups",
+      "type": "util",
+      "name": "playback-groups.test",
+      "path": "src/__tests__/playback-groups.test.ts",
+      "description": "Unit tests for playback-groups grouping utilities",
+      "tags": [
+        "test",
+        "playback"
+      ]
+    },
+    {
+      "id": "test:routing",
+      "type": "util",
+      "name": "routing.test",
+      "path": "src/__tests__/routing.test.ts",
+      "description": "Unit tests for media URL routing helpers",
+      "tags": [
+        "test",
+        "routing",
+        "api"
+      ]
+    },
+    {
+      "id": "test:seo",
+      "type": "util",
+      "name": "seo.test",
+      "path": "src/__tests__/seo.test.ts",
+      "description": "Unit tests for SEO metadata generation",
+      "tags": [
+        "test",
+        "seo"
+      ]
+    },
+    {
+      "id": "test:ui-components",
+      "type": "util",
+      "name": "ui-components.test",
+      "path": "src/__tests__/ui-components.test.tsx",
+      "description": "Unit tests for UI section components",
+      "tags": [
+        "test",
+        "ui",
+        "components"
+      ]
+    },
+    {
+      "id": "test:VideoPlayer",
+      "type": "util",
+      "name": "VideoPlayer.test",
+      "path": "src/__tests__/VideoPlayer.test.tsx",
+      "description": "Unit tests for VideoPlayer component",
+      "tags": [
+        "test",
+        "VideoPlayer"
+      ]
+    },
+    {
+      "id": "test:wallets",
+      "type": "util",
+      "name": "wallets.test",
+      "path": "src/__tests__/wallets.test.ts",
+      "description": "Unit tests for wallets utility",
+      "tags": [
+        "test",
+        "wallets"
+      ]
+    },
+    {
+      "id": "test:watch-room-pages",
+      "type": "util",
+      "name": "watch-room-pages.test",
+      "path": "src/__tests__/watch-room-pages.test.tsx",
+      "description": "Integration tests for watch room page flows",
+      "tags": [
+        "test",
+        "watch",
+        "pages"
+      ]
+    },
+    {
+      "id": "test:MangaReader",
+      "type": "util",
+      "name": "MangaReader.test",
+      "path": "src/components/MangaReader.test.tsx",
+      "description": "Unit tests for MangaReader component",
+      "tags": [
+        "test",
+        "MangaReader"
+      ]
+    },
+    {
+      "id": "test:SafeSlotIklan",
+      "type": "util",
+      "name": "SafeSlotIklan.test",
+      "path": "src/components/ads/SafeSlotIklan.test.tsx",
+      "description": "Unit tests for SafeSlotIklan ad filtering",
+      "tags": [
+        "test",
+        "ads",
+        "SafeSlotIklan"
+      ]
+    },
+    {
+      "id": "test:ProgressList",
+      "type": "util",
+      "name": "ProgressList.test",
+      "path": "src/components/sections/ProgressList.test.tsx",
+      "description": "Unit tests for ProgressList component",
+      "tags": [
+        "test",
+        "progress",
+        "ProgressList"
+      ]
+    },
+    {
+      "id": "test:RecentSearches",
+      "type": "util",
+      "name": "RecentSearches.test",
+      "path": "src/components/sections/RecentSearches.test.tsx",
+      "description": "Unit tests for RecentSearches component",
+      "tags": [
+        "test",
+        "search",
+        "RecentSearches"
+      ]
+    },
+    {
+      "id": "test:RemoveProgressButton",
+      "type": "util",
+      "name": "RemoveProgressButton.test",
+      "path": "src/components/sections/RemoveProgressButton.test.tsx",
+      "description": "Unit tests for RemoveProgressButton component",
+      "tags": [
+        "test",
+        "progress",
+        "button"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "script:migrate",
+      "target": "lib:db",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:auth-all",
+      "target": "lib:auth",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:auth-sign-out",
+      "target": "lib:auth",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:auth-sign-out",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:media-chapter-pages",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:media-episode-server",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:media-episode-sources",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:user-library-state",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:user-library-state",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:user-progress",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "api-route:user-progress",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:home",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:search",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:discover",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:latest",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:popular",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:trending",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "page:genres",
+      "target": "layout:root",
+      "type": "contains"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:SearchBar",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:MobileNav",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:BottomNav",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:BackToTop",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:GoogleAnalytics",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:VercelAnalytics",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:GoogleAds",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "component:ToastProvider",
+      "type": "imports"
+    },
+    {
+      "source": "layout:root",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "page:home",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:home",
+      "target": "component:HeroSpotlight",
+      "type": "imports"
+    },
+    {
+      "source": "page:home",
+      "target": "component:ContinueRail",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "component:RecentSearches",
+      "type": "imports"
+    },
+    {
+      "source": "page:search",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover-type",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover-type",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:discover-type",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:latest",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:latest",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:latest",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:latest",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:popular",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:popular",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:popular",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:popular",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:trending",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:trending",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:trending",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:trending",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres-slug",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres-slug",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres-slug",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:genres-slug",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:authors-slug",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:authors-slug",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:authors-slug",
+      "target": "lib:mediaHref",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-page",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-page",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-page",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-slug",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-slug",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:studios-slug",
+      "target": "lib:mediaHref",
+      "type": "imports"
+    },
+    {
+      "source": "page:library",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-bookmarks",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-history",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-history",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-history",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-history",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-history",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-lists",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-lists",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-reading-progress",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-reading-progress",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-reading-progress",
+      "target": "component:ProgressList",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-reading-progress",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-reading-progress",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-watch-progress",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-watch-progress",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-watch-progress",
+      "target": "component:ProgressList",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-watch-progress",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:library-watch-progress",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:register",
+      "target": "component:Field",
+      "type": "imports"
+    },
+    {
+      "source": "page:register",
+      "target": "component:Button",
+      "type": "imports"
+    },
+    {
+      "source": "page:notifications",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:notifications",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:error",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:error",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:error",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "page:not-found",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:not-found",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:not-found",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "page:template",
+      "target": "component:Reveal",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "lib:localApi",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:SafeSlotIklan",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:MediaJsonLd",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:Button",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:DetailActions",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:Reveal",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-detail",
+      "target": "component:CountUp",
+      "type": "imports"
+    },
+    {
+      "source": "util:media-actions",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "util:media-actions",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:Container",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:VideoPlayer",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:SupportCTA",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:BreadcrumbJsonLd",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-episode",
+      "target": "component:Reveal",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:MangaReader",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:NovelReader",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:SupportCTA",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:BreadcrumbJsonLd",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "lib:session",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "page:media-chapter",
+      "target": "component:Reveal",
+      "type": "imports"
+    },
+    {
+      "source": "page:sitemap",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "page:sitemap",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "page:sitemap-index",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "page:robots",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContentCard",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContentCard",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "lib:client-media",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "lib:playback-groups",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "component:Spinner",
+      "type": "imports"
+    },
+    {
+      "source": "component:VideoPlayer",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "lib:client-media",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "component:Spinner",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "component:SafeSlotIklan",
+      "type": "imports"
+    },
+    {
+      "source": "component:MangaReader",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:NovelReader",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:BookmarkButton",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "component:BookmarkButton",
+      "target": "component:ToastProvider",
+      "type": "imports"
+    },
+    {
+      "source": "component:BookmarkButton",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "component:BookmarkButton",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:DetailActions",
+      "target": "component:BookmarkButton",
+      "type": "imports"
+    },
+    {
+      "source": "component:DetailActions",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "component:DetailActions",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:Container",
+      "target": "util:tokens",
+      "type": "imports"
+    },
+    {
+      "source": "component:HeroSpotlight",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "component:HeroSpotlight",
+      "target": "component:Parallax",
+      "type": "imports"
+    },
+    {
+      "source": "component:HeroSpotlight",
+      "target": "component:CountUp",
+      "type": "imports"
+    },
+    {
+      "source": "component:HeroSpotlight",
+      "target": "component:Button",
+      "type": "imports"
+    },
+    {
+      "source": "component:HeroSpotlight",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContinueRail",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContinueRail",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContinueRail",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContinueRail",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:ContinueRail",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaGrid",
+      "target": "component:Card",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaGrid",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaGrid",
+      "target": "lib:mediaHref",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaGrid",
+      "target": "util:ui-index",
+      "type": "imports"
+    },
+    {
+      "source": "component:ProgressList",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:ProgressList",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "component:ProgressList",
+      "target": "component:RemoveProgressButton",
+      "type": "imports"
+    },
+    {
+      "source": "component:RemoveProgressButton",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "component:RemoveProgressButton",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:RecentSearches",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:SupportCTA",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:SupportCTA",
+      "target": "component:CryptoDonate",
+      "type": "imports"
+    },
+    {
+      "source": "component:SupportCTA",
+      "target": "lib:wallets",
+      "type": "imports"
+    },
+    {
+      "source": "component:CryptoDonate",
+      "target": "lib:wallets",
+      "type": "imports"
+    },
+    {
+      "source": "component:CryptoDonate",
+      "target": "component:ToastProvider",
+      "type": "imports"
+    },
+    {
+      "source": "component:CryptoDonate",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:MobileNav",
+      "target": "component:Disclosure",
+      "type": "imports"
+    },
+    {
+      "source": "component:BottomNav",
+      "target": "lib:copy",
+      "type": "imports"
+    },
+    {
+      "source": "component:EmptyState",
+      "target": "component:Button",
+      "type": "imports"
+    },
+    {
+      "source": "component:SafeSlotIklan",
+      "target": "util:gambling-blocklist",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaJsonLd",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:MediaJsonLd",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "component:BreadcrumbJsonLd",
+      "target": "lib:site-url",
+      "type": "imports"
+    },
+    {
+      "source": "component:Button",
+      "target": "lib:cn",
+      "type": "imports"
+    },
+    {
+      "source": "component:Card",
+      "target": "component:RefererImage",
+      "type": "imports"
+    },
+    {
+      "source": "component:Chip",
+      "target": "util:tokens",
+      "type": "imports"
+    },
+    {
+      "source": "component:SkeletonGrid",
+      "target": "component:Skeleton",
+      "type": "imports"
+    },
+    {
+      "source": "lib:api",
+      "target": "lib:localApi",
+      "type": "imports"
+    },
+    {
+      "source": "lib:auth",
+      "target": "lib:db",
+      "type": "imports"
+    },
+    {
+      "source": "lib:auth",
+      "target": "lib:cache",
+      "type": "imports"
+    },
+    {
+      "source": "lib:library",
+      "target": "lib:db",
+      "type": "imports"
+    },
+    {
+      "source": "lib:localApi",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "lib:playback-groups",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "lib:session",
+      "target": "lib:auth",
+      "type": "imports"
+    },
+    {
+      "source": "lib:client-media",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "component:ToastProvider",
+      "target": "hook:useToast",
+      "type": "defines"
+    },
+    {
+      "source": "lib:api",
+      "target": "hook:useLocalApi",
+      "type": "defines"
+    },
+    {
+      "source": "test:ContentCard",
+      "target": "component:ContentCard",
+      "type": "imports"
+    },
+    {
+      "source": "test:MangaReader",
+      "target": "component:MangaReader",
+      "type": "imports"
+    },
+    {
+      "source": "test:MangaReader",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "test:playback-groups",
+      "target": "lib:playback-groups",
+      "type": "imports"
+    },
+    {
+      "source": "test:routing",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "test:ui-components",
+      "target": "component:EmptyState",
+      "type": "imports"
+    },
+    {
+      "source": "test:ui-components",
+      "target": "component:MediaGrid",
+      "type": "imports"
+    },
+    {
+      "source": "test:ui-components",
+      "target": "component:SectionHeader",
+      "type": "imports"
+    },
+    {
+      "source": "test:ui-components",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "test:VideoPlayer",
+      "target": "component:VideoPlayer",
+      "type": "imports"
+    },
+    {
+      "source": "test:VideoPlayer",
+      "target": "lib:client-media",
+      "type": "imports"
+    },
+    {
+      "source": "test:VideoPlayer",
+      "target": "lib:api",
+      "type": "imports"
+    },
+    {
+      "source": "test:SafeSlotIklan",
+      "target": "component:SafeSlotIklan",
+      "type": "imports"
+    },
+    {
+      "source": "test:ProgressList",
+      "target": "component:ProgressList",
+      "type": "imports"
+    },
+    {
+      "source": "test:ProgressList",
+      "target": "lib:library",
+      "type": "imports"
+    },
+    {
+      "source": "test:ProgressList",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "test:RecentSearches",
+      "target": "component:RecentSearches",
+      "type": "imports"
+    },
+    {
+      "source": "test:RemoveProgressButton",
+      "target": "component:RemoveProgressButton",
+      "type": "imports"
+    },
+    {
+      "source": "test:RemoveProgressButton",
+      "target": "util:media-actions",
+      "type": "imports"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Badge",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Button",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Card",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Chip",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Disclosure",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Skeleton",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:SkeletonGrid",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Spinner",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Tabs",
+      "type": "contains"
+    },
+    {
+      "source": "util:ui-index",
+      "target": "component:Toast",
+      "type": "contains"
+    }
+  ]
+}

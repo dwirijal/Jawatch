@@ -283,6 +283,18 @@ export function buildMediaLink(ref: MediaRef): string {
 }
 
 export function decodeMediaRef(value: string): MediaRef | null {
+  // Semicolon format from local API: "comic;mangasusuku;some-slug"
+  if (!value.includes('/') && !value.startsWith('m~') && value.includes(';')) {
+    const parts = value.split(';');
+    if (parts.length >= 3) {
+      const type = toMediaType(parts[0]);
+      const provider = parts[1];
+      const slug = endpointSlug(parts.slice(2).join(';'));
+      if (type && provider && slug) return { type, provider, slug };
+    }
+    return null;
+  }
+
   const canonicalParts = value.split('/');
   if (canonicalParts.length === 2) {
     const type = toMediaType(canonicalParts[0]);

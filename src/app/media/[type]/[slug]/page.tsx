@@ -34,17 +34,9 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
 
-  if (useLocalApi()) {
-    const data = await localApiLib.getMediaBySlug(decodeSlug);
-    if (!data) {
-      return {
-        title: { absolute: 'Media tidak ditemukan | jawatch' },
-        robots: { index: false, follow: false },
-      };
-    }
-  }
-
-  const content = await getMediaBySlug(decodeSlug);
+  const content = useLocalApi()
+    ? await localApiLib.getMediaBySlug(decodeSlug)
+    : await getMediaBySlug(decodeSlug);
 
   if (!content) {
     return {
