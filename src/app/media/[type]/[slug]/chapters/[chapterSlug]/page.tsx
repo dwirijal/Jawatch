@@ -20,10 +20,10 @@ export default async function ChapterPage({ params }: { params: Promise<{ type: 
   const { type, slug, chapterSlug } = await params;
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
-  // localApi expects "type;provider;upstream" semicolon format
-  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
-    ? decodeURIComponent(slug)
-    : `${type};${decodeURIComponent(slug)}`;
+  // localApi expects "type;provider;upstream" semicolon format.
+  // URL path: /media/[type]/[slug] → slug param = "provider;upstream", type is separate.
+  // Always reconstruct as "type;decoded(slug)".
+  const localSlug = `${type};${decodeURIComponent(slug)}`;
   const isNovel = type === 'novel';
   const [pages, novel, content, chapters] = await Promise.all([
     isNovel ? Promise.resolve([]) : (useLocalApi() ? localApiLib.getChapterPages(localSlug, chapterSlug) : getChapterPages(decodeSlug, chapterSlug)),

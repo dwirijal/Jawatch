@@ -21,10 +21,10 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
   // slug from URL is semicolon-encoded — decode and reconstruct full ref
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
-  // localApi expects "type;provider;upstream" semicolon format
-  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
-    ? decodeURIComponent(slug)
-    : `${type};${decodeURIComponent(slug)}`;
+  // localApi expects "type;provider;upstream" semicolon format.
+  // URL path: /media/[type]/[slug] → slug param = "provider;upstream", type is separate.
+  // Always reconstruct as "type;decoded(slug)".
+  const localSlug = `${type};${decodeURIComponent(slug)}`;
 
   const [content, episodeResult, playback] = await Promise.all([
     useLocalApi()

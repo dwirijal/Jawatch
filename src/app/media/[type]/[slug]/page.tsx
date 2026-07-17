@@ -33,10 +33,10 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
-  // localApi expects "type;provider;upstream" semicolon format
-  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
-    ? decodeURIComponent(slug)
-    : `${type};${decodeURIComponent(slug)}`;
+  // localApi expects "type;provider;upstream" semicolon format.
+  // URL path: /media/[type]/[slug] → slug param = "provider;upstream", type is separate.
+  // Always reconstruct as "type;decoded(slug)".
+  const localSlug = `${type};${decodeURIComponent(slug)}`;
 
   const content = useLocalApi()
     ? await localApiLib.getMediaBySlug(localSlug)
@@ -81,10 +81,10 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
-  // localApi expects "type;provider;upstream" semicolon format
-  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
-    ? decodeURIComponent(slug)
-    : `${type};${decodeURIComponent(slug)}`;
+  // localApi expects "type;provider;upstream" semicolon format.
+  // URL path: /media/[type]/[slug] → slug param = "provider;upstream", type is separate.
+  // Always reconstruct as "type;decoded(slug)".
+  const localSlug = `${type};${decodeURIComponent(slug)}`;
 
   if (useLocalApi()) {
     const data = await localApiLib.getMediaBySlug(localSlug);
