@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/layout/Container';
-import { getMediaBySlug, getEpisodePlayback, getEpisodes } from '@/lib/api';
+import { getMediaBySlug, getEpisodePlayback, getEpisodes, useLocalApi } from '@/lib/api';
+import * as localApiLib from '@/lib/localApi';
 import { VideoPlayer } from '@/components/VideoPlayer';
 import { EmptyState } from '@/components/sections/EmptyState';
 import { SupportCTA } from '@/components/sections/SupportCTA';
@@ -17,13 +18,27 @@ export const metadata: Metadata = {
 
 export default async function EpisodePage({ params }: { params: Promise<{ type: string; slug: string; episodeSlug: string }> }) {
   const { type, slug, episodeSlug } = await params;
-  const decodeSlug = `${type}/${slug}`;
+  // slug from URL is semicolon-encoded — decode and reconstruct full ref
+  const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
+  const decodeSlug = `${type}/${decodedStr}`;
+
   const [content, episodeResult, playback] = await Promise.all([
-    getMediaBySlug(decodeSlug),
-    getEpisodes(decodeSlug)
-      .then((items) => ({ items, failed: false }))
-      .catch(() => ({ items: [], failed: true })),
-    getEpisodePlayback(decodeSlug, episodeSlug).catch(() => ({ sources: [], mirrors: [], downloads: [] })),
+    useLocalApi()
+      ? localApiLib.getMediaBySlug(decodeSlug)
+      : getMediaBySlug(decodeSlug),
+    useLocalApi()
+      ? localApiLib.getEpisodes(decodeSlug)
+          .then((items) => ({ items, failed: false }))
+          .catch(() => ({ items: [], failed: true }))
+      : getEpisodes(decodeSlug)
+          .then((items) => ({ items, failed: false }))
+          .catch(() => ({ items: [], failed: true })),
+    useLocalApi()
+      ? localApiLib.getEpisodeSources(decodeSlug, episodeSlug)
+          .then((sources) => ({ sources, mirrors: [], downloads: [] }))
+          .catch(() => ({ sources: [], mirrors: [], downloads: [] }))
+      : getEpisodePlayback(decodeSlug, episodeSlug)
+          .catch(() => ({ sources: [], mirrors: [], downloads: [] })),
   ]);
 
   if (!content || playback.sources.length === 0) {
@@ -33,7 +48,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
           eyebrow="Not found"
           title={COPY.empty.itemUnavailable(true)}
           description={COPY.empty.notAvailableDesc('Episode')}
-          href={`/${type}/${slug}`}
+          href={`/media/${type}/${slug}`}
           actionLabel={COPY.empty.backToDetail}
         />
       </Container>
@@ -60,8 +75,8 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
       <BreadcrumbJsonLd crumbs={[
         { name: 'Home', path: '' },
         { name: content.type, path: `/discover/${content.type}` },
-        { name: content.title, path: `/${type}/${slug}` },
-        { name: `Episode ${current.episodeNumber}`, path: `/${type}/${slug}/episodes/${episodeSlug}` },
+        { name: content.title, path: `/media/${type}/${slug}` },
+        { name: `Episode ${current.episodeNumber}`, path: `/media/${type}/${slug}/episodes/${episodeSlug}` },
       ]} />
       <VideoPlayer slug={decodeSlug} episodes={resolvedEpisodes} initialEpIndex={Math.max(0, episodeIndex)} initialPlayback={playback} episodeListError={episodeResult.failed} mediaType={content.type} title={content.title} />
       <Reveal><div className="mt-10"><SupportCTA /></div></Reveal>
