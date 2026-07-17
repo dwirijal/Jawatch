@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { getMedia, getGenres, getStudios, decodeMediaRef, buildCanonicalPath } from '@/lib/api';
 import { siteUrl } from '@/lib/site-url';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 300;
 
 // Sitemaps are capped at 50,000 URLs/file by the protocol. With ~70k media we
