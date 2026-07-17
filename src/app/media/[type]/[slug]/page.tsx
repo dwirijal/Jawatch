@@ -33,9 +33,13 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
+  // localApi expects "type;provider;upstream" semicolon format
+  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
+    ? decodeURIComponent(slug)
+    : `${type};${decodeURIComponent(slug)}`;
 
   const content = useLocalApi()
-    ? await localApiLib.getMediaBySlug(decodeSlug)
+    ? await localApiLib.getMediaBySlug(localSlug)
     : await getMediaBySlug(decodeSlug);
 
   if (!content) {
@@ -77,15 +81,21 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
   const ref = decodeMediaRef(decodeSlug);
+  // localApi expects "type;provider;upstream" semicolon format
+  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
+    ? decodeURIComponent(slug)
+    : `${type};${decodeURIComponent(slug)}`;
 
   if (useLocalApi()) {
-    const data = await localApiLib.getMediaBySlug(decodeSlug);
+    const data = await localApiLib.getMediaBySlug(localSlug);
     if (!data) {
       notFound();
     }
   }
 
-  const content = await getMediaBySlug(decodeSlug);
+  const content = useLocalApi()
+    ? await localApiLib.getMediaBySlug(localSlug)
+    : await getMediaBySlug(decodeSlug);
   if (!content) {
     notFound(); // real 404 status, not soft-200. Renders app/not-found.tsx.
   }
@@ -93,7 +103,9 @@ export default async function MediaPage({ params }: { params: Promise<{ type: st
   const canonicalPath = ref ? buildCanonicalPath(ref) : `/media/${type}/${decodedStr}`;
   const year = content.createdAt ? new Date(content.createdAt).getUTCFullYear() : null;
   const isVideo = ['anime', 'donghua', 'movie'].includes(content.type);
-  const items = isVideo ? await getEpisodes(decodeSlug) : await getChapters(decodeSlug);
+  const items = isVideo
+    ? await (useLocalApi() ? localApiLib.getEpisodes(localSlug) : getEpisodes(decodeSlug))
+    : await (useLocalApi() ? localApiLib.getChapters(localSlug) : getChapters(decodeSlug));
   const firstItem = items[0];
   const startHref = firstItem ? `${canonicalPath}/${isVideo ? 'episodes' : 'chapters'}/${firstItem.slug}` : null;
   const related = await getMediaRelated(decodeSlug);

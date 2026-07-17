@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { getMediaBySlug, getChapterPages, getChapters, getNovelChapter } from '@/lib/api';
+import { getMediaBySlug, getChapterPages, getChapters, getNovelChapter, useLocalApi } from '@/lib/api';
+import * as localApiLib from '@/lib/localApi';
 import { MangaReader } from '@/components/MangaReader';
 import { NovelReader } from '@/components/NovelReader';
 import { EmptyState } from '@/components/sections/EmptyState';
@@ -17,13 +18,18 @@ export const metadata: Metadata = {
 
 export default async function ChapterPage({ params }: { params: Promise<{ type: string; slug: string; chapterSlug: string }> }) {
   const { type, slug, chapterSlug } = await params;
-  const decodeSlug = `${type}/${slug}`;
+  const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
+  const decodeSlug = `${type}/${decodedStr}`;
+  // localApi expects "type;provider;upstream" semicolon format
+  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
+    ? decodeURIComponent(slug)
+    : `${type};${decodeURIComponent(slug)}`;
   const isNovel = type === 'novel';
   const [pages, novel, content, chapters] = await Promise.all([
-    isNovel ? Promise.resolve([]) : getChapterPages(decodeSlug, chapterSlug),
+    isNovel ? Promise.resolve([]) : (useLocalApi() ? localApiLib.getChapterPages(localSlug, chapterSlug) : getChapterPages(decodeSlug, chapterSlug)),
     isNovel ? getNovelChapter(decodeSlug, chapterSlug) : Promise.resolve(null),
-    getMediaBySlug(decodeSlug),
-    getChapters(decodeSlug),
+    useLocalApi() ? localApiLib.getMediaBySlug(localSlug) : getMediaBySlug(decodeSlug),
+    useLocalApi() ? localApiLib.getChapters(localSlug) : getChapters(decodeSlug),
   ]);
 
   const hasContent = isNovel ? (novel?.paragraphs.length ?? 0) > 0 : pages.length > 0;

@@ -21,20 +21,24 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
   // slug from URL is semicolon-encoded — decode and reconstruct full ref
   const decodedStr = decodeURIComponent(slug).replace(/;/g, '/');
   const decodeSlug = `${type}/${decodedStr}`;
+  // localApi expects "type;provider;upstream" semicolon format
+  const localSlug = decodeURIComponent(slug).startsWith(type + ';')
+    ? decodeURIComponent(slug)
+    : `${type};${decodeURIComponent(slug)}`;
 
   const [content, episodeResult, playback] = await Promise.all([
     useLocalApi()
-      ? localApiLib.getMediaBySlug(decodeSlug)
+      ? localApiLib.getMediaBySlug(localSlug)
       : getMediaBySlug(decodeSlug),
     useLocalApi()
-      ? localApiLib.getEpisodes(decodeSlug)
+      ? localApiLib.getEpisodes(localSlug)
           .then((items) => ({ items, failed: false }))
           .catch(() => ({ items: [], failed: true }))
       : getEpisodes(decodeSlug)
           .then((items) => ({ items, failed: false }))
           .catch(() => ({ items: [], failed: true })),
     useLocalApi()
-      ? localApiLib.getEpisodeSources(decodeSlug, episodeSlug)
+      ? localApiLib.getEpisodeSources(localSlug, episodeSlug)
           .then((sources) => ({ sources, mirrors: [], downloads: [] }))
           .catch(() => ({ sources: [], mirrors: [], downloads: [] }))
       : getEpisodePlayback(decodeSlug, episodeSlug)
