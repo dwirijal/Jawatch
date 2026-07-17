@@ -77,7 +77,9 @@ function slugToRef(slug: string): { type: string; provider: string; upstream: st
 function toMedia(item: any): Media {
   const { type, provider, upstream } = slugToRef(item.slug || '');
   const mediaType = toMediaType(item.type || type);
-  const ref = encodeMediaRef(mediaType, provider, item.upstreamSlug || upstream);
+  // Use the raw semicolon slug from local API directly — no m~ base64 encoding.
+  // decodeMediaRef already handles "type;provider;upstream" format.
+  const ref = item.slug || encodeMediaRef(mediaType, provider, item.upstreamSlug || upstream);
   return {
     ...baseMedia(mediaType, ref, item.title || 'Untitled', item.coverImage || undefined),
     status: item.status,
