@@ -6,7 +6,7 @@ import * as axeMatchers from 'vitest-axe/matchers';
 import type { AxeMatchers } from 'vitest-axe/matchers';
 import { ProgressList } from './ProgressList';
 import type { ProgressInput } from '@/lib/library';
-import { removeProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { removeProgressAction } from '@/app/[type]/[slug]/actions';
 
 declare module 'vitest' {
   interface Assertion extends AxeMatchers {}
@@ -15,7 +15,7 @@ declare module 'vitest' {
 
 expect.extend(axeMatchers);
 
-vi.mock('@/app/media/[type]/[slug]/actions', () => ({
+vi.mock('@/app/[type]/[slug]/actions', () => ({
   removeProgressAction: vi.fn(),
 }));
 

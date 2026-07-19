@@ -7,7 +7,7 @@ describe('media routing', () => {
   it('round-trips a registered ref: register -> build path -> decode', () => {
     const canonical = registerMedia('anime', 'samehadaku', 'one-piece-sub', 'One Piece');
     const path = buildCanonicalPath({ type: 'anime', provider: 'samehadaku', slug: 'one-piece-sub' });
-    expect(path).toBe(`/media/anime/${canonical}`);
+    expect(path).toBe(`/anime/${canonical}`);
 
     const ref = decodeMediaRef(`anime/${canonical}`);
     expect(ref).toEqual({ type: 'anime', provider: 'samehadaku', slug: 'one-piece-sub' });

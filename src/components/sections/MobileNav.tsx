@@ -5,7 +5,6 @@ import { Disclosure } from '@/components/ui/Disclosure';
 
 const LINKS = [
   { href: '/discover', label: 'Discover' },
-  { href: '/trending', label: 'Trending' },
   { href: '/popular', label: 'Popular' },
   { href: '/latest', label: 'Latest' },
   { href: '/studios', label: 'Studios' },

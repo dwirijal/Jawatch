@@ -79,7 +79,6 @@ export default function RootLayout({
             {/* Nav links */}
             <nav aria-label="Main" className="hidden md:flex items-center gap-5 font-mono text-micro uppercase">
               <Link href="/discover" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Discover</Link>
-              <Link href="/trending" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Trending</Link>
               <Link href="/popular" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Popular</Link>
               <Link href="/latest" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-foreground transition-colors">Latest</Link>
               <Link href="/random" aria-label="Random title" className="p-2 min-h-[48px] flex items-center text-muted-foreground hover:text-primary transition-colors"><span aria-hidden="true">🎲</span></Link>

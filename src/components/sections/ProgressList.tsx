@@ -11,7 +11,8 @@ export function ProgressList({ items, kind }: { items: ProgressInput[]; kind: 'e
       {items.map((item) => {
         const ref = decodeMediaRef(item.mediaRef);
         if (!ref) return null;
-        const href = `${buildCanonicalPath(ref)}/${kind}/${item.itemSlug}`;
+        // Public item path: /{type}/{work}/eN|cN (no /episodes|/chapters segment)
+        const href = `${buildCanonicalPath(ref)}/${item.itemSlug}`;
         return (
           <li key={item.mediaRef} className="flex items-stretch">
             <Link href={href} className="flex flex-1 items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-card">

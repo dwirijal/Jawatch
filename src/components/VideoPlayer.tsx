@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Episode, EpisodeSource, EpisodeMirror, EpisodeDownload, EpisodePlayback } from '@/lib/api';
 import { getEpisodePlaybackClient, resolveMirrorClient } from '@/lib/client-media';
 import { groupMirrorsByProvider, groupDownloadsByResolution } from '@/lib/playback-groups';
-import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { recordProgressAction } from '@/app/[type]/[slug]/actions';
 import { Spinner } from '@/components/ui/Spinner';
 import { COPY } from '@/lib/copy';
 
@@ -195,8 +195,8 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
               src={videoUrl}
               className="h-full w-full"
               allowFullScreen
-              allow="autoplay; fullscreen; encrypted-media"
-              sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              referrerPolicy="no-referrer-when-downgrade"
             />
             {/* ponytail: mobile-first real Fullscreen API; desktop keeps the CSS theater button below.
                 min 44px tap target, lg:hidden so it never collides with theater on desktop. */}

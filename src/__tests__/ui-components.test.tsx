@@ -27,10 +27,15 @@ describe('standalone UI sections', () => {
     render(<MediaGrid items={[
       media({ slug: 'anime-1', type: 'anime', title: 'Anime One' }),
       media({ slug: 'comic-1', type: 'comic', title: 'Comic One' }),
+      media({ slug: 'anime;samehadaku;hitoribocchi-no-isekai-kouryaku', type: 'anime', title: 'Local Semi' }),
     ]} />);
 
-    expect(screen.getByRole('link', { name: /anime one/i })).toHaveAttribute('href', '/media/anime-1');
-    expect(screen.getByRole('link', { name: /comic one/i })).toHaveAttribute('href', '/media/comic-1');
+    expect(screen.getByRole('link', { name: /anime one/i })).toHaveAttribute('href', '/anime/anime-1');
+    expect(screen.getByRole('link', { name: /comic one/i })).toHaveAttribute('href', '/comic/comic-1');
+    expect(screen.getByRole('link', { name: /local semi/i })).toHaveAttribute(
+      'href',
+      '/anime/hitoribocchi-no-isekai-kouryaku?src=samehadaku',
+    );
   });
 
   it('renders empty-state CTA only when provided', () => {

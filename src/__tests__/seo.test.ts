@@ -55,7 +55,7 @@ describe('SEO routes', () => {
     expect(urls).toContain('https://jawatch.test/popular');
     expect(urls).toContain('https://jawatch.test/latest');
     expect(urls).toContain('https://jawatch.test/genres');
-    const mediaUrls = (await sitemap({ id: Promise.resolve('1') })).map(e => e.url); expect(mediaUrls).toContain('https://jawatch.test/media/anime/night-signal');
+    const mediaUrls = (await sitemap({ id: Promise.resolve('1') })).map(e => e.url); expect(mediaUrls).toContain('https://jawatch.test/anime/night-signal');
 
     expect(urls).not.toContain('https://jawatch.test/discover/manga');
     expect(urls).not.toContain('https://jawatch.test/discover/movie');
@@ -91,10 +91,10 @@ describe('SEO routes', () => {
 
     const entries = await sitemap({ id: Promise.resolve("0") }); const entries1 = await sitemap({ id: Promise.resolve("1") });
     const urls = entries.map((entry) => entry.url); const mediaUrls = entries1.map(e => e.url);
-    const fallbackEntry = entries1.find((entry) => entry.url === 'https://jawatch.test/media/anime/empty-date');
+    const fallbackEntry = entries1.find((entry) => entry.url === 'https://jawatch.test/anime/empty-date');
 
     expect(urls).toContain('https://jawatch.test/genres/action');
-    expect(mediaUrls.filter((url) => url === 'https://jawatch.test/media/anime/night-signal')).toHaveLength(2);
+    expect(mediaUrls.filter((url) => url === 'https://jawatch.test/anime/night-signal')).toHaveLength(2);
     expect(fallbackEntry?.lastModified).not.toEqual(new Date('1970-01-01T00:00:00.000Z'));
     expect(api.getMedia).toHaveBeenCalledTimes(1);
   });
@@ -110,7 +110,7 @@ describe('SEO routes', () => {
 
   it('uses media data for detail metadata', async () => {
     vi.mocked(api.getMediaBySlug).mockResolvedValue(media);
-    const { generateMetadata } = await import('@/app/media/[type]/[slug]/page');
+    const { generateMetadata } = await import('@/app/[type]/[slug]/page');
 
     const metadata = await generateMetadata({ params: Promise.resolve({ type: media.type, slug: media.slug }) });
 

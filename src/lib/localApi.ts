@@ -71,15 +71,21 @@ function slugToRef(slug: string): { type: string; provider: string; upstream: st
   if (parts.length === 3) {
     return { type: parts[0], provider: parts[1], upstream: parts[2] };
   }
-  return { type: 'anime', provider: 'samehadaku', upstream: slug };
+  if (parts.length === 2) {
+    return { type: parts[0], provider: 'resolve', upstream: parts[1] };
+  }
+  return { type: 'anime', provider: 'resolve', upstream: slug };
 }
 
 function toMedia(item: any): Media {
   const { type, provider, upstream } = slugToRef(item.slug || '');
   const mediaType = toMediaType(item.type || type);
-  // Use the raw semicolon slug from local API directly — no m~ base64 encoding.
-  // decodeMediaRef already handles "type;provider;upstream" format.
-  const ref = item.slug || encodeMediaRef(mediaType, provider, item.upstreamSlug || upstream);
+  // Prefer public work slug for links: type/publicSlug (mediaHref → /{type}/{publicSlug}).
+  const publicSlug = (item.publicSlug || item.public_slug || '').toString().trim();
+  const workSlug = publicSlug || item.upstreamSlug || upstream || '';
+  const ref = workSlug
+    ? `${mediaType}/${workSlug}`
+    : item.slug || encodeMediaRef(mediaType, provider, item.upstreamSlug || upstream);
   return {
     ...baseMedia(mediaType, ref, item.title || 'Untitled', item.coverImage || undefined),
     status: item.status,
@@ -105,14 +111,12 @@ export async function getHomeRails(): Promise<any[]> {
   try {
     const body = await localGet<{ ok: boolean; rails: Array<{ key: string; items: any[] }> }>('/api/v1/home');
     if (!body?.ok || !Array.isArray(body.rails)) return [];
+    // Normalize rail items through toMedia so slug/href shape matches catalog pages.
     return body.rails.map((r) => ({
       key: r.key,
-      items: (r.items || []).map((it: any) => ({
-        title: it.title,
-        slug: it.slug,
-        coverImage: cover(it.coverImage),
-        type: it.type,
-      })),
+      title: r.key,
+      href: r.key === 'popular' ? '/popular' : r.key === 'latest' ? '/latest' : `/discover`,
+      items: (r.items || []).map((it: any) => toMedia(it)),
     }));
   } catch (err) {
     return [];

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { Chapter, ChapterPage } from '@/lib/api';
 import { getChapterPagesClient } from '@/lib/client-media';
-import { recordProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { recordProgressAction } from '@/app/[type]/[slug]/actions';
 import { Spinner } from '@/components/ui/Spinner';
 import { SafeSlotIklan } from '@/components/ads/SafeSlotIklan';
 import { COPY } from '@/lib/copy';

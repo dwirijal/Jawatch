@@ -52,7 +52,7 @@ export default async function HomePage() {
             {[...contents.slice(0, 20), ...contents.slice(0, 20)].map((item, index) => (
               <Link
                 key={`${item.slug}-${index}`}
-                href={mediaHref(item.slug)}
+                href={mediaHref(item.slug, item.type)}
                 className="group flex min-w-[260px] shrink-0 items-center gap-3 rounded-page border border-border bg-card/50 px-4 py-2.5 transition-all duration-300 hover:border-amber/40 hover:-translate-y-0.5"
               >
                 <span className="w-5 font-mono text-tag tabular-nums text-primary/60">{String((index % 20) + 1).padStart(2, '0')}</span>

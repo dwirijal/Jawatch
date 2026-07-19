@@ -36,7 +36,14 @@ export function Card({
           onError={() => setImgError(true)}
         />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-muted to-card" />
+        <div className="absolute inset-0 bg-gradient-to-br from-muted via-card to-background">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-serif text-4xl font-semibold tracking-tight text-primary/35 select-none">
+              {(title || kind || '?').trim().charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/80 to-transparent" />
+        </div>
       )}
 
       {/* Gradient overlay */}

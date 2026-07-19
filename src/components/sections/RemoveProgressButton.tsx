@@ -1,6 +1,6 @@
 'use client';
 import { useTransition } from 'react';
-import { removeProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { removeProgressAction } from '@/app/[type]/[slug]/actions';
 import { COPY } from '@/lib/copy';
 
 export function RemoveProgressButton({ mediaRef, label }: { mediaRef: string; label?: string }) {

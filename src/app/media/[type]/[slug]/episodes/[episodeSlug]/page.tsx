@@ -38,8 +38,7 @@ export default async function EpisodePage({ params }: { params: Promise<{ type: 
           .then((items) => ({ items, failed: false }))
           .catch(() => ({ items: [], failed: true })),
     useLocalApi()
-      ? localApiLib.getEpisodeSources(localSlug, episodeSlug)
-          .then((sources) => ({ sources, mirrors: [], downloads: [] }))
+      ? getEpisodePlayback(localSlug, episodeSlug)
           .catch(() => ({ sources: [], mirrors: [], downloads: [] }))
       : getEpisodePlayback(decodeSlug, episodeSlug)
           .catch(() => ({ sources: [], mirrors: [], downloads: [] })),

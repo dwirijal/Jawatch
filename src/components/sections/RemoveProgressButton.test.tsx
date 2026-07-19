@@ -13,11 +13,11 @@ declare module 'vitest' {
 
 expect.extend(axeMatchers);
 
-vi.mock('@/app/media/[type]/[slug]/actions', () => ({
+vi.mock('@/app/[type]/[slug]/actions', () => ({
   removeProgressAction: vi.fn(),
 }));
 
-import { removeProgressAction } from '@/app/media/[type]/[slug]/actions';
+import { removeProgressAction } from '@/app/[type]/[slug]/actions';
 const removeMock = vi.mocked(removeProgressAction);
 
 describe('RemoveProgressButton', () => {

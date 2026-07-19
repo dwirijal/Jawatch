@@ -46,7 +46,8 @@ function ProgressRail({ items, kind }: { items: ProgressInput[]; kind: 'episodes
         {items.map((item, idx) => {
           const ref = decodeMediaRef(item.mediaRef);
           if (!ref) return null;
-          const href = `${buildCanonicalPath(ref)}/${kind}/${item.itemSlug}`;
+          // Public item path: /{type}/{work}/eN|cN
+          const href = `${buildCanonicalPath(ref)}/${item.itemSlug}`;
           // Pill fills based on position in the rail (simple visual progress)
           const pct = total > 1 ? ((idx) / (total - 1)) * 100 : 0;
 

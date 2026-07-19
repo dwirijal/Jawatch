@@ -267,13 +267,14 @@ export function buildCanonicalPath(ref: MediaRef): string {
   const upstreamKey = `${ref.type}/${ref.provider}/${ref.slug}`;
   let canonicalSlug = upstreamToCanonical.get(upstreamKey);
   if (!canonicalSlug) {
+    // Prefer slug-as-public when already a clean work slug (local public_slug / title key).
     canonicalSlug = slugFromTitle(ref.slug);
   }
-  return `/media/${ref.type}/${canonicalSlug}`;
+  // Public URL: /{type}/{workSlug} — no /media prefix, no provider segment.
+  return `/${ref.type}/${canonicalSlug}`;
 }
 
-// Navigation link = canonical path + ?src= provider hint (#286). Canonical path stays
-// clean for SEO/sitemap; the hint only lets the detail page skip blind provider probing.
+// Navigation link = canonical path + ?src= provider soft hint only.
 // 'resolve'/'generic' carry no useful hint, so they're omitted.
 export function buildMediaLink(ref: MediaRef): string {
   const path = buildCanonicalPath(ref);
@@ -805,7 +806,12 @@ async function searchAlqanime(query: string): Promise<Media[]> {
 }
 
 function slugFromTitle(title: string): string {
-  return String(title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return String(title || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // strip combining accents (é→e, ü→u, etc.)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 function firstArray(...values: any[]): any[] {
@@ -1137,6 +1143,31 @@ function flattenEpisodeDownloads(downloadUrl: any): EpisodeDownload[] {
 }
 
 export async function getEpisodePlayback(slug: string, epSlug: string): Promise<EpisodePlayback> {
+  if (useLocalApi()) {
+    // Public slug is work identity (no type/provider). Accept both bare + type/slug.
+    const key = slug.includes('/') ? slug.split('/').pop()! : slug.includes(';') ? slug.split(';').pop()! : slug;
+    try {
+      const rows = await localApi.getEpisodeSources(key, epSlug);
+      const list = Array.isArray(rows) ? rows : [];
+      const sources: EpisodeSource[] = [];
+      const downloads: EpisodeDownload[] = [];
+      for (const r of list) {
+        if (!r?.url) continue;
+        const label = r.label || r.serverId || 'Server';
+        const quality = r.quality || undefined;
+        const st = String(r.sourceType || r.source_type || '').toLowerCase();
+        if (st === 'download') {
+          downloads.push({ url: r.url, label, quality });
+        } else {
+          sources.push({ url: r.url, label, quality });
+        }
+      }
+      return { sources, mirrors: [], downloads };
+    } catch {
+      return EMPTY_PLAYBACK;
+    }
+  }
+
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return EMPTY_PLAYBACK;
 
@@ -1427,7 +1458,7 @@ export async function getHomeRails(): Promise<Array<{ title: string; href: strin
         'anime:anime:home': { title: 'Ongoing Anime', href: '/discover/anime' },
         'donghua:donghua:latest': { title: 'Latest Donghua', href: '/discover/donghua' },
         'comic:komikstation:recommendation': { title: 'Comic Recommendations', href: '/discover/comic' },
-        'comic:komikstation:top-weekly': { title: 'Top Weekly Comics', href: '/trending' },
+        'comic:komikstation:top-weekly': { title: 'Top Weekly Comics', href: '/popular' },
         'comic:mangasusuku:popular': { title: 'Popular Comics', href: '/popular' },
         'novel:sakuranovel:home': { title: 'Latest Novels', href: '/discover/novel' },
       };
@@ -1464,7 +1495,7 @@ export async function getHomeRails(): Promise<Array<{ title: string; href: strin
     { title: 'Featured Anime', href: '/discover/anime', items: safe(featured) },
     { title: 'Latest Donghua', href: '/discover/donghua', items: safe(latestDonghua) },
     { title: 'Comic Recommendations', href: '/discover/comic', items: safe(recommendations) },
-    { title: 'Top Weekly Comics', href: '/trending', items: safe(topWeekly) },
+    { title: 'Top Weekly Comics', href: '/popular', items: safe(topWeekly) },
     { title: 'Popular Comics', href: '/popular', items: safe(popular) },
   ].filter((rail) => rail.items.length > 0);
 }

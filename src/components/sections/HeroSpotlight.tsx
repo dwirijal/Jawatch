@@ -5,6 +5,7 @@ import { CountUp } from '@/components/motion/CountUp';
 import Link from 'next/link';
 import { buttonClasses } from '@/components/ui/Button';
 import type { Media } from '@/lib/api';
+import { mediaHref } from '@/lib/mediaHref';
 
 const readableTypes = new Set(['manga', 'comic', 'novel']);
 
@@ -16,7 +17,7 @@ export function HeroSpotlight({ item }: HeroSpotlightProps) {
   if (!item) return null;
 
   const isReadable = readableTypes.has(item.type);
-  const primaryHref = `/media/${item.slug}`;
+  const primaryHref = mediaHref(item.slug, item.type);
   const genres = item.genres?.slice(0, 3).map((genre) => genre.name).join(' · ');
 
   return (

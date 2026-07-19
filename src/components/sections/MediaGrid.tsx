@@ -40,7 +40,7 @@ export function MediaGrid({ items, limit }: MediaGridProps) {
             }}
           >
             <Card
-              href={mediaHref(item.slug)}
+              href={mediaHref(item.slug, item.type)}
               kind={item.type}
               title={item.title}
               rating={item.rating?.average}

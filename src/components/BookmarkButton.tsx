@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bookmark } from 'lucide-react';
-import { toggleBookmarkAction } from '@/app/media/[type]/[slug]/actions';
+import { toggleBookmarkAction } from '@/app/[type]/[slug]/actions';
 import { useToast } from '@/components/ui/ToastProvider';
 import type { BookmarkInput } from '@/lib/library';
 import { COPY } from '@/lib/copy';

@@ -48,14 +48,35 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Phase 3: legacy /media/* → /{type}/{slug}[+/{item}]
+      {
+        source: '/media/:type/:slug/episodes/:item',
+        destination: '/:type/:slug/:item',
+        permanent: true,
+      },
+      {
+        source: '/media/:type/:slug/chapters/:item',
+        destination: '/:type/:slug/:item',
+        permanent: true,
+      },
+      {
+        source: '/media/:type/:slug',
+        destination: '/:type/:slug',
+        permanent: true,
+      },
+      {
+        source: '/media/:slug',
+        destination: '/:slug',
+        permanent: true,
+      },
       {
         source: '/watch/:slug',
-        destination: '/media/:slug',
+        destination: '/:slug',
         permanent: true,
       },
       {
         source: '/read/:slug',
-        destination: '/media/:slug',
+        destination: '/:slug',
         permanent: true,
       },
       {

@@ -25,7 +25,7 @@ export function DetailActions({
   mediaRef: string;
   isVideo: boolean;
   startHref: string | null;
-  itemBasePath: string; // e.g. /media/anime/one-piece/episodes
+  itemBasePath: string; // e.g. /anime/one-piece
   bookmarkInput: BookmarkInput;
 }) {
   const [state, setState] = useState<LibraryState>({ bookmarked: false, resume: null });

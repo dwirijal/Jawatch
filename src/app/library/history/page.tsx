@@ -37,8 +37,7 @@ export default async function HistoryPage() {
         {history.map((h) => {
           const ref = decodeMediaRef(h.mediaRef);
           if (!ref) return null;
-          const kind = VIDEO_TYPES.includes(ref.type) ? 'episodes' : 'chapters';
-          const href = `${buildCanonicalPath(ref)}/${kind}/${h.itemSlug}`;
+          const href = `${buildCanonicalPath(ref)}/${h.itemSlug}`;
           return (
             <li key={`${h.mediaRef}-${h.itemSlug}`}>
               <Link href={href} className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-card">

@@ -21,7 +21,7 @@ vi.mock('@/lib/client-media', () => ({
 }));
 
 // server action — no-op in jsdom
-vi.mock('@/app/media/[type]/[slug]/actions', () => ({
+vi.mock('@/app/[type]/[slug]/actions', () => ({
   recordProgressAction: vi.fn(),
 }));
 

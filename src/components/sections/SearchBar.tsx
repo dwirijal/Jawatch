@@ -22,9 +22,10 @@ export function SearchBar() {
   }, []);
 
   return (
-    <form action="/search" className="relative flex-1">
+    <form action="/search" className="relative flex-1" suppressHydrationWarning>
       <div className="relative transition-all duration-300 focus-within:max-w-[520px] max-w-[420px]">
         <input
+          suppressHydrationWarning
           ref={inputRef}
           name="q"
           type="search"

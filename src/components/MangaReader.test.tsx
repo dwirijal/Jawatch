@@ -17,7 +17,7 @@ expect.extend(axeMatchers);
 vi.mock('@/lib/client-media', () => ({
   getChapterPagesClient: vi.fn(),
 }));
-vi.mock('@/app/media/[type]/[slug]/actions', () => ({
+vi.mock('@/app/[type]/[slug]/actions', () => ({
   recordProgressAction: vi.fn(),
 }));
 

@@ -12,6 +12,6 @@ export default async function RandomPage() {
 
   // Resolve slug to canonical mediaRef for buildMediaLink
   const ref = decodeMediaRef(content.slug);
-  const href = ref ? buildMediaLink(ref) : `/media/${content.slug}`;
+  const href = ref ? buildMediaLink(ref) : `/${content.type}/${content.slug}`;
   redirect(href);
 }

@@ -4,12 +4,13 @@ import Link from 'next/link';
 import Image from '@/components/ui/RefererImage';
 import { useState, type PointerEvent } from 'react';
 import { Media, decodeMediaRef, buildMediaLink } from '@/lib/api';
+import { mediaHref } from '@/lib/mediaHref';
 
 export function ContentCard({ content }: { content: Media }) {
   const isNew = new Date(content.createdAt).getTime() > Date.now() - 7 * 86400000;
   const [imgError, setImgError] = useState(false);
   const ref = decodeMediaRef(content.slug);
-  const href = ref ? buildMediaLink(ref) : `/media/${content.slug}`;
+  const href = ref ? buildMediaLink(ref) : mediaHref(content.slug, content.type);
 
   // ponytail: reactbits-style SpotlightCard — pointer-follow glow via CSS vars.
   // Fine-pointer only (no touch/keyboard cost), token-colored, opacity gated by
