@@ -17,6 +17,26 @@ class IO {
 }
 globalThis.IntersectionObserver = IO as unknown as typeof IntersectionObserver;
 
+// Mock localStorage for testing
+const localStorageMock = (function () {
+  let store: Record<string, string> = {};
+  return {
+    getItem(key: string) {
+      return store[key] || null;
+    },
+    setItem(key: string, value: string) {
+      store[key] = value.toString();
+    },
+    clear() {
+      store = {};
+    },
+    removeItem(key: string) {
+      delete store[key];
+    },
+  };
+})();
+Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock, writable: true });
+
 // next/image validates hosts against next.config.js, which vitest does not load.
 // Mock it to a plain <img> so component tests don't depend on image config.
 vi.mock('next/image', () => ({

@@ -2,10 +2,6 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('next/image', () => ({
-  // eslint-disable-next-line @next/next/no-img-element
-  default: ({ alt = '', ...props }: any) => <img alt={alt} {...props} />,
-}));
 
 vi.mock('@/components/VideoPlayer', () => ({
   VideoPlayer: ({ episodes, initialEpIndex }: any) => (
