@@ -105,7 +105,8 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
     };
   }, []);
 
-  const videoUrl = sources[activeSource]?.url;
+  const hasVideo = sources.length > 0;
+  const videoUrl = hasVideo ? sources[activeSource]?.url : undefined;
   const currentEp = episodes[epIndex];
   const nextEp = episodes[epIndex + 1];
   const nearbyEpisodes = episodes.slice(Math.max(0, epIndex - 3), epIndex + 4);
@@ -123,7 +124,7 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
     setError('');
     try {
       const playback = await getEpisodePlaybackClient(slug, ep.slug);
-      if (playback.sources.length === 0) throw new Error('No episode sources');
+      if (playback.sources.length === 0 && playback.downloads.length === 0) throw new Error('No episode sources');
       setSources(playback.sources);
       setMirrors(playback.mirrors);
       setDownloads(playback.downloads);
@@ -168,10 +169,10 @@ export function VideoPlayer({ slug, episodes, initialEpIndex, initialPlayback, e
     getEpisodePlaybackClient(slug, next.slug).catch(() => {});
   }, [epIndex, episodes, slug]);
 
-  if (!videoUrl) {
+  if (!hasVideo && downloads.length === 0) {
     return (
       <div className="aspect-video bg-background rounded-none border border-border flex items-center justify-center grain">
-        <p className="text-muted-foreground text-sm font-mono uppercase tracking-wider">{COPY.watch.noStream}</p>
+        <p className="font-mono text-sm text-muted-foreground">{error || COPY.empty.notAvailableDesc('Episode')}</p>
       </div>
     );
   }
