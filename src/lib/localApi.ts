@@ -189,10 +189,22 @@ export async function getRandom(): Promise<Media | null> {
   }
 }
 
-export async function searchMedia(query: string, type?: string, limit = 20): Promise<Media[]> {
+export async function suggestMedia(query: string, limit = 8): Promise<Media[]> {
+  try {
+    const body = await localGet<{ ok: boolean; data: any[] }>(`/api/v1/suggest?q=${encodeURIComponent(query)}&limit=${limit}`);
+    return (body?.data || []).map(toMedia);
+  } catch {
+    return [];
+  }
+}
+
+export async function searchMedia(query: string, type?: string, limit = 20, opts?: { genre?: string; status?: string; sort?: string }): Promise<Media[]> {
   try {
     const qs = new URLSearchParams({ q: query, limit: String(limit) });
     if (type) qs.set('type', type);
+    if (opts?.genre) qs.set('genre', opts.genre);
+    if (opts?.status) qs.set('status', opts.status);
+    if (opts?.sort) qs.set('sort', opts.sort);
     const body = await localGet<{ ok: boolean; data: any[] }>(`/api/v1/search?${qs.toString()}`);
     return (body?.data || []).map(toMedia);
   } catch {

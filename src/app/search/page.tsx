@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/sections/EmptyState';
 import { MediaGrid } from '@/components/sections/MediaGrid';
 import { SectionHeader } from '@/components/sections/SectionHeader';
 import { RecentSearches } from '@/components/sections/RecentSearches';
-import { Search } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { COPY } from '@/lib/copy';
 
 export const metadata: Metadata = {
@@ -15,14 +15,37 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string; type?: string }> }) {
+const TYPES = ['anime', 'donghua', 'manga', 'comic', 'movie', 'novel'];
+const STATUSES = ['Ongoing', 'Completed'];
+const SORTS = [
+  { value: '', label: 'Relevance' },
+  { value: 'rating', label: 'Top Rated' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'az', label: 'A→Z' },
+];
+
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string; type?: string; genre?: string; status?: string; sort?: string }> }) {
   const params = await searchParams;
   const query = params.q || '';
   const activeType = params.type || '';
-  const result = query ? await searchMedia(query, 50, activeType || undefined) : { data: [], total: 0 };
+  const activeGenre = params.genre || '';
+  const activeStatus = params.status || '';
+  const activeSort = params.sort || '';
+
+  const result = query
+    ? await searchMedia(query, 50, activeType || undefined, { genre: activeGenre || undefined, status: activeStatus || undefined, sort: activeSort || undefined })
+    : { data: [], total: 0 };
   const contents = result.data || [];
 
-  const types = ['anime', 'donghua', 'manga', 'comic', 'movie', 'novel'];
+  const buildHref = (overrides: Record<string, string>) => {
+    const p = new URLSearchParams();
+    if (query) p.set('q', query);
+    const merged = { type: activeType, genre: activeGenre, status: activeStatus, sort: activeSort, ...overrides };
+    for (const [k, v] of Object.entries(merged)) {
+      if (v) p.set(k, v);
+    }
+    return `/search?${p.toString()}`;
+  };
 
   return (
     <Container>
@@ -32,27 +55,38 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <Search className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
           <span className="sr-only">Search query</span>
           <input name="q" defaultValue={query} placeholder={COPY.search.placeholder} className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
+          {activeType && <input type="hidden" name="type" value={activeType} />}
+          {activeGenre && <input type="hidden" name="genre" value={activeGenre} />}
+          {activeStatus && <input type="hidden" name="status" value={activeStatus} />}
+          {activeSort && <input type="hidden" name="sort" value={activeSort} />}
         </label>
-        {activeType && <input type="hidden" name="type" value={activeType} />}
       </form>
 
-      <div className="mb-8 flex flex-wrap gap-2">
-        {activeType ? (
-          <Link href={`/search?q=${encodeURIComponent(query)}`} className="rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors border-border bg-card text-muted-foreground hover:border-primary hover:text-primary">all</Link>
-        ) : (
-          <span aria-current="page" className="rounded-pill border px-4 py-2 font-mono text-micro uppercase border-primary text-primary">all</span>
-        )}
-        {types.map((t) => (
-          <Link
-            key={t}
-            href={`/search?q=${encodeURIComponent(query)}&type=${t}`}
-            aria-current={activeType === t ? 'page' : undefined}
-            className={`rounded-pill border px-4 py-2 font-mono text-micro uppercase transition-colors ${activeType === t ? 'border-primary text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'}`}
-          >
-            {t}
-          </Link>
+      {/* Type pills */}
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Pill href={buildHref({ type: '' })} active={!activeType}>all</Pill>
+        {TYPES.map((t) => (
+          <Pill key={t} href={buildHref({ type: activeType === t ? '' : t })} active={activeType === t}>{t}</Pill>
         ))}
       </div>
+
+      {/* Filters row: status + sort */}
+      {query && (
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <SlidersHorizontal className="h-4 w-4 text-muted-foreground" aria-hidden />
+          <div className="flex flex-wrap gap-1.5">
+            {STATUSES.map((s) => (
+              <Pill key={s} href={buildHref({ status: activeStatus === s ? '' : s })} active={activeStatus === s} size="sm">{s}</Pill>
+            ))}
+          </div>
+          <div className="h-4 w-px bg-border" aria-hidden />
+          <div className="flex flex-wrap gap-1.5">
+            {SORTS.map((s) => (
+              <Pill key={s.value} href={buildHref({ sort: activeSort === s.value ? '' : s.value })} active={activeSort === s.value} size="sm">{s.label}</Pill>
+            ))}
+          </div>
+        </div>
+      )}
 
       <RecentSearches current={query} />
 
@@ -62,8 +96,21 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <MediaGrid items={contents} />
         </>
       ) : query ? (
-        <EmptyState icon={<Search className="h-6 w-6" aria-hidden="true" />} title={COPY.search.emptyTitle} description={COPY.search.emptyDesc(query)} href="/discover" actionLabel="Browse catalog" />
+        <EmptyState icon={<Search className="h-6 w-6" aria-hidden />} title={COPY.search.emptyTitle} description={COPY.search.emptyDesc(query)} href="/discover" actionLabel="Browse catalog" />
       ) : null}
     </Container>
+  );
+}
+
+function Pill({ href, active, size = 'md', children }: { href: string; active: boolean; size?: 'sm' | 'md'; children: React.ReactNode }) {
+  const base = size === 'sm' ? 'px-2.5 py-1 text-micro' : 'px-4 py-2 text-micro';
+  return (
+    <Link
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={`rounded-pill border font-mono uppercase transition-colors ${active ? 'border-primary text-primary' : 'border-border bg-card text-muted-foreground hover:border-primary hover:text-primary'} ${base}`}
+    >
+      {children}
+    </Link>
   );
 }

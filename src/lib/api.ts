@@ -1375,9 +1375,9 @@ async function safeSearchSource<T>(promise: Promise<T>): Promise<T | null> {
   }
 }
 
-export async function searchMedia(query: string, limit?: number, type?: string): Promise<{ data: Media[]; total: number }> {
+export async function searchMedia(query: string, limit?: number, type?: string, opts?: { genre?: string; status?: string; sort?: string }): Promise<{ data: Media[]; total: number }> {
   if (useLocalApi()) {
-    const items = await localApi.searchMedia(query, type, limit || 20);
+    const items = await localApi.searchMedia(query, type, limit || 20, opts);
     return { data: items, total: items.length };
   }
   const encoded = encodeURIComponent(query);
