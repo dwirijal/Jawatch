@@ -1144,10 +1144,8 @@ function flattenEpisodeDownloads(downloadUrl: any): EpisodeDownload[] {
 
 export async function getEpisodePlayback(slug: string, epSlug: string): Promise<EpisodePlayback> {
   if (useLocalApi()) {
-    // Public slug is work identity (no type/provider). Accept both bare + type/slug.
-    const key = slug.includes('/') ? slug.split('/').pop()! : slug.includes(';') ? slug.split(';').pop()! : slug;
     try {
-      const rows = await localApi.getEpisodeSources(key, epSlug);
+      const rows = await localApi.getEpisodeSources(slug, epSlug);
       const list = Array.isArray(rows) ? rows : [];
       const sources: EpisodeSource[] = [];
       const downloads: EpisodeDownload[] = [];
