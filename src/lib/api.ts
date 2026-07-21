@@ -1169,6 +1169,9 @@ export async function getEpisodePlayback(slug: string, epSlug: string): Promise<
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return EMPTY_PLAYBACK;
 
+  // Guard: upstream slug must be safe path segment (same as resolveEpisodeMirror)
+  if (!/^[A-Za-z0-9_-]+$/.test(epSlug)) throw new Error(`Unsafe epSlug rejected: ${epSlug}`);
+
   if (ref.type === 'anime') {
     if (ref.provider === 'anime') {
       const body = unwrapUpstreamEnvelope(`/anime/episode/${epSlug}`, await fetchUpstreamJson(`/anime/episode/${epSlug}`));
@@ -1183,7 +1186,7 @@ export async function getEpisodePlayback(slug: string, epSlug: string): Promise<
       const sources = (Array.isArray(body.streams) ? body.streams : []).map((item: any) => ({
         url: item.url,
         label: item.name,
-        quality: String(item.name).split(' ')[0] || 'auto',
+        quality: item.name ? String(item.name).split(' ')[0] : 'auto',
       }));
       return { sources, mirrors: [], downloads: [] };
     }
