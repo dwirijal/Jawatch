@@ -1220,6 +1220,10 @@ export async function getEpisodeSources(slug: string, epSlug: string): Promise<E
 }
 
 export async function getChapters(slug: string): Promise<Chapter[]> {
+  if (useLocalApi()) {
+    const items = await localApi.getChapters(slug);
+    return (Array.isArray(items) ? items : []).sort((a, b) => (a.chapterNumber ?? 0) - (b.chapterNumber ?? 0));
+  }
   const items = await getChaptersUnsorted(slug);
   return items.sort((a, b) => a.chapterNumber - b.chapterNumber);
 }
@@ -1298,6 +1302,13 @@ async function getChaptersUnsorted(slug: string): Promise<Chapter[]> {
 }
 
 export async function getChapterPages(slug: string, chSlug: string): Promise<ChapterPage[]> {
+  if (useLocalApi()) {
+    const items = await localApi.getChapterPages(slug, chSlug);
+    return (Array.isArray(items) ? items : []).map((p: any, i: number) => ({
+      url: p.url ?? p,
+      pageNumber: p.pageNumber ?? i + 1,
+    }));
+  }
   const ref = await resolveRefIfNeeded(decodeMediaRef(slug));
   if (!ref) return [];
   if (ref.type !== 'comic') return [];
