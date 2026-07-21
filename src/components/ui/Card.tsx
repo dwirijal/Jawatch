@@ -22,13 +22,14 @@ export function Card({
   isNew?: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
+  const hasCover = !!(coverImage && !imgError);
 
   return (
     <Link href={href} className="group relative aspect-[2/3] overflow-hidden bg-card block transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl hover:shadow-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
       {/* Poster bg */}
-      {coverImage && !imgError ? (
+      {hasCover ? (
         <Image
-          src={coverImage}
+          src={coverImage!}
           alt={title}
           fill
           sizes="(max-width:640px) 50vw, 20vw"
@@ -46,8 +47,10 @@ export function Card({
         </div>
       )}
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent transition-all duration-300 group-hover:from-background/95 group-hover:via-background/30" />
+      {/* Gradient overlay — only when cover exists */}
+      {hasCover && (
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent transition-all duration-300 group-hover:from-background/95 group-hover:via-background/30" />
+      )}
 
       {/* Grain overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] group-hover:opacity-[0.07] transition-opacity" style={{
